@@ -1,45 +1,77 @@
 #include "../include/const.h"
 #include <iostream>
-#include "TGeoManager.h"   // Il "regista" della geometria
-#include "TGeoVolume.h"    // Per la gestione dei volumi 
-#include "TGeoMaterial.h"  // Per definire materiali e medie (indici di rifrazione, X0, ecc.)
-#include "TGeoTube.h"      // Per la forma specifica del cilindro (TGeoShape)
-#include "TColor.h"        // Se vuoi usare costanti di colore come kBlue o kRed
+#include "TApplication.h" // NECESSARIO per app stand-alone
+#include "TGeoManager.h"
+#include "TGeoVolume.h"
+#include "TGeoMaterial.h"
+#include "TGeoTube.h"
+#include "TColor.h"
+#include "TVirtualGeoTrack.h" // NECESSARIO per GetTrack
+#include "TGeoTrack.h"
+#include "TPolyLine3D.h"
 using namespace std;
 
-int main(){
+int main(int argc = 0, char** argv = nullptr) {
+    TApplication app("app", &argc, argv);
 
-    // 1. Inizializzazione del Manager e del volume contenitore (Mondo)
-    TGeoManager *geom = new TGeoManager("Hierarchy", "Esempio Intercapedine");
-    TGeoMedium *med = 0; // Usiamo il medium nullo per semplicità di disegno
-    TGeoVolume *top = geom->MakeBox("TOP", med, 50, 50, 50);
+    //inizializzo ambiente
+    TGeoManager *geom = new TGeoManager("Hierarchy", "Esempio Tracker");
+    
+    // definizione materiali
+    TGeoMaterial *mat = new TGeoMaterial("Vacuum", 0, 0, 0);
+    TGeoMedium *med = new TGeoMedium("Vacuum", 1, mat);
+
+    // TOP Volume
+    TGeoVolume *top = geom->MakeBox("TOP", med, 100, 100, 100);
     geom->SetTopVolume(top);
-
-    // BEAM PIPE
-    TGeoVolume *beampipe = geom->MakeTube("beam pipe", med, beam_pipe_radius, beam_pipe_radius + beam_pipe_thickness, beam_pipe_lenght / 2);
+    
+    // Geometria (Beam pipe e Layer)
+    TGeoVolume *beampipe = geom->MakeTube("beam_pipe", med, beam_pipe_radius, beam_pipe_radius + beam_pipe_thickness, beam_pipe_lenght / 2.);
     beampipe->SetLineColor(kGreen);
-    beampipe->SetFillColor(kGreen);
-
-    // 2. Creazione del Cilindro Esterno (R=20, dz=30)
-    TGeoVolume *extCyl = geom->MakeTube("Esterno", med, layer2_radius, layer2_radius + 1, layer2_lenght / 2);
-    extCyl->SetLineColor(kBlue);
-    extCyl->SetFillColor(kBlue);
-    //extCyl->SetTransparency(50); 
-
-    // 3. Creazione del Cilindro Interno (R=10, dz=30)
-    TGeoVolume *intCyl = geom->MakeTube("Interno", med, layer1_radius, layer1_radius + layer1_thickness, layer2_lenght / 2);
-    intCyl->SetLineColor(kRed);
-    intCyl->SetFillColor(kRed);
-
-    // 4. Costruzione della gerarchia
-    // Posizioniamo il cilindro esterno nel Top, e quello interno dentro l'esterno
     top->AddNode(beampipe, 1);
-    top->AddNode(extCyl, 1);
-    top->AddNode(intCyl, 1); 
 
-    // 5. Chiusura e Disegno
+    //layer1 interno
+    TGeoVolume *layer1 = geom->MakeTube("Interno", med, layer1_radius, layer1_radius + layer1_thickness, layer1_lenght / 2.);
+    layer1->SetLineColor(kRed);
+    top->AddNode(layer1, 1);
+
+    //layer2 esterno
+    TGeoVolume *layer2 = geom->MakeTube("Esterno", med, layer2_radius, layer2_radius + 1, layer2_lenght / 2.);
+    layer2->SetLineColor(kBlue);
+    top->AddNode(layer2, 1);
+
     geom->CloseGeometry();
+
+    //creazione delle tracce
+    int n_punti = 2;
+    TPolyLine3D *linea = new TPolyLine3D(n_punti);
+    TPolyLine3D *beam = new TPolyLine3D(n_punti);
+    
+    //SetPoint(indice, x, y, z)
+    linea->SetPoint(0, 0, 0, 0);
+    linea->SetPoint(1, 50, 50, 50);
+    beam->SetPoint(0, 0, 0, -beam_pipe_lenght / 2.);
+    beam->SetPoint(1, 0, 0, +beam_pipe_lenght / 2.);
+
+    //grafica
+    linea->SetLineColor(kYellow);
+    linea->SetLineWidth(4);
+    beam->SetLineColor(kBlue);
+    beam->SetLineWidth(5);
+    
+    // Disegno
+    // Usiamo un Canvas per assicurarci che il contesto grafico sia inizializzato
+    //TCanvas *c1 = new TCanvas("c1", "Viewer", 800, 800);
     top->Draw("ogl");
+    
+    // Disegna le tracce sulla geometria esistente
+    linea->Draw("same");
+    beam->Draw("same");
+
+
+    
+
+    app.Run(); 
 
     return 0;
 }
