@@ -1,6 +1,8 @@
 #include "../include/const.h"
 #include "../include/evento.h"
 #include "../include/traccia.h"
+#include "../include/point.h"
+#include "../include/tracklet.h"
 #include <iostream>
 #include "TApplication.h" // NECESSARIO per app stand-alone
 #include "TGeoManager.h"
@@ -82,17 +84,16 @@ using namespace std;
 }*/
 
 int main() {
-    evento ev;
-    ev.setX();
-    ev.setY();
-    ev.setZ();
-    ev.setMolteplicita();
-    cout<<ev; 
-    
-    traccia tr;
-    tr.setTheta();
-    tr.setPhi();
-    tr.setEta();
-    cout<<tr;
+
+    tracklet trkl;
+    cout << trkl << endl;
+    trkl.generate_eta();
+    trkl.generate_phi();
+    trkl.generate_theta();
+    trkl.generate_vertex();
+    cout << trkl << endl;
+
+
+
     return 0;
 }

@@ -1,6 +1,7 @@
 #include "../include/traccia.h"
 #include <iostream>
 #include <cmath>
+using namespace std;
 
 void traccia::setTheta(){
     //distribuzione assegnata??

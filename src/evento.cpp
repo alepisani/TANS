@@ -1,5 +1,6 @@
 #include "../include/evento.h"
 #include <iostream>
+using namespace std;
 
 //evento::evento() : TObject(), x(0), y(0), z(0), molteplicita(0), rand() {
     //costruttore di default

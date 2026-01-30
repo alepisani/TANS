@@ -1,0 +1,38 @@
+cmake_minimum_required(VERSION 3.15)
+project(MyROOTProject)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Trova ROOT
+find_package(ROOT REQUIRED COMPONENTS Core RIO Hist)
+
+# Include directories di ROOT
+include(${ROOT_USE_FILE})
+
+# Aggiungi la directory include
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+# File sorgenti
+set(SOURCES
+    src/main.cpp
+    src/point.cpp
+    src/traccia.cpp
+    src/tracklet.cpp
+    src/evento.cpp)
+
+# Header files per il dizionario
+set(HEADERS
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/point.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/traccia.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/tracklet.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/evento.h)
+
+# Genera il dizionario ROOT
+ROOT_GENERATE_DICTIONARY(G__MyDict ${HEADERS} LINKDEF src/LinkDef.h)
+
+# Crea l'eseguibile
+add_executable(myprogram ${SOURCES} G__MyDict.cxx)
+
+# Linka le librerie di ROOT
+target_link_libraries(myprogram ${ROOT_LIBRARIES})
