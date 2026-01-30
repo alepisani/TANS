@@ -1,4 +1,6 @@
 #include "../include/const.h"
+#include "../include/evento.h"
+#include "../include/traccia.h"
 #include <iostream>
 #include "TApplication.h" // NECESSARIO per app stand-alone
 #include "TGeoManager.h"
@@ -11,7 +13,8 @@
 #include "TPolyLine3D.h"
 using namespace std;
 
-int main(int argc = 0, char** argv = nullptr) {
+/*int main(int argc = 0, char** argv = nullptr) {
+
     TApplication app("app", &argc, argv);
 
     //inizializzo ambiente
@@ -76,4 +79,20 @@ int main(int argc = 0, char** argv = nullptr) {
     return 0;
     //commento per  edere se fuznione
 
+}*/
+
+int main() {
+    evento ev;
+    ev.setX();
+    ev.setY();
+    ev.setZ();
+    ev.setMolteplicita();
+    cout<<ev; 
+    
+    traccia tr;
+    tr.setTheta();
+    tr.setPhi();
+    tr.setEta();
+    cout<<tr;
+    return 0;
 }
