@@ -7,7 +7,6 @@ void traccia::setTheta(){
     do {
         theta = rand.Uniform(0,M_PI); 
     } while (abs(-log(tan(theta/2))) < 1.);
-
 }
 
 void traccia::setPhi(){
