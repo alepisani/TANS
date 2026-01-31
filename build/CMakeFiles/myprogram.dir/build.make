@@ -213,6 +213,8 @@ myprogram: /opt/homebrew/Cellar/root/6.36.04_1/lib/root/libMathCore.so
 myprogram: /opt/homebrew/Cellar/root/6.36.04_1/lib/root/libThread.so
 myprogram: /opt/homebrew/Cellar/root/6.36.04_1/lib/root/libMultiProc.so
 myprogram: /opt/homebrew/Cellar/root/6.36.04_1/lib/root/libROOTVecOps.so
+myprogram: /opt/homebrew/Cellar/root/6.36.04_1/lib/root/libGeom.so
+myprogram: /opt/homebrew/Cellar/root/6.36.04_1/lib/root/libRGL.so
 myprogram: CMakeFiles/myprogram.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/alepisani/Documents/tans/tracker/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX executable myprogram"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/myprogram.dir/link.txt --verbose=$(VERBOSE)

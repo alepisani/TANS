@@ -232,6 +232,9 @@ ROOT_Core_LIBRARY:FILEPATH=/opt/homebrew/Cellar/root/6.36.04_1/lib/root/libCore.
 ROOT_DIR:PATH=/opt/homebrew/share/root/cmake
 
 //Path to a library.
+ROOT_Geom_LIBRARY:FILEPATH=/opt/homebrew/Cellar/root/6.36.04_1/lib/root/libGeom.so
+
+//Path to a library.
 ROOT_Gpad_LIBRARY:FILEPATH=/opt/homebrew/Cellar/root/6.36.04_1/lib/root/libGpad.so
 
 //Path to a library.
@@ -263,6 +266,9 @@ ROOT_Physics_LIBRARY:FILEPATH=/opt/homebrew/Cellar/root/6.36.04_1/lib/root/libPh
 
 //Path to a library.
 ROOT_Postscript_LIBRARY:FILEPATH=/opt/homebrew/Cellar/root/6.36.04_1/lib/root/libPostscript.so
+
+//Path to a library.
+ROOT_RGL_LIBRARY:FILEPATH=/opt/homebrew/Cellar/root/6.36.04_1/lib/root/libRGL.so
 
 //Path to a library.
 ROOT_RIO_LIBRARY:FILEPATH=/opt/homebrew/Cellar/root/6.36.04_1/lib/root/libRIO.so
@@ -480,6 +486,8 @@ CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
 FIND_PACKAGE_MESSAGE_DETAILS_Vdt:INTERNAL=[/opt/homebrew/Cellar/root/6.36.04_1/include/root][/opt/homebrew/Cellar/root/6.36.04_1/lib/root/libvdt.dylib][v0.4()]
 //ADVANCED property for variable: ROOT_Core_LIBRARY
 ROOT_Core_LIBRARY-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: ROOT_Geom_LIBRARY
+ROOT_Geom_LIBRARY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: ROOT_Gpad_LIBRARY
 ROOT_Gpad_LIBRARY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: ROOT_Graf3d_LIBRARY
@@ -502,6 +510,8 @@ ROOT_Net_LIBRARY-ADVANCED:INTERNAL=1
 ROOT_Physics_LIBRARY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: ROOT_Postscript_LIBRARY
 ROOT_Postscript_LIBRARY-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: ROOT_RGL_LIBRARY
+ROOT_RGL_LIBRARY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: ROOT_RIO_LIBRARY
 ROOT_RIO_LIBRARY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: ROOT_ROOTDataFrame_LIBRARY

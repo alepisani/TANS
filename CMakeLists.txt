@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Trova ROOT
 find_package(ROOT REQUIRED COMPONENTS Core RIO Hist)
+find_package(ROOT REQUIRED COMPONENTS Core RIO Hist Geom RGL)
 
 # Include directories di ROOT
 include(${ROOT_USE_FILE})

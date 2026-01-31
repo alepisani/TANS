@@ -21,12 +21,13 @@ class evento : public TObject {
     void setY() {y=rand.Gaus(0,0.1);};
     void setZ() {z=rand.Uniform(0,53);};
 
-    void setMolteplicita() ;
+    void setMolteplicita();
 
     double getX() const {return x;};
     double getY() const {return y;};            
     double getZ() const {return z;};
     int getMolteplicita() const {return molteplicita;};
+    void display_event();
 
     friend std::ostream &operator<<(std::ostream &output, const evento &ev);
 

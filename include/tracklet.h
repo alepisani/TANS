@@ -1,9 +1,9 @@
 #ifndef TRACKLET_H
 #define TRACKLET_H
 #include <iostream>
-using namespace std;
 #include "TObject.h"
 #include "point.h"
+using namespace std;
 
 class tracklet : public TObject {
 

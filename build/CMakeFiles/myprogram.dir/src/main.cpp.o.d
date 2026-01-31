@@ -1064,4 +1064,21 @@ CMakeFiles/myprogram.dir/src/main.cpp.o: \
   /opt/homebrew/Cellar/root/6.36.04_1/include/root/TColor.h \
   /opt/homebrew/Cellar/root/6.36.04_1/include/root/TVirtualGeoTrack.h \
   /opt/homebrew/Cellar/root/6.36.04_1/include/root/TGeoTrack.h \
-  /opt/homebrew/Cellar/root/6.36.04_1/include/root/TPolyLine3D.h
+  /opt/homebrew/Cellar/root/6.36.04_1/include/root/TPolyLine3D.h \
+  /opt/homebrew/Cellar/root/6.36.04_1/include/root/TSystem.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/fcntl.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/fcntl.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/_types/_o_sync.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/_types/_o_dsync.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/_types/_s_ifmt.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/_types/_filesec_t.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/unistd.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/_types/_posix_vdisable.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/select.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/_select.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/_types/_uuid_t.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/gethostuuid.h \
+  /opt/homebrew/Cellar/root/6.36.04_1/include/root/TInetAddress.h \
+  /opt/homebrew/Cellar/root/6.36.04_1/include/root/TTimer.h \
+  /opt/homebrew/Cellar/root/6.36.04_1/include/root/TSysEvtHandler.h \
+  /opt/homebrew/Cellar/root/6.36.04_1/include/root/TTime.h
