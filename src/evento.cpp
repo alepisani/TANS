@@ -1,4 +1,5 @@
 #include "../include/evento.h"
+#include "../include/point.h"
 #include "../include/const.h"
 #include "TApplication.h" 
 #include "TGeoManager.h"
@@ -12,22 +13,22 @@
 #include <iostream>
 using namespace std;
 
-//evento::evento() : TObject(), x(0), y(0), z(0), molteplicita(0), rand() {
+
+
+//evento::evento() : TObject(), x(0), y(0), z(0), multiplicity(0), rand() {
     //costruttore di default
 //}
 
 //evento::evento() {}
 
-//evento::evento(double x, double y, double z, int molteplicita) : TObject(), x(x), y(y), z(z), molteplicita(molteplicita), rand() {
+//evento::evento(double x, double y, double z, int multiplicity) : TObject(), x(x), y(y), z(z), multiplicity(multiplicity), rand() {
     //costruttore con parametri
 //}
 
 
 
-void evento::setMolteplicita() {
-    molteplicita = static_cast<int>(rand.Uniform(1, 50));
-    //manca distribuzione assegnata
-    //molteplicita = 10;
+void evento::setmultiplicity() {
+    multiplicity = static_cast<int>(rnd.Uniform(1, 5));
 }
 
 void evento::display_event(){
@@ -86,16 +87,61 @@ void evento::display_event(){
 
 }
 
+void evento::generate_vertex(){
+    double x = rnd.Gaus(0,0.1);
+    double y = rnd.Gaus(0,0.1);
+    double z = rnd.Gaus(0,53.);
+    vertex.set_point(x,y,z);
+}
+
+void evento::event(){
+    
+    
+    //molteplicità --> genera n tracklet
+    cout << "AAAAAAAAAAAAAAAAA----------------------------------" << multiplicity << endl;
+    for (int i = 0; i < multiplicity; i++){
+        
+        tracklet trkl_BP_to_L1;
+        trkl_BP_to_L1.generate_theta();
+        trkl_BP_to_L1.generate_phi();
+        trkl_BP_to_L1.generate_eta();
+        
+        point point_on_BP;
+        double x_BP = vertex.get_x() + beam_pipe_radius * sin(trkl_BP_to_L1.get_theta()) * sin(trkl_BP_to_L1.get_phi());
+        double y_BP = vertex.get_y() + beam_pipe_radius * cos(trkl_BP_to_L1.get_theta());
+        double z_BP = vertex.get_z() + beam_pipe_radius * sin(trkl_BP_to_L1.get_theta()) * cos(trkl_BP_to_L1.get_phi());
+        point_on_BP.set_point(x_BP, y_BP, z_BP);
+        
+        trkl_BP_to_L1.set_points(vertex, point_on_BP);
+        trkl_BP_L1.push_back(trkl_BP_to_L1);
+    }
+
+    for(int i = 0; i < trkl_BP_L1.size(); i++){
+        cout << "----" << endl;
+        cout << trkl_BP_L1[i] << endl;
+        points_BP.push_back(trkl_BP_L1[i].get_point_ext());
+    }
 
 
+    //TODO LIST
+    //intersezione tracklet beam pipe
+    //crea punti su beam pipe
+    //tracklet BP_L1
+    //smearing
+    //crea punti su L1
+    //tracklet L1_L2
+    //smearing
+    //riempi vettori 
+
+}
 
 
 
 
 std::ostream &operator<<(std::ostream &output, const evento & ev) {
-    output << "x del vertice: " << ev.x << endl;
-    output << "y del vertice: " << ev.y << endl;
-    output << "z del vertice: " << ev.z << endl;
-    output << "molteplicita: " << ev.molteplicita << endl;
+    output << "x del vertice: " << ev.vertex.get_x() << endl;
+    output << "y del vertice: " << ev.vertex.get_y() << endl;
+    output << "z del vertice: " << ev.vertex.get_z() << endl;
+    output << "multiplicity: " << ev.multiplicity << endl;
     return output;
 }

@@ -154,7 +154,7 @@ namespace ROOT {
       ::evento *ptr = nullptr;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::evento >(nullptr);
       static ::ROOT::TGenericClassInfo 
-         instance("evento", ::evento::Class_Version(), "include/evento.h", 7,
+         instance("evento", ::evento::Class_Version(), "include/evento.h", 9,
                   typeid(::evento), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::evento::Dictionary, isa_proxy, 4,
                   sizeof(::evento) );
@@ -444,6 +444,136 @@ namespace ROOT {
       (static_cast<current_t*>(p))->~current_t();
    }
 } // end of namespace ROOT for class ::evento
+
+namespace ROOT {
+   static TClass *vectorlEtrackletgR_Dictionary();
+   static void vectorlEtrackletgR_TClassManip(TClass*);
+   static void *new_vectorlEtrackletgR(void *p = nullptr);
+   static void *newArray_vectorlEtrackletgR(Long_t size, void *p);
+   static void delete_vectorlEtrackletgR(void *p);
+   static void deleteArray_vectorlEtrackletgR(void *p);
+   static void destruct_vectorlEtrackletgR(void *p);
+
+   // Function generating the singleton type initializer
+   static TGenericClassInfo *GenerateInitInstanceLocal(const vector<tracklet>*)
+   {
+      vector<tracklet> *ptr = nullptr;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(vector<tracklet>));
+      static ::ROOT::TGenericClassInfo 
+         instance("vector<tracklet>", -2, "vector", 383,
+                  typeid(vector<tracklet>), ::ROOT::Internal::DefineBehavior(ptr, ptr),
+                  &vectorlEtrackletgR_Dictionary, isa_proxy, 0,
+                  sizeof(vector<tracklet>) );
+      instance.SetNew(&new_vectorlEtrackletgR);
+      instance.SetNewArray(&newArray_vectorlEtrackletgR);
+      instance.SetDelete(&delete_vectorlEtrackletgR);
+      instance.SetDeleteArray(&deleteArray_vectorlEtrackletgR);
+      instance.SetDestructor(&destruct_vectorlEtrackletgR);
+      instance.AdoptCollectionProxyInfo(TCollectionProxyInfo::Generate(TCollectionProxyInfo::Pushback< vector<tracklet> >()));
+
+      instance.AdoptAlternate(::ROOT::AddClassAlternate("vector<tracklet>","std::__1::vector<tracklet, std::__1::allocator<tracklet>>"));
+      return &instance;
+   }
+   // Static variable to force the class initialization
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal(static_cast<const vector<tracklet>*>(nullptr)); R__UseDummy(_R__UNIQUE_DICT_(Init));
+
+   // Dictionary for non-ClassDef classes
+   static TClass *vectorlEtrackletgR_Dictionary() {
+      TClass* theClass =::ROOT::GenerateInitInstanceLocal(static_cast<const vector<tracklet>*>(nullptr))->GetClass();
+      vectorlEtrackletgR_TClassManip(theClass);
+   return theClass;
+   }
+
+   static void vectorlEtrackletgR_TClassManip(TClass* ){
+   }
+
+} // end of namespace ROOT
+
+namespace ROOT {
+   // Wrappers around operator new
+   static void *new_vectorlEtrackletgR(void *p) {
+      return  p ? ::new(static_cast<::ROOT::Internal::TOperatorNewHelper*>(p)) vector<tracklet> : new vector<tracklet>;
+   }
+   static void *newArray_vectorlEtrackletgR(Long_t nElements, void *p) {
+      return p ? ::new(static_cast<::ROOT::Internal::TOperatorNewHelper*>(p)) vector<tracklet>[nElements] : new vector<tracklet>[nElements];
+   }
+   // Wrapper around operator delete
+   static void delete_vectorlEtrackletgR(void *p) {
+      delete (static_cast<vector<tracklet>*>(p));
+   }
+   static void deleteArray_vectorlEtrackletgR(void *p) {
+      delete [] (static_cast<vector<tracklet>*>(p));
+   }
+   static void destruct_vectorlEtrackletgR(void *p) {
+      typedef vector<tracklet> current_t;
+      (static_cast<current_t*>(p))->~current_t();
+   }
+} // end of namespace ROOT for class vector<tracklet>
+
+namespace ROOT {
+   static TClass *vectorlEpointgR_Dictionary();
+   static void vectorlEpointgR_TClassManip(TClass*);
+   static void *new_vectorlEpointgR(void *p = nullptr);
+   static void *newArray_vectorlEpointgR(Long_t size, void *p);
+   static void delete_vectorlEpointgR(void *p);
+   static void deleteArray_vectorlEpointgR(void *p);
+   static void destruct_vectorlEpointgR(void *p);
+
+   // Function generating the singleton type initializer
+   static TGenericClassInfo *GenerateInitInstanceLocal(const vector<point>*)
+   {
+      vector<point> *ptr = nullptr;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(vector<point>));
+      static ::ROOT::TGenericClassInfo 
+         instance("vector<point>", -2, "vector", 383,
+                  typeid(vector<point>), ::ROOT::Internal::DefineBehavior(ptr, ptr),
+                  &vectorlEpointgR_Dictionary, isa_proxy, 0,
+                  sizeof(vector<point>) );
+      instance.SetNew(&new_vectorlEpointgR);
+      instance.SetNewArray(&newArray_vectorlEpointgR);
+      instance.SetDelete(&delete_vectorlEpointgR);
+      instance.SetDeleteArray(&deleteArray_vectorlEpointgR);
+      instance.SetDestructor(&destruct_vectorlEpointgR);
+      instance.AdoptCollectionProxyInfo(TCollectionProxyInfo::Generate(TCollectionProxyInfo::Pushback< vector<point> >()));
+
+      instance.AdoptAlternate(::ROOT::AddClassAlternate("vector<point>","std::__1::vector<point, std::__1::allocator<point>>"));
+      return &instance;
+   }
+   // Static variable to force the class initialization
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal(static_cast<const vector<point>*>(nullptr)); R__UseDummy(_R__UNIQUE_DICT_(Init));
+
+   // Dictionary for non-ClassDef classes
+   static TClass *vectorlEpointgR_Dictionary() {
+      TClass* theClass =::ROOT::GenerateInitInstanceLocal(static_cast<const vector<point>*>(nullptr))->GetClass();
+      vectorlEpointgR_TClassManip(theClass);
+   return theClass;
+   }
+
+   static void vectorlEpointgR_TClassManip(TClass* ){
+   }
+
+} // end of namespace ROOT
+
+namespace ROOT {
+   // Wrappers around operator new
+   static void *new_vectorlEpointgR(void *p) {
+      return  p ? ::new(static_cast<::ROOT::Internal::TOperatorNewHelper*>(p)) vector<point> : new vector<point>;
+   }
+   static void *newArray_vectorlEpointgR(Long_t nElements, void *p) {
+      return p ? ::new(static_cast<::ROOT::Internal::TOperatorNewHelper*>(p)) vector<point>[nElements] : new vector<point>[nElements];
+   }
+   // Wrapper around operator delete
+   static void delete_vectorlEpointgR(void *p) {
+      delete (static_cast<vector<point>*>(p));
+   }
+   static void deleteArray_vectorlEpointgR(void *p) {
+      delete [] (static_cast<vector<point>*>(p));
+   }
+   static void destruct_vectorlEpointgR(void *p) {
+      typedef vector<point> current_t;
+      (static_cast<current_t*>(p))->~current_t();
+   }
+} // end of namespace ROOT for class vector<point>
 
 namespace ROOT {
    // Registration Schema evolution read functions

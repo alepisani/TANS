@@ -7,10 +7,13 @@ using namespace std;
 class point : public TObject {
 
     public:
-    point();              // COSTRUTTORE
-    virtual ~point();     // DISTRUTTORE (obbligatorio con ROOT)
+    point();              
+    virtual ~point();     
     void set_point(double, double, double);
     //auto get_point() {return point;}
+    double get_x() const {return x;}
+    double get_y() const {return y;}
+    double get_z() const {return z;}
   
     friend std::ostream &operator<<(std::ostream &output, const point &point);
 

@@ -3,13 +3,15 @@
 
 #include "TObject.h"
 #include "TRandom3.h"
+#include "./tracklet.h"
+#include "./point.h"
 
 class evento : public TObject {
 
  public:
     // inline default constructor so ROOT/cling finds it when compiling only headers
-    evento() : TObject(), x(0), y(0), z(0), molteplicita(0), rand() {rand.SetSeed(0);}
-    //evento(double z, double x, double y, int molteplicita);
+    // evento() : TObject(), x(0), y(0), z(0), multiplicity(0), rand() {rand.SetSeed(0);}
+    //evento(double z, double x, double y, int multiplicity);
 
     //evento(const evento& source); //copy constructor
     //virtual ~evento();
@@ -17,27 +19,26 @@ class evento : public TObject {
 
     //implementazione in riga di funzioni
 
-    void setX() {x=rand.Gaus(0,0.1);};
-    void setY() {y=rand.Gaus(0,0.1);};
-    void setZ() {z=rand.Uniform(0,53);};
-
-    void setMolteplicita();
-
-    double getX() const {return x;};
-    double getY() const {return y;};            
-    double getZ() const {return z;};
-    int getMolteplicita() const {return molteplicita;};
+    void setmultiplicity();
+    int getmultiplicity() const {return multiplicity;};
     void display_event();
+    void generate_vertex();
+    void event();
 
     friend std::ostream &operator<<(std::ostream &output, const evento &ev);
 
+    std::vector<tracklet> trkl_BP_L1;    //will contain all tracklet from bp to l1
+    std::vector<tracklet> trkl_L1_L2;    //will contain all tracklet from l1 to l2
+    std::vector<point> points_BP;        //will contain all points on bp
+    std::vector<point> points_L1;        //will contain all points on l1
+    std::vector<point> points_L2;        //will contain all points on l2
+     
+
   
  private:
-    double x;
-    double y;
-    double z;
-    int molteplicita;
-    TRandom3 rand; //generatore di numeri casuali
+    int multiplicity;
+    point vertex;
+    TRandom3 rnd; //generatore di numeri casuali
 
     ClassDef(evento,1); //classe evento per root
 };

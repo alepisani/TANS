@@ -1024,4 +1024,6 @@ CMakeFiles/myprogram.dir/G__MyDict.cxx.o: \
   /opt/homebrew/Cellar/root/6.36.04_1/include/root/TRandom.h \
   /opt/homebrew/Cellar/root/6.36.04_1/include/root/Math/TRandomEngine.h \
   /Users/alepisani/Documents/tans/tracker/include/tracklet.h \
-  /Users/alepisani/Documents/tans/tracker/include/evento.h
+  /Users/alepisani/Documents/tans/tracker/include/evento.h \
+  /Users/alepisani/Documents/tans/tracker/include/./tracklet.h \
+  /Users/alepisani/Documents/tans/tracker/include/./point.h
