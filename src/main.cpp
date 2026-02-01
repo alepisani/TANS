@@ -1,6 +1,5 @@
 #include "../include/const.h"
 #include "../include/evento.h"
-#include "../include/traccia.h"
 #include "../include/point.h"
 #include "../include/tracklet.h"
 #include <iostream>
@@ -15,6 +14,7 @@
 #include "TPolyLine3D.h"
 #include <thread>
 #include "TSystem.h" 
+#include "TRandom3.h"
 using namespace std;
 
 
@@ -22,13 +22,14 @@ int main(int argc, char **argv) {
 
     TApplication app("app", &argc, argv);
 
-
+    int seed = 0;
+    gRandom->SetSeed(seed);
 
     evento ev;
     ev.setmultiplicity();
     ev.generate_vertex();
     ev.event();
-    //ev.display_event();
+    ev.display_event();
 
 
 

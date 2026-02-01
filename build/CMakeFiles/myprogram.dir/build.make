@@ -71,16 +71,14 @@ include CMakeFiles/myprogram.dir/flags.make
 
 G__MyDict.cxx: /Users/alepisani/Documents/tans/tracker/src/LinkDef.h
 G__MyDict.cxx: /Users/alepisani/Documents/tans/tracker/include/point.h
-G__MyDict.cxx: /Users/alepisani/Documents/tans/tracker/include/traccia.h
 G__MyDict.cxx: /Users/alepisani/Documents/tans/tracker/include/tracklet.h
 G__MyDict.cxx: /Users/alepisani/Documents/tans/tracker/include/evento.h
 G__MyDict.cxx: /Users/alepisani/Documents/tans/tracker/include/point.h
-G__MyDict.cxx: /Users/alepisani/Documents/tans/tracker/include/traccia.h
 G__MyDict.cxx: /Users/alepisani/Documents/tans/tracker/include/tracklet.h
 G__MyDict.cxx: /Users/alepisani/Documents/tans/tracker/include/evento.h
 G__MyDict.cxx: /Users/alepisani/Documents/tans/tracker/src/LinkDef.h
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/Users/alepisani/Documents/tans/tracker/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating G__MyDict.cxx, libMyDict_rdict.pcm, libMyDict.rootmap"
-	/opt/homebrew/bin/cmake -E env DYLD_LIBRARY_PATH=/opt/homebrew/Cellar/root/6.36.04_1/lib/root: /opt/homebrew/bin/rootcling -v2 -f G__MyDict.cxx -s /Users/alepisani/Documents/tans/tracker/build/libMyDict.dylib -rml libMyDict.dylib -rmf /Users/alepisani/Documents/tans/tracker/build/libMyDict.rootmap -compilerI/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1 -compilerI/Library/Developer/CommandLineTools/usr/lib/clang/16/include -compilerI/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include -compilerI/Library/Developer/CommandLineTools/usr/include -compilerI/Library/Developer/CommandLineTools/usr/lib/clang/16/include -compilerI/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include -compilerI/Library/Developer/CommandLineTools/usr/include -I/opt/homebrew/Cellar/root/6.36.04_1/include/root -I/Users/alepisani/Documents/tans/tracker/src -I/Users/alepisani/Documents/tans/tracker /Users/alepisani/Documents/tans/tracker/include/point.h /Users/alepisani/Documents/tans/tracker/include/traccia.h /Users/alepisani/Documents/tans/tracker/include/tracklet.h /Users/alepisani/Documents/tans/tracker/include/evento.h /Users/alepisani/Documents/tans/tracker/src/LinkDef.h
+	/opt/homebrew/bin/cmake -E env DYLD_LIBRARY_PATH=/opt/homebrew/Cellar/root/6.36.04_1/lib/root: /opt/homebrew/bin/rootcling -v2 -f G__MyDict.cxx -s /Users/alepisani/Documents/tans/tracker/build/libMyDict.dylib -rml libMyDict.dylib -rmf /Users/alepisani/Documents/tans/tracker/build/libMyDict.rootmap -compilerI/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1 -compilerI/Library/Developer/CommandLineTools/usr/lib/clang/16/include -compilerI/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include -compilerI/Library/Developer/CommandLineTools/usr/include -compilerI/Library/Developer/CommandLineTools/usr/lib/clang/16/include -compilerI/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include -compilerI/Library/Developer/CommandLineTools/usr/include -I/opt/homebrew/Cellar/root/6.36.04_1/include/root -I/Users/alepisani/Documents/tans/tracker/src -I/Users/alepisani/Documents/tans/tracker /Users/alepisani/Documents/tans/tracker/include/point.h /Users/alepisani/Documents/tans/tracker/include/tracklet.h /Users/alepisani/Documents/tans/tracker/include/evento.h /Users/alepisani/Documents/tans/tracker/src/LinkDef.h
 
 libMyDict_rdict.pcm: G__MyDict.cxx
 	@$(CMAKE_COMMAND) -E touch_nocreate libMyDict_rdict.pcm
@@ -119,24 +117,10 @@ CMakeFiles/myprogram.dir/src/point.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/myprogram.dir/src/point.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/alepisani/Documents/tans/tracker/src/point.cpp -o CMakeFiles/myprogram.dir/src/point.cpp.s
 
-CMakeFiles/myprogram.dir/src/traccia.cpp.o: CMakeFiles/myprogram.dir/flags.make
-CMakeFiles/myprogram.dir/src/traccia.cpp.o: /Users/alepisani/Documents/tans/tracker/src/traccia.cpp
-CMakeFiles/myprogram.dir/src/traccia.cpp.o: CMakeFiles/myprogram.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/alepisani/Documents/tans/tracker/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/myprogram.dir/src/traccia.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/myprogram.dir/src/traccia.cpp.o -MF CMakeFiles/myprogram.dir/src/traccia.cpp.o.d -o CMakeFiles/myprogram.dir/src/traccia.cpp.o -c /Users/alepisani/Documents/tans/tracker/src/traccia.cpp
-
-CMakeFiles/myprogram.dir/src/traccia.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/myprogram.dir/src/traccia.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/alepisani/Documents/tans/tracker/src/traccia.cpp > CMakeFiles/myprogram.dir/src/traccia.cpp.i
-
-CMakeFiles/myprogram.dir/src/traccia.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/myprogram.dir/src/traccia.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/alepisani/Documents/tans/tracker/src/traccia.cpp -o CMakeFiles/myprogram.dir/src/traccia.cpp.s
-
 CMakeFiles/myprogram.dir/src/tracklet.cpp.o: CMakeFiles/myprogram.dir/flags.make
 CMakeFiles/myprogram.dir/src/tracklet.cpp.o: /Users/alepisani/Documents/tans/tracker/src/tracklet.cpp
 CMakeFiles/myprogram.dir/src/tracklet.cpp.o: CMakeFiles/myprogram.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/alepisani/Documents/tans/tracker/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/myprogram.dir/src/tracklet.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/alepisani/Documents/tans/tracker/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/myprogram.dir/src/tracklet.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/myprogram.dir/src/tracklet.cpp.o -MF CMakeFiles/myprogram.dir/src/tracklet.cpp.o.d -o CMakeFiles/myprogram.dir/src/tracklet.cpp.o -c /Users/alepisani/Documents/tans/tracker/src/tracklet.cpp
 
 CMakeFiles/myprogram.dir/src/tracklet.cpp.i: cmake_force
@@ -150,7 +134,7 @@ CMakeFiles/myprogram.dir/src/tracklet.cpp.s: cmake_force
 CMakeFiles/myprogram.dir/src/evento.cpp.o: CMakeFiles/myprogram.dir/flags.make
 CMakeFiles/myprogram.dir/src/evento.cpp.o: /Users/alepisani/Documents/tans/tracker/src/evento.cpp
 CMakeFiles/myprogram.dir/src/evento.cpp.o: CMakeFiles/myprogram.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/alepisani/Documents/tans/tracker/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/myprogram.dir/src/evento.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/alepisani/Documents/tans/tracker/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/myprogram.dir/src/evento.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/myprogram.dir/src/evento.cpp.o -MF CMakeFiles/myprogram.dir/src/evento.cpp.o.d -o CMakeFiles/myprogram.dir/src/evento.cpp.o -c /Users/alepisani/Documents/tans/tracker/src/evento.cpp
 
 CMakeFiles/myprogram.dir/src/evento.cpp.i: cmake_force
@@ -164,7 +148,7 @@ CMakeFiles/myprogram.dir/src/evento.cpp.s: cmake_force
 CMakeFiles/myprogram.dir/G__MyDict.cxx.o: CMakeFiles/myprogram.dir/flags.make
 CMakeFiles/myprogram.dir/G__MyDict.cxx.o: G__MyDict.cxx
 CMakeFiles/myprogram.dir/G__MyDict.cxx.o: CMakeFiles/myprogram.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/alepisani/Documents/tans/tracker/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/myprogram.dir/G__MyDict.cxx.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/alepisani/Documents/tans/tracker/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/myprogram.dir/G__MyDict.cxx.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/myprogram.dir/G__MyDict.cxx.o -MF CMakeFiles/myprogram.dir/G__MyDict.cxx.o.d -o CMakeFiles/myprogram.dir/G__MyDict.cxx.o -c /Users/alepisani/Documents/tans/tracker/build/G__MyDict.cxx
 
 CMakeFiles/myprogram.dir/G__MyDict.cxx.i: cmake_force
@@ -179,7 +163,6 @@ CMakeFiles/myprogram.dir/G__MyDict.cxx.s: cmake_force
 myprogram_OBJECTS = \
 "CMakeFiles/myprogram.dir/src/main.cpp.o" \
 "CMakeFiles/myprogram.dir/src/point.cpp.o" \
-"CMakeFiles/myprogram.dir/src/traccia.cpp.o" \
 "CMakeFiles/myprogram.dir/src/tracklet.cpp.o" \
 "CMakeFiles/myprogram.dir/src/evento.cpp.o" \
 "CMakeFiles/myprogram.dir/G__MyDict.cxx.o"
@@ -189,7 +172,6 @@ myprogram_EXTERNAL_OBJECTS =
 
 myprogram: CMakeFiles/myprogram.dir/src/main.cpp.o
 myprogram: CMakeFiles/myprogram.dir/src/point.cpp.o
-myprogram: CMakeFiles/myprogram.dir/src/traccia.cpp.o
 myprogram: CMakeFiles/myprogram.dir/src/tracklet.cpp.o
 myprogram: CMakeFiles/myprogram.dir/src/evento.cpp.o
 myprogram: CMakeFiles/myprogram.dir/G__MyDict.cxx.o
@@ -216,7 +198,7 @@ myprogram: /opt/homebrew/Cellar/root/6.36.04_1/lib/root/libROOTVecOps.so
 myprogram: /opt/homebrew/Cellar/root/6.36.04_1/lib/root/libGeom.so
 myprogram: /opt/homebrew/Cellar/root/6.36.04_1/lib/root/libRGL.so
 myprogram: CMakeFiles/myprogram.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/alepisani/Documents/tans/tracker/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX executable myprogram"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/alepisani/Documents/tans/tracker/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable myprogram"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/myprogram.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

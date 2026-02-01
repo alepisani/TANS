@@ -1019,10 +1019,6 @@ CMakeFiles/myprogram.dir/G__MyDict.cxx.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__format/formatter_tuple.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/print \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/unistd.h \
-  /Users/alepisani/Documents/tans/tracker/include/traccia.h \
-  /opt/homebrew/Cellar/root/6.36.04_1/include/root/TRandom3.h \
-  /opt/homebrew/Cellar/root/6.36.04_1/include/root/TRandom.h \
-  /opt/homebrew/Cellar/root/6.36.04_1/include/root/Math/TRandomEngine.h \
   /Users/alepisani/Documents/tans/tracker/include/tracklet.h \
   /Users/alepisani/Documents/tans/tracker/include/evento.h \
   /Users/alepisani/Documents/tans/tracker/include/./tracklet.h \

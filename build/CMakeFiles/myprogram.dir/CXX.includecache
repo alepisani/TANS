@@ -9,20 +9,16 @@
 /Users/alepisani/Documents/tans/tracker/include/evento.h
 TObject.h
 /Users/alepisani/Documents/tans/tracker/include/TObject.h
-TRandom3.h
-/Users/alepisani/Documents/tans/tracker/include/TRandom3.h
+./tracklet.h
+/Users/alepisani/Documents/tans/tracker/include/tracklet.h
+./point.h
+/Users/alepisani/Documents/tans/tracker/include/point.h
 
 /Users/alepisani/Documents/tans/tracker/include/point.h
 iostream
 -
 TObject.h
 /Users/alepisani/Documents/tans/tracker/include/TObject.h
-
-/Users/alepisani/Documents/tans/tracker/include/traccia.h
-TObject.h
-/Users/alepisani/Documents/tans/tracker/include/TObject.h
-TRandom3.h
-/Users/alepisani/Documents/tans/tracker/include/TRandom3.h
 
 /Users/alepisani/Documents/tans/tracker/include/tracklet.h
 iostream
@@ -35,8 +31,6 @@ point.h
 /Users/alepisani/Documents/tans/tracker/src/LinkDef.h
 
 /opt/homebrew/Cellar/root/6.36.04_1/include/root/DllImport.h
-
-/opt/homebrew/Cellar/root/6.36.04_1/include/root/Math/TRandomEngine.h
 
 /opt/homebrew/Cellar/root/6.36.04_1/include/root/RConfigure.h
 
@@ -55,12 +49,6 @@ TargetConditionals.h
 -
 
 /opt/homebrew/Cellar/root/6.36.04_1/include/root/ROOT/RVersion.hxx
-
-/opt/homebrew/Cellar/root/6.36.04_1/include/root/ROOT/TypeTraits.hxx
-memory
--
-type_traits
--
 
 /opt/homebrew/Cellar/root/6.36.04_1/include/root/RVersion.h
 ROOT/RVersion.hxx
@@ -118,22 +106,6 @@ atomic
 typeinfo
 -
 
-/opt/homebrew/Cellar/root/6.36.04_1/include/root/TMathBase.h
-RtypesCore.h
-/opt/homebrew/Cellar/root/6.36.04_1/include/root/RtypesCore.h
-cstdlib
--
-cmath
--
-algorithm
--
-
-/opt/homebrew/Cellar/root/6.36.04_1/include/root/TNamed.h
-TObject.h
-/opt/homebrew/Cellar/root/6.36.04_1/include/root/TObject.h
-TString.h
-/opt/homebrew/Cellar/root/6.36.04_1/include/root/TString.h
-
 /opt/homebrew/Cellar/root/6.36.04_1/include/root/TObject.h
 Rtypes.h
 /opt/homebrew/Cellar/root/6.36.04_1/include/root/Rtypes.h
@@ -148,16 +120,6 @@ string
 iosfwd
 -
 
-/opt/homebrew/Cellar/root/6.36.04_1/include/root/TRandom.h
-Math/TRandomEngine.h
-/opt/homebrew/Cellar/root/6.36.04_1/include/root/Math/TRandomEngine.h
-TNamed.h
-/opt/homebrew/Cellar/root/6.36.04_1/include/root/TNamed.h
-
-/opt/homebrew/Cellar/root/6.36.04_1/include/root/TRandom3.h
-TRandom.h
-/opt/homebrew/Cellar/root/6.36.04_1/include/root/TRandom.h
-
 /opt/homebrew/Cellar/root/6.36.04_1/include/root/TSchemaHelper.h
 RtypesCore.h
 /opt/homebrew/Cellar/root/6.36.04_1/include/root/RtypesCore.h
@@ -167,30 +129,6 @@ string
 /opt/homebrew/Cellar/root/6.36.04_1/include/root/TStorage.h
 Rtypes.h
 /opt/homebrew/Cellar/root/6.36.04_1/include/root/Rtypes.h
-
-/opt/homebrew/Cellar/root/6.36.04_1/include/root/TString.h
-Rtypes.h
-/opt/homebrew/Cellar/root/6.36.04_1/include/root/Rtypes.h
-TMathBase.h
-/opt/homebrew/Cellar/root/6.36.04_1/include/root/TMathBase.h
-string_view
--
-ROOT/TypeTraits.hxx
-/opt/homebrew/Cellar/root/6.36.04_1/include/root/ROOT/TypeTraits.hxx
-snprintf.h
-/opt/homebrew/Cellar/root/6.36.04_1/include/root/snprintf.h
-iosfwd
--
-cstdarg
--
-cstdio
--
-cstring
--
-string
--
-compare
--
 
 /opt/homebrew/Cellar/root/6.36.04_1/include/root/TVersionCheck.h
 RVersion.h

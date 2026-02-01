@@ -10,6 +10,7 @@
 #include "TVirtualGeoTrack.h" 
 #include "TGeoTrack.h"
 #include "TPolyLine3D.h"
+#include "TRandom3.h"
 #include <iostream>
 using namespace std;
 
@@ -28,7 +29,7 @@ using namespace std;
 
 
 void evento::setmultiplicity() {
-    multiplicity = static_cast<int>(rnd.Uniform(1, 5));
+    multiplicity = static_cast<int>(gRandom->Uniform(1, 5));
 }
 
 void evento::display_event(){
@@ -61,36 +62,30 @@ void evento::display_event(){
     
     geom->CloseGeometry();
     
-    //creazione delle tracce
-    int n_punti = 2;
-    TPolyLine3D *linea = new TPolyLine3D(n_punti);
-    TPolyLine3D *beam = new TPolyLine3D(n_punti);
-    
-    //SetPoint(indice, x, y, z)
-    linea->SetPoint(0, 0, 0, 0);
-    linea->SetPoint(1, 50, 50, 50);
-    beam->SetPoint(0, 0, 0, -beam_pipe_lenght / 2.);
-    beam->SetPoint(1, 0, 0, +beam_pipe_lenght / 2.);
-    
-    //grafica
-    linea->SetLineColor(kYellow);
-    linea->SetLineWidth(4);
-    beam->SetLineColor(kBlue);
-    beam->SetLineWidth(5);
-    
     // Disegno
     top->Draw("ogl");
+
+    //creazione delle tracce
+    int n_punti = 2;
+    for(int i = 0; i < trkl_BP_L1.size(); i++){
+
+        TPolyLine3D *trkl = new TPolyLine3D(n_punti);   
+        trkl->SetPoint(0, trkl_BP_L1[i].get_point_int().get_x(),trkl_BP_L1[i].get_point_int().get_y(),trkl_BP_L1[i].get_point_int().get_z());
+        trkl->SetPoint(1, trkl_BP_L1[i].get_point_ext().get_x(),trkl_BP_L1[i].get_point_ext().get_y(),trkl_BP_L1[i].get_point_ext().get_z());
+        trkl->SetLineColor(kRed);
+        trkl->SetLineWidth(2);
+        trkl->Draw("same");
+
+    }
     
-    // Disegna le tracce sulla geometria esistente
-    linea->Draw("same");
-    beam->Draw("same");
+    cout << "_______________" << trkl_BP_L1.size() << "_________" << endl;
 
 }
 
 void evento::generate_vertex(){
-    double x = rnd.Gaus(0,0.1);
-    double y = rnd.Gaus(0,0.1);
-    double z = rnd.Gaus(0,53.);
+    double x = gRandom->Gaus(0,0.1);
+    double y = gRandom->Gaus(0,0.1);
+    double z = gRandom->Gaus(0,53.);
     vertex.set_point(x,y,z);
 }
 
@@ -106,13 +101,14 @@ void evento::event(){
         trkl_BP_to_L1.generate_phi();
         trkl_BP_to_L1.generate_eta();
         
-        point point_on_BP;
-        double x_BP = vertex.get_x() + beam_pipe_radius * sin(trkl_BP_to_L1.get_theta()) * sin(trkl_BP_to_L1.get_phi());
-        double y_BP = vertex.get_y() + beam_pipe_radius * cos(trkl_BP_to_L1.get_theta());
-        double z_BP = vertex.get_z() + beam_pipe_radius * sin(trkl_BP_to_L1.get_theta()) * cos(trkl_BP_to_L1.get_phi());
-        point_on_BP.set_point(x_BP, y_BP, z_BP);
+        //point point_on_BP;
+        //double x_BP = vertex.get_x() + beam_pipe_radius * sin(trkl_BP_to_L1.get_theta()) * sin(trkl_BP_to_L1.get_phi());
+        //double y_BP = vertex.get_y() + beam_pipe_radius * cos(trkl_BP_to_L1.get_theta());
+        //double z_BP = vertex.get_z() + beam_pipe_radius * sin(trkl_BP_to_L1.get_theta()) * cos(trkl_BP_to_L1.get_phi());
+        //point_on_BP.set_point(x_BP, y_BP, z_BP);
+        trkl_BP_to_L1.find_beampipe_intersection(vertex.get_x(), vertex.get_y(), vertex.get_z(), trkl_BP_to_L1.get_theta(), trkl_BP_to_L1.get_phi());
         
-        trkl_BP_to_L1.set_points(vertex, point_on_BP);
+        trkl_BP_to_L1.set_points(vertex, trkl_BP_to_L1.get_point_ext());
         trkl_BP_L1.push_back(trkl_BP_to_L1);
     }
 

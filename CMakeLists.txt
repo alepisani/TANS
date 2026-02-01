@@ -18,14 +18,12 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(SOURCES
     src/main.cpp
     src/point.cpp
-    src/traccia.cpp
     src/tracklet.cpp
     src/evento.cpp)
 
 # Header files per il dizionario
 set(HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/include/point.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/traccia.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/tracklet.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/evento.h)
 

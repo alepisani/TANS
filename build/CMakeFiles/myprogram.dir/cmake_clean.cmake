@@ -7,8 +7,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/myprogram.dir/src/main.cpp.o.d"
   "CMakeFiles/myprogram.dir/src/point.cpp.o"
   "CMakeFiles/myprogram.dir/src/point.cpp.o.d"
-  "CMakeFiles/myprogram.dir/src/traccia.cpp.o"
-  "CMakeFiles/myprogram.dir/src/traccia.cpp.o.d"
   "CMakeFiles/myprogram.dir/src/tracklet.cpp.o"
   "CMakeFiles/myprogram.dir/src/tracklet.cpp.o.d"
   "G__MyDict.cxx"

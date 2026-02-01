@@ -238,30 +238,6 @@ src/point.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/myprogram.dir/build.make CMakeFiles/myprogram.dir/src/point.cpp.s
 .PHONY : src/point.cpp.s
 
-src/traccia.o: src/traccia.cpp.o
-.PHONY : src/traccia.o
-
-# target to build an object file
-src/traccia.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/myprogram.dir/build.make CMakeFiles/myprogram.dir/src/traccia.cpp.o
-.PHONY : src/traccia.cpp.o
-
-src/traccia.i: src/traccia.cpp.i
-.PHONY : src/traccia.i
-
-# target to preprocess a source file
-src/traccia.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/myprogram.dir/build.make CMakeFiles/myprogram.dir/src/traccia.cpp.i
-.PHONY : src/traccia.cpp.i
-
-src/traccia.s: src/traccia.cpp.s
-.PHONY : src/traccia.s
-
-# target to generate assembly for a file
-src/traccia.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/myprogram.dir/build.make CMakeFiles/myprogram.dir/src/traccia.cpp.s
-.PHONY : src/traccia.cpp.s
-
 src/tracklet.o: src/tracklet.cpp.o
 .PHONY : src/tracklet.o
 
@@ -308,9 +284,6 @@ help:
 	@echo "... src/point.o"
 	@echo "... src/point.i"
 	@echo "... src/point.s"
-	@echo "... src/traccia.o"
-	@echo "... src/traccia.i"
-	@echo "... src/traccia.s"
 	@echo "... src/tracklet.o"
 	@echo "... src/tracklet.i"
 	@echo "... src/tracklet.s"

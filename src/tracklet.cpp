@@ -8,7 +8,6 @@ using namespace std;
 
 ClassImp(tracklet);
 
-TRandom3 rnd(0);
 
 // COSTRUTTORE
 //tracklet::tracklet() : point(), point(), theta(0), eta(0), phi(0) {}
@@ -18,12 +17,12 @@ tracklet::~tracklet() {}
 
 void tracklet::generate_theta() {
     do {
-        theta = rnd.Uniform(0,M_PI); 
+        theta = gRandom->Uniform(0,M_PI); 
     } while (abs(-log(tan(theta/2))) >= 1.);
 }
 
 void tracklet::generate_phi(){
-    phi=rnd.Uniform(-M_PI, +M_PI); 
+    phi=gRandom->Uniform(-M_PI, +M_PI); 
 }
 
 void tracklet::generate_eta(){

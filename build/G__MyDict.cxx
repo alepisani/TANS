@@ -36,7 +36,6 @@
 
 // Header files passed as explicit arguments
 #include "/Users/alepisani/Documents/tans/tracker/include/point.h"
-#include "/Users/alepisani/Documents/tans/tracker/include/traccia.h"
 #include "/Users/alepisani/Documents/tans/tracker/include/tracklet.h"
 #include "/Users/alepisani/Documents/tans/tracker/include/evento.h"
 
@@ -75,38 +74,6 @@ namespace ROOT {
    }
    // Static variable to force the class initialization
    static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal(static_cast<const ::point*>(nullptr)); R__UseDummy(_R__UNIQUE_DICT_(Init));
-} // end of namespace ROOT
-
-namespace ROOT {
-   static void *new_traccia(void *p = nullptr);
-   static void *newArray_traccia(Long_t size, void *p);
-   static void delete_traccia(void *p);
-   static void deleteArray_traccia(void *p);
-   static void destruct_traccia(void *p);
-
-   // Function generating the singleton type initializer
-   static TGenericClassInfo *GenerateInitInstanceLocal(const ::traccia*)
-   {
-      ::traccia *ptr = nullptr;
-      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::traccia >(nullptr);
-      static ::ROOT::TGenericClassInfo 
-         instance("traccia", ::traccia::Class_Version(), "include/traccia.h", 7,
-                  typeid(::traccia), ::ROOT::Internal::DefineBehavior(ptr, ptr),
-                  &::traccia::Dictionary, isa_proxy, 4,
-                  sizeof(::traccia) );
-      instance.SetNew(&new_traccia);
-      instance.SetNewArray(&newArray_traccia);
-      instance.SetDelete(&delete_traccia);
-      instance.SetDeleteArray(&deleteArray_traccia);
-      instance.SetDestructor(&destruct_traccia);
-      return &instance;
-   }
-   TGenericClassInfo *GenerateInitInstance(const ::traccia*)
-   {
-      return GenerateInitInstanceLocal(static_cast<::traccia*>(nullptr));
-   }
-   // Static variable to force the class initialization
-   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal(static_cast<const ::traccia*>(nullptr)); R__UseDummy(_R__UNIQUE_DICT_(Init));
 } // end of namespace ROOT
 
 namespace ROOT {
@@ -154,7 +121,7 @@ namespace ROOT {
       ::evento *ptr = nullptr;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::evento >(nullptr);
       static ::ROOT::TGenericClassInfo 
-         instance("evento", ::evento::Class_Version(), "include/evento.h", 9,
+         instance("evento", ::evento::Class_Version(), "include/evento.h", 8,
                   typeid(::evento), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::evento::Dictionary, isa_proxy, 4,
                   sizeof(::evento) );
@@ -205,41 +172,6 @@ TClass *point::Dictionary()
 TClass *point::Class()
 {
    if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::point*)nullptr)->GetClass(); }
-   return fgIsA;
-}
-
-//______________________________________________________________________________
-atomic_TClass_ptr traccia::fgIsA(nullptr);  // static to hold class pointer
-
-//______________________________________________________________________________
-const char *traccia::Class_Name()
-{
-   return "traccia";
-}
-
-//______________________________________________________________________________
-const char *traccia::ImplFileName()
-{
-   return ::ROOT::GenerateInitInstanceLocal((const ::traccia*)nullptr)->GetImplFileName();
-}
-
-//______________________________________________________________________________
-int traccia::ImplFileLine()
-{
-   return ::ROOT::GenerateInitInstanceLocal((const ::traccia*)nullptr)->GetImplFileLine();
-}
-
-//______________________________________________________________________________
-TClass *traccia::Dictionary()
-{
-   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::traccia*)nullptr)->GetClass();
-   return fgIsA;
-}
-
-//______________________________________________________________________________
-TClass *traccia::Class()
-{
-   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::traccia*)nullptr)->GetClass(); }
    return fgIsA;
 }
 
@@ -345,39 +277,6 @@ namespace ROOT {
       (static_cast<current_t*>(p))->~current_t();
    }
 } // end of namespace ROOT for class ::point
-
-//______________________________________________________________________________
-void traccia::Streamer(TBuffer &R__b)
-{
-   // Stream an object of class traccia.
-
-   if (R__b.IsReading()) {
-      R__b.ReadClassBuffer(traccia::Class(),this);
-   } else {
-      R__b.WriteClassBuffer(traccia::Class(),this);
-   }
-}
-
-namespace ROOT {
-   // Wrappers around operator new
-   static void *new_traccia(void *p) {
-      return  p ? new(p) ::traccia : new ::traccia;
-   }
-   static void *newArray_traccia(Long_t nElements, void *p) {
-      return p ? new(p) ::traccia[nElements] : new ::traccia[nElements];
-   }
-   // Wrapper around operator delete
-   static void delete_traccia(void *p) {
-      delete (static_cast<::traccia*>(p));
-   }
-   static void deleteArray_traccia(void *p) {
-      delete [] (static_cast<::traccia*>(p));
-   }
-   static void destruct_traccia(void *p) {
-      typedef ::traccia current_t;
-      (static_cast<current_t*>(p))->~current_t();
-   }
-} // end of namespace ROOT for class ::traccia
 
 //______________________________________________________________________________
 void tracklet::Streamer(TBuffer &R__b)
@@ -586,7 +485,6 @@ namespace {
   void TriggerDictionaryInitialization_libMyDict_Impl() {
     static const char* headers[] = {
 "/Users/alepisani/Documents/tans/tracker/include/point.h",
-"/Users/alepisani/Documents/tans/tracker/include/traccia.h",
 "/Users/alepisani/Documents/tans/tracker/include/tracklet.h",
 "/Users/alepisani/Documents/tans/tracker/include/evento.h",
 nullptr
@@ -606,7 +504,6 @@ nullptr
 #pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
 extern int __Cling_AutoLoading_Map;
 class __attribute__((annotate("$clingAutoload$/Users/alepisani/Documents/tans/tracker/include/point.h")))  point;
-class __attribute__((annotate("$clingAutoload$/Users/alepisani/Documents/tans/tracker/include/traccia.h")))  traccia;
 class __attribute__((annotate("$clingAutoload$/Users/alepisani/Documents/tans/tracker/include/tracklet.h")))  tracklet;
 class __attribute__((annotate("$clingAutoload$/Users/alepisani/Documents/tans/tracker/include/evento.h")))  evento;
 )DICTFWDDCLS";
@@ -617,7 +514,6 @@ class __attribute__((annotate("$clingAutoload$/Users/alepisani/Documents/tans/tr
 #define _BACKWARD_BACKWARD_WARNING_H
 // Inline headers
 #include "/Users/alepisani/Documents/tans/tracker/include/point.h"
-#include "/Users/alepisani/Documents/tans/tracker/include/traccia.h"
 #include "/Users/alepisani/Documents/tans/tracker/include/tracklet.h"
 #include "/Users/alepisani/Documents/tans/tracker/include/evento.h"
 
@@ -626,7 +522,6 @@ class __attribute__((annotate("$clingAutoload$/Users/alepisani/Documents/tans/tr
     static const char* classesHeaders[] = {
 "evento", payloadCode, "@",
 "point", payloadCode, "@",
-"traccia", payloadCode, "@",
 "tracklet", payloadCode, "@",
 nullptr
 };

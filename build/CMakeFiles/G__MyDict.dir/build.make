@@ -72,16 +72,14 @@ CMakeFiles/G__MyDict: libMyDict.rootmap
 
 G__MyDict.cxx: /Users/alepisani/Documents/tans/tracker/src/LinkDef.h
 G__MyDict.cxx: /Users/alepisani/Documents/tans/tracker/include/point.h
-G__MyDict.cxx: /Users/alepisani/Documents/tans/tracker/include/traccia.h
 G__MyDict.cxx: /Users/alepisani/Documents/tans/tracker/include/tracklet.h
 G__MyDict.cxx: /Users/alepisani/Documents/tans/tracker/include/evento.h
 G__MyDict.cxx: /Users/alepisani/Documents/tans/tracker/include/point.h
-G__MyDict.cxx: /Users/alepisani/Documents/tans/tracker/include/traccia.h
 G__MyDict.cxx: /Users/alepisani/Documents/tans/tracker/include/tracklet.h
 G__MyDict.cxx: /Users/alepisani/Documents/tans/tracker/include/evento.h
 G__MyDict.cxx: /Users/alepisani/Documents/tans/tracker/src/LinkDef.h
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/Users/alepisani/Documents/tans/tracker/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating G__MyDict.cxx, libMyDict_rdict.pcm, libMyDict.rootmap"
-	/opt/homebrew/bin/cmake -E env DYLD_LIBRARY_PATH=/opt/homebrew/Cellar/root/6.36.04_1/lib/root: /opt/homebrew/bin/rootcling -v2 -f G__MyDict.cxx -s /Users/alepisani/Documents/tans/tracker/build/libMyDict.dylib -rml libMyDict.dylib -rmf /Users/alepisani/Documents/tans/tracker/build/libMyDict.rootmap -compilerI/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1 -compilerI/Library/Developer/CommandLineTools/usr/lib/clang/16/include -compilerI/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include -compilerI/Library/Developer/CommandLineTools/usr/include -compilerI/Library/Developer/CommandLineTools/usr/lib/clang/16/include -compilerI/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include -compilerI/Library/Developer/CommandLineTools/usr/include -I/opt/homebrew/Cellar/root/6.36.04_1/include/root -I/Users/alepisani/Documents/tans/tracker/src -I/Users/alepisani/Documents/tans/tracker /Users/alepisani/Documents/tans/tracker/include/point.h /Users/alepisani/Documents/tans/tracker/include/traccia.h /Users/alepisani/Documents/tans/tracker/include/tracklet.h /Users/alepisani/Documents/tans/tracker/include/evento.h /Users/alepisani/Documents/tans/tracker/src/LinkDef.h
+	/opt/homebrew/bin/cmake -E env DYLD_LIBRARY_PATH=/opt/homebrew/Cellar/root/6.36.04_1/lib/root: /opt/homebrew/bin/rootcling -v2 -f G__MyDict.cxx -s /Users/alepisani/Documents/tans/tracker/build/libMyDict.dylib -rml libMyDict.dylib -rmf /Users/alepisani/Documents/tans/tracker/build/libMyDict.rootmap -compilerI/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1 -compilerI/Library/Developer/CommandLineTools/usr/lib/clang/16/include -compilerI/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include -compilerI/Library/Developer/CommandLineTools/usr/include -compilerI/Library/Developer/CommandLineTools/usr/lib/clang/16/include -compilerI/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include -compilerI/Library/Developer/CommandLineTools/usr/include -I/opt/homebrew/Cellar/root/6.36.04_1/include/root -I/Users/alepisani/Documents/tans/tracker/src -I/Users/alepisani/Documents/tans/tracker /Users/alepisani/Documents/tans/tracker/include/point.h /Users/alepisani/Documents/tans/tracker/include/tracklet.h /Users/alepisani/Documents/tans/tracker/include/evento.h /Users/alepisani/Documents/tans/tracker/src/LinkDef.h
 
 libMyDict_rdict.pcm: G__MyDict.cxx
 	@$(CMAKE_COMMAND) -E touch_nocreate libMyDict_rdict.pcm

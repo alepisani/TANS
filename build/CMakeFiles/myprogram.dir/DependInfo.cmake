@@ -10,7 +10,6 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_CXX
   "/Users/alepisani/Documents/tans/tracker/src/LinkDef.h" "/Users/alepisani/Documents/tans/tracker/build/G__MyDict.cxx"
   "/Users/alepisani/Documents/tans/tracker/include/point.h" "/Users/alepisani/Documents/tans/tracker/build/G__MyDict.cxx"
-  "/Users/alepisani/Documents/tans/tracker/include/traccia.h" "/Users/alepisani/Documents/tans/tracker/build/G__MyDict.cxx"
   "/Users/alepisani/Documents/tans/tracker/include/tracklet.h" "/Users/alepisani/Documents/tans/tracker/build/G__MyDict.cxx"
   "/Users/alepisani/Documents/tans/tracker/include/evento.h" "/Users/alepisani/Documents/tans/tracker/build/G__MyDict.cxx"
   )
@@ -28,7 +27,6 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/Users/alepisani/Documents/tans/tracker/src/evento.cpp" "CMakeFiles/myprogram.dir/src/evento.cpp.o" "gcc" "CMakeFiles/myprogram.dir/src/evento.cpp.o.d"
   "/Users/alepisani/Documents/tans/tracker/src/main.cpp" "CMakeFiles/myprogram.dir/src/main.cpp.o" "gcc" "CMakeFiles/myprogram.dir/src/main.cpp.o.d"
   "/Users/alepisani/Documents/tans/tracker/src/point.cpp" "CMakeFiles/myprogram.dir/src/point.cpp.o" "gcc" "CMakeFiles/myprogram.dir/src/point.cpp.o.d"
-  "/Users/alepisani/Documents/tans/tracker/src/traccia.cpp" "CMakeFiles/myprogram.dir/src/traccia.cpp.o" "gcc" "CMakeFiles/myprogram.dir/src/traccia.cpp.o.d"
   "/Users/alepisani/Documents/tans/tracker/src/tracklet.cpp" "CMakeFiles/myprogram.dir/src/tracklet.cpp.o" "gcc" "CMakeFiles/myprogram.dir/src/tracklet.cpp.o.d"
   )
 

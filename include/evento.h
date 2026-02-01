@@ -2,7 +2,6 @@
 #define EVENTO_H
 
 #include "TObject.h"
-#include "TRandom3.h"
 #include "./tracklet.h"
 #include "./point.h"
 
@@ -38,7 +37,6 @@ class evento : public TObject {
  private:
     int multiplicity;
     point vertex;
-    TRandom3 rnd; //generatore di numeri casuali
 
     ClassDef(evento,1); //classe evento per root
 };

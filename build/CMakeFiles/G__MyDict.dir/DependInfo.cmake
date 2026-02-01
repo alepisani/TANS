@@ -10,7 +10,6 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_CXX
   "/Users/alepisani/Documents/tans/tracker/src/LinkDef.h" "/Users/alepisani/Documents/tans/tracker/build/G__MyDict.cxx"
   "/Users/alepisani/Documents/tans/tracker/include/point.h" "/Users/alepisani/Documents/tans/tracker/build/G__MyDict.cxx"
-  "/Users/alepisani/Documents/tans/tracker/include/traccia.h" "/Users/alepisani/Documents/tans/tracker/build/G__MyDict.cxx"
   "/Users/alepisani/Documents/tans/tracker/include/tracklet.h" "/Users/alepisani/Documents/tans/tracker/build/G__MyDict.cxx"
   "/Users/alepisani/Documents/tans/tracker/include/evento.h" "/Users/alepisani/Documents/tans/tracker/build/G__MyDict.cxx"
   )
