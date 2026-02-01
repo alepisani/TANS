@@ -14,6 +14,7 @@ class point : public TObject {
     double get_x() const {return x;}
     double get_y() const {return y;}
     double get_z() const {return z;}
+    point extend_segment(double, double, double);
   
     friend std::ostream &operator<<(std::ostream &output, const point &point);
 

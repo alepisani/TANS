@@ -26,6 +26,7 @@ class evento : public TObject {
 
     friend std::ostream &operator<<(std::ostream &output, const evento &ev);
 
+    std::vector<tracklet> trkl_VTX_BP;    //will contain all tracklet from vtx to bp
     std::vector<tracklet> trkl_BP_L1;    //will contain all tracklet from bp to l1
     std::vector<tracklet> trkl_L1_L2;    //will contain all tracklet from l1 to l2
     std::vector<point> points_BP;        //will contain all points on bp

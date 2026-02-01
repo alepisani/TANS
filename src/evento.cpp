@@ -68,18 +68,40 @@ void evento::display_event(){
 
     //creazione delle tracce
     int n_punti = 2;
+    for(int i = 0; i < trkl_VTX_BP.size(); i++){
+
+        TPolyLine3D *trkl = new TPolyLine3D(n_punti);   
+        trkl->SetPoint(0, trkl_VTX_BP[i].get_point_int().get_x(),trkl_VTX_BP[i].get_point_int().get_y(),trkl_VTX_BP[i].get_point_int().get_z());
+        trkl->SetPoint(1, trkl_VTX_BP[i].get_point_ext().get_x(),trkl_VTX_BP[i].get_point_ext().get_y(),trkl_VTX_BP[i].get_point_ext().get_z());
+        trkl->SetLineColor(kRed);
+        trkl->SetLineWidth(4);
+        trkl->Draw("same");
+
+    }
     for(int i = 0; i < trkl_BP_L1.size(); i++){
 
         TPolyLine3D *trkl = new TPolyLine3D(n_punti);   
         trkl->SetPoint(0, trkl_BP_L1[i].get_point_int().get_x(),trkl_BP_L1[i].get_point_int().get_y(),trkl_BP_L1[i].get_point_int().get_z());
         trkl->SetPoint(1, trkl_BP_L1[i].get_point_ext().get_x(),trkl_BP_L1[i].get_point_ext().get_y(),trkl_BP_L1[i].get_point_ext().get_z());
         trkl->SetLineColor(kRed);
-        trkl->SetLineWidth(2);
+        trkl->SetLineWidth(4);
+        trkl->Draw("same");
+
+    }
+    for(int i = 0; i < trkl_L1_L2.size(); i++){
+
+        TPolyLine3D *trkl = new TPolyLine3D(n_punti);   
+        trkl->SetPoint(0, trkl_L1_L2[i].get_point_int().get_x(),trkl_L1_L2[i].get_point_int().get_y(),trkl_L1_L2[i].get_point_int().get_z());
+        trkl->SetPoint(1, trkl_L1_L2[i].get_point_ext().get_x(),trkl_L1_L2[i].get_point_ext().get_y(),trkl_L1_L2[i].get_point_ext().get_z());
+        trkl->SetLineColor(kRed);
+        trkl->SetLineWidth(4);
         trkl->Draw("same");
 
     }
     
+    cout << "_______________" << trkl_VTX_BP.size() << "_________" << endl;
     cout << "_______________" << trkl_BP_L1.size() << "_________" << endl;
+    cout << "_______________" << trkl_L1_L2.size() << "_________" << endl;
 
 }
 
@@ -95,40 +117,43 @@ void evento::event(){
     
     //molteplicità --> genera n tracklet
     cout << "AAAAAAAAAAAAAAAAA----------------------------------" << multiplicity << endl;
+
     for (int i = 0; i < multiplicity; i++){
         
+        // Tracklet VTX -> BP
+        tracklet trkl_VTX_to_BP;
+        trkl_VTX_to_BP.generate_theta();
+        trkl_VTX_to_BP.generate_phi();
+        trkl_VTX_to_BP.generate_eta();
+        trkl_VTX_to_BP.set_point_int(vertex);  
+        trkl_VTX_to_BP.set_point_ext(trkl_VTX_to_BP.find_intersection(beam_pipe_radius));
+        points_BP.push_back(trkl_VTX_to_BP.get_point_ext());  
+        trkl_VTX_BP.push_back(trkl_VTX_to_BP);
+
+        // Tracklet BP -> L1
         tracklet trkl_BP_to_L1;
-        trkl_BP_to_L1.generate_theta();
-        trkl_BP_to_L1.generate_phi();
-        trkl_BP_to_L1.generate_eta();
-        
-        //point point_on_BP;
-        //double x_BP = vertex.get_x() + beam_pipe_radius * sin(trkl_BP_to_L1.get_theta()) * sin(trkl_BP_to_L1.get_phi());
-        //double y_BP = vertex.get_y() + beam_pipe_radius * cos(trkl_BP_to_L1.get_theta());
-        //double z_BP = vertex.get_z() + beam_pipe_radius * sin(trkl_BP_to_L1.get_theta()) * cos(trkl_BP_to_L1.get_phi());
-        //point_on_BP.set_point(x_BP, y_BP, z_BP);
-        trkl_BP_to_L1.find_beampipe_intersection();
-        
-        trkl_BP_to_L1.set_points(vertex, trkl_BP_to_L1.get_point_ext());
-        trkl_BP_L1.push_back(trkl_BP_to_L1);
-    }
+        trkl_BP_to_L1.set_theta(trkl_VTX_to_BP.get_theta());  
+        trkl_BP_to_L1.set_phi(trkl_VTX_to_BP.get_phi());      
+        trkl_BP_to_L1.set_point_int(trkl_VTX_to_BP.get_point_ext().extend_segment(trkl_VTX_to_BP.get_theta(), trkl_VTX_to_BP.get_phi(), beam_pipe_thickness));
+        trkl_BP_to_L1.set_point_ext(trkl_BP_to_L1.find_intersection(layer1_radius));
+        points_L1.push_back(trkl_BP_to_L1.get_point_ext());
+        trkl_BP_L1.push_back(trkl_BP_to_L1);  
 
-    for(int i = 0; i < trkl_BP_L1.size(); i++){
-        cout << "----" << endl;
-        cout << trkl_BP_L1[i] << endl;
-        points_BP.push_back(trkl_BP_L1[i].get_point_ext());
+        // Tracklet L1 -> L2
+        tracklet trkl_L1_to_L2;
+        trkl_L1_to_L2.set_theta(trkl_VTX_to_BP.get_theta());  
+        trkl_L1_to_L2.set_phi(trkl_VTX_to_BP.get_phi());      
+        trkl_L1_to_L2.set_point_int(trkl_BP_to_L1.get_point_ext().extend_segment(trkl_VTX_to_BP.get_theta(), trkl_VTX_to_BP.get_phi(), layer1_thickness));
+        trkl_L1_to_L2.set_point_ext(trkl_L1_to_L2.find_intersection(layer2_radius));
+        points_L2.push_back(trkl_L1_to_L2.get_point_ext());
+        trkl_L1_L2.push_back(trkl_L1_to_L2);  
     }
 
 
-    //TODO LIST
-    //intersezione tracklet beam pipe
-    //crea punti su beam pipe
-    //tracklet BP_L1
-    //smearing
-    //crea punti su L1
-    //tracklet L1_L2
-    //smearing
-    //riempi vettori 
+
+
+
+
 
 }
 
