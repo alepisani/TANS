@@ -20,7 +20,8 @@ class tracklet : public TObject {
     auto get_point_int() const {return point_int;}
     auto get_point_ext() const {return point_ext;}
     void set_points(point, point);
-    void find_beampipe_intersection(double, double, double, double, double);
+    void set_point_ext(point);
+    void find_beampipe_intersection();
     //double multiple_scattering();
 
     

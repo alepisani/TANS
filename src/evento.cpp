@@ -29,7 +29,8 @@ using namespace std;
 
 
 void evento::setmultiplicity() {
-    multiplicity = static_cast<int>(gRandom->Uniform(1, 5));
+    //multiplicity = static_cast<int>(gRandom->Uniform(1, 50));
+    multiplicity = 10; 
 }
 
 void evento::display_event(){
@@ -106,7 +107,7 @@ void evento::event(){
         //double y_BP = vertex.get_y() + beam_pipe_radius * cos(trkl_BP_to_L1.get_theta());
         //double z_BP = vertex.get_z() + beam_pipe_radius * sin(trkl_BP_to_L1.get_theta()) * cos(trkl_BP_to_L1.get_phi());
         //point_on_BP.set_point(x_BP, y_BP, z_BP);
-        trkl_BP_to_L1.find_beampipe_intersection(vertex.get_x(), vertex.get_y(), vertex.get_z(), trkl_BP_to_L1.get_theta(), trkl_BP_to_L1.get_phi());
+        trkl_BP_to_L1.find_beampipe_intersection();
         
         trkl_BP_to_L1.set_points(vertex, trkl_BP_to_L1.get_point_ext());
         trkl_BP_L1.push_back(trkl_BP_to_L1);
