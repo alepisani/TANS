@@ -1,6 +1,6 @@
-.vscode/*
+./vscode/*
 !.vscode/.gitkeep
-.data/*
+./data/*
 !.data/.gitkeep
-.build/*
+./build/*
 !.build/.gitkeep

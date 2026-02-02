@@ -151,13 +151,33 @@ void evento::event(){
         trkl_L1_L2.push_back(trkl_L1_to_L2);  
 
 
-        //BACO NELLA EXTENDED SEGMENT, DISEGNI SBAGLIATI
+
 
     }
 
+    for(int i = 0; i < points_BP.size(); i++){
 
+        double R = (points_BP[i].get_x())*(points_BP[i].get_x()) + (points_BP[i].get_y())*(points_BP[i].get_y());
 
+        cout << "beam pipe  " << R << endl;
 
+    }
+    
+    for(int i = 0; i < points_L1.size(); i++){
+
+        double R = (points_L1[i].get_x())*(points_L1[i].get_x()) + (points_L1[i].get_y())*(points_L1[i].get_y());
+
+        cout << "beam pipe  " << R << endl;
+
+    }
+
+    for(int i = 0; i < points_L2.size(); i++){
+
+        double R = (points_L2[i].get_x())*(points_L2[i].get_x()) + (points_L2[i].get_y())*(points_L2[i].get_y());
+
+        cout << "beam pipe  " << R << endl;
+
+    }
 
 
 

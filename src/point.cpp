@@ -1,5 +1,7 @@
 #include "../include/point.h"
+#include <cmath>
 #include <iostream>
+
 using namespace std;
 
 
