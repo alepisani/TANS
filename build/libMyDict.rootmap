@@ -1,4 +1,4 @@
-[ libMyDict.dylib ]
+[ libMyDict.so ]
 # List of selected classes
 class evento
 class point

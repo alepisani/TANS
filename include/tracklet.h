@@ -25,7 +25,7 @@ class tracklet : public TObject {
     void set_point_ext(point);
     void set_point_int(point);
     point find_intersection(double);
-    //double multiple_scattering();
+    double multiple_scattering(int Z, double X0, double t);
 
     
 
