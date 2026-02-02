@@ -30,7 +30,7 @@ using namespace std;
 
 void evento::setmultiplicity() {
     //multiplicity = static_cast<int>(gRandom->Uniform(1, 50));
-    multiplicity = 10; 
+    multiplicity = 3; 
 }
 
 void evento::display_event(){
@@ -73,8 +73,8 @@ void evento::display_event(){
         TPolyLine3D *trkl = new TPolyLine3D(n_punti);   
         trkl->SetPoint(0, trkl_VTX_BP[i].get_point_int().get_x(),trkl_VTX_BP[i].get_point_int().get_y(),trkl_VTX_BP[i].get_point_int().get_z());
         trkl->SetPoint(1, trkl_VTX_BP[i].get_point_ext().get_x(),trkl_VTX_BP[i].get_point_ext().get_y(),trkl_VTX_BP[i].get_point_ext().get_z());
-        trkl->SetLineColor(kRed);
-        trkl->SetLineWidth(4);
+        trkl->SetLineColor(kBlue);
+        trkl->SetLineWidth(1);
         trkl->Draw("same");
 
     }
@@ -83,8 +83,8 @@ void evento::display_event(){
         TPolyLine3D *trkl = new TPolyLine3D(n_punti);   
         trkl->SetPoint(0, trkl_BP_L1[i].get_point_int().get_x(),trkl_BP_L1[i].get_point_int().get_y(),trkl_BP_L1[i].get_point_int().get_z());
         trkl->SetPoint(1, trkl_BP_L1[i].get_point_ext().get_x(),trkl_BP_L1[i].get_point_ext().get_y(),trkl_BP_L1[i].get_point_ext().get_z());
-        trkl->SetLineColor(kRed);
-        trkl->SetLineWidth(4);
+        trkl->SetLineColor(kBlue);
+        trkl->SetLineWidth(6);
         trkl->Draw("same");
 
     }
@@ -94,7 +94,7 @@ void evento::display_event(){
         trkl->SetPoint(0, trkl_L1_L2[i].get_point_int().get_x(),trkl_L1_L2[i].get_point_int().get_y(),trkl_L1_L2[i].get_point_int().get_z());
         trkl->SetPoint(1, trkl_L1_L2[i].get_point_ext().get_x(),trkl_L1_L2[i].get_point_ext().get_y(),trkl_L1_L2[i].get_point_ext().get_z());
         trkl->SetLineColor(kRed);
-        trkl->SetLineWidth(4);
+        trkl->SetLineWidth(2);
         trkl->Draw("same");
 
     }
@@ -129,12 +129,14 @@ void evento::event(){
         trkl_VTX_to_BP.set_point_ext(trkl_VTX_to_BP.find_intersection(beam_pipe_radius));
         points_BP.push_back(trkl_VTX_to_BP.get_point_ext());  
         trkl_VTX_BP.push_back(trkl_VTX_to_BP);
+        cout << "vertex   " << vertex << endl;
+        cout << "BP   " << trkl_VTX_to_BP.get_point_ext() << endl;
 
         // Tracklet BP -> L1
         tracklet trkl_BP_to_L1;
         trkl_BP_to_L1.set_theta(trkl_VTX_to_BP.get_theta());  
         trkl_BP_to_L1.set_phi(trkl_VTX_to_BP.get_phi());      
-        trkl_BP_to_L1.set_point_int(trkl_VTX_to_BP.get_point_ext().extend_segment(trkl_VTX_to_BP.get_theta(), trkl_VTX_to_BP.get_phi(), beam_pipe_thickness));
+        trkl_BP_to_L1.set_point_int(trkl_VTX_to_BP.get_point_ext().extend_segment(trkl_VTX_to_BP.get_theta(), trkl_VTX_to_BP.get_phi(), beam_pipe_radius + beam_pipe_thickness));
         trkl_BP_to_L1.set_point_ext(trkl_BP_to_L1.find_intersection(layer1_radius));
         points_L1.push_back(trkl_BP_to_L1.get_point_ext());
         trkl_BP_L1.push_back(trkl_BP_to_L1);  
@@ -143,10 +145,14 @@ void evento::event(){
         tracklet trkl_L1_to_L2;
         trkl_L1_to_L2.set_theta(trkl_VTX_to_BP.get_theta());  
         trkl_L1_to_L2.set_phi(trkl_VTX_to_BP.get_phi());      
-        trkl_L1_to_L2.set_point_int(trkl_BP_to_L1.get_point_ext().extend_segment(trkl_VTX_to_BP.get_theta(), trkl_VTX_to_BP.get_phi(), layer1_thickness));
+        trkl_L1_to_L2.set_point_int(trkl_BP_to_L1.get_point_ext().extend_segment(trkl_VTX_to_BP.get_theta(), trkl_VTX_to_BP.get_phi(), layer1_radius + layer1_thickness));
         trkl_L1_to_L2.set_point_ext(trkl_L1_to_L2.find_intersection(layer2_radius));
         points_L2.push_back(trkl_L1_to_L2.get_point_ext());
         trkl_L1_L2.push_back(trkl_L1_to_L2);  
+
+
+        //BACO NELLA EXTENDED SEGMENT, DISEGNI SBAGLIATI
+
     }
 
 
