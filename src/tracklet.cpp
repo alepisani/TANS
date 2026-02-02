@@ -89,7 +89,7 @@ point tracklet::find_intersection(double radius) {
 double tracklet::multiple_scattering(int Z, double X0, double thickness) {
     double p=700; //MeV/c 
     double beta=1.;
-    double theta0=13.6/(beta*p)*Z*sqrt(thickness/X0)*(1+0.038*log(thickness/X0)); //theta nel piano
+    double theta0=(13.6/(beta*p))*Z*sqrt(thickness/X0)*(1+0.038*log(thickness/X0)); //theta nel piano
     double theta_rms=theta0*sqrt(2); //rms nello spazio
     double theta_ms=gRandom->Gaus(0, theta_rms);
     return theta_ms;

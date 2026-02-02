@@ -1,7 +1,7 @@
 {
 	"InstallScripts" : 
 	[
-		"/mnt/c/users/admin/Desktop/tans/TANS/build/cmake_install.cmake"
+		"/Users/alepisani/Documents/tans/tracker/build/cmake_install.cmake"
 	],
 	"Parallel" : false
 }
