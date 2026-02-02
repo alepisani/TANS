@@ -1,0 +1,8 @@
+[ libMyDict.dylib ]
+# List of selected classes
+class evento
+class point
+class tracklet
+header include/evento.h
+header include/point.h
+header include/tracklet.h
