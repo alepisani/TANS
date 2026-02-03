@@ -18,6 +18,26 @@ void point::set_point(double a, double b, double c){
     z = c;
 }
 
+void point::set_phi(double p){
+
+    phi = p;
+
+}
+
+void point::set_cilindrical(){
+
+    R = sqrt(x*x + y*y);
+    phi = atan2(y, x);
+
+}
+
+void point::update_coordinates(){
+
+    x = R * cos(phi);
+    y = R * sin(phi);
+
+}
+
 point point::extend_segment(double theta, double phi, double lenght){
 
     double c1 = sin(theta) * cos(phi);

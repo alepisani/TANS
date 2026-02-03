@@ -156,17 +156,40 @@ void evento::event(){
         
         cout << "------------" << endl;
         cout<<"THETA "<< trkl_VTX_to_BP.get_theta() << endl;
-        cout<<"THETA dopo bp!!!!!"<< trkl_BP_to_L1.get_theta() << endl;
-        cout<<"THETA dopo layer1"<< trkl_L1_to_L2.get_theta() << endl;
+        cout<<"THETA dopo BP:  "<< trkl_BP_to_L1.get_theta() << endl;
+        cout<<"THETA dopo Layer1:  "<< trkl_L1_to_L2.get_theta() << endl;
         cout << "------------" << endl;
-        
-        
+                
 
     }
 
 }
 
+void evento::smearing(){
 
+    //smearing di 30um applicato sull'arco di circonferenza --> sta cambiando il phi del punto
+    //30um = 0.03mm
+
+    for(int i = 0; i < points_L1.size(); i++){
+
+        points_L1[i].set_cilindrical();
+        double smearing = gRandom->Gaus(0, 0.03);
+        points_L1[i].set_phi(points_L1[i].get_phi() + smearing / points_L1[i].get_R());
+        points_L1[i].update_coordinates();
+
+    }
+
+    for(int i = 0; i < points_L2.size(); i++){
+
+        points_L2[i].set_cilindrical();
+        double smearing = gRandom->Gaus(0, 0.03);
+        points_L2[i].set_phi(points_L2[i].get_phi() + smearing / points_L2[i].get_R());
+        points_L2[i].update_coordinates();
+
+    }
+
+
+}
 
 
 std::ostream &operator<<(std::ostream &output, const evento & ev) {

@@ -29,6 +29,23 @@ int main(int argc, char **argv) {
     ev.setmultiplicity();
     ev.generate_vertex();
     ev.event();
+    for(int i = 0; i < ev.points_L1.size(); i++){
+        cout << "L1" << endl;
+        cout << ev.points_L1[i] << endl;
+    }
+    for(int i = 0; i < ev.points_L2.size(); i++){
+        cout << "L2" << endl;
+        cout << ev.points_L2[i] << endl;
+    }
+    ev.smearing();
+    for(int i = 0; i < ev.points_L1.size(); i++){
+        cout << "L1s" << endl;
+        cout << ev.points_L1[i] << endl;
+    }
+    for(int i = 0; i < ev.points_L2.size(); i++){
+        cout << "L2s" << endl;
+        cout << ev.points_L2[i] << endl;
+    }
     ev.display_event();
 
 
