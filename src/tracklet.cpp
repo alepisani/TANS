@@ -22,6 +22,8 @@ void tracklet::generate_theta() {
 
 }
 
+//AL CONTRARIO! GENERO ETA SU UNA FUNZIONE CHE MI DA LUI, CON ACCETTANZA IN BASE A DOVE STA IL VERTICE
+
 void tracklet::generate_phi(){
     phi=gRandom->Uniform(-M_PI, +M_PI); 
 }
@@ -89,10 +91,41 @@ point tracklet::find_intersection(double radius) {
 double tracklet::multiple_scattering(int Z, double X0, double thickness) {
     double p=700; //MeV/c 
     double beta=1.;
-    double theta0=13.6/(beta*p)*Z*sqrt(thickness/X0)*(1+0.038*log(thickness/X0)); //theta nel piano
+    double theta0=13.6/(beta*p)*Z*sqrt(thickness/(sin(theta)*X0))*(1+0.038*log(thickness/X0)); //theta nel piano
     double theta_rms=theta0*sqrt(2); //rms nello spazio
     double theta_ms=gRandom->Gaus(0, theta_rms);
     return theta_ms;
+
+}
+
+void tracklet::rotate (double theta, double phi, double theta_p, double phi_p) {
+    double mr[3][3];
+
+    mr[0][0] = sin(phi);
+    mr[1][0] = cos(phi);
+    mr[2][0] = 0.;
+    mr[0][1] = cos(phi)*cos(theta);
+    mr[1][1] = cos(theta)*sin(phi);
+    mr[2][1] = sin(theta);
+    mr[0][2] = sin(theta)*cos(phi);
+    mr[1][2] = sin(theta)*sin(phi);
+    mr[2][2] = cos(theta);
+
+    double cd[3]; //coseni direttori
+    double cdp[3];  
+    cdp[0] = sin(theta_p)*cos(phi_p);
+    cdp[1] = sin(theta_p)*sin(phi_p);
+    cdp[2] = cos(theta_p);
+
+    for (int i=0; i<3; i++) {
+        cd[i]=0.;
+        for (int j=0; j<3; j++){
+            cd[i]+=mr[i][j]*cdp[j];
+        }
+    }
+    
+    theta=acos(cd[2]);
+    phi=atan2(cd[1], cd[0]);
 
 }
 

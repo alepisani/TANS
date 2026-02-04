@@ -26,7 +26,7 @@ class tracklet : public TObject {
     void set_point_int(point);
     point find_intersection(double);
     double multiple_scattering(int Z, double X0, double t);
-
+    void rotate (double theta, double phi, double theta_p, double phi_p); 
     
 
     friend std::ostream &operator<<(std::ostream &output, const tracklet &tracklet);

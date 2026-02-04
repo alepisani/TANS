@@ -135,23 +135,30 @@ void evento::event(){
 
         // Tracklet BP -> L1
         tracklet trkl_BP_to_L1;
-        //trkl_BP_to_L1.set_theta(trkl_VTX_to_BP.get_theta());
-        trkl_BP_to_L1.set_theta(trkl_VTX_to_BP.get_theta()+ trkl_VTX_to_BP.multiple_scattering(beam_pipe_Z, beam_pipe_X0, beam_pipe_thickness));  
-        //trkl_BP_to_L1.set_phi(trkl_VTX_to_BP.get_phi());  
-        trkl_BP_to_L1.set_phi(trkl_VTX_to_BP.get_phi()+ trkl_VTX_to_BP.multiple_scattering(beam_pipe_Z, beam_pipe_X0, beam_pipe_thickness));    
+        trkl_BP_to_L1.set_theta(trkl_VTX_to_BP.get_theta());
+        trkl_BP_to_L1.set_phi(trkl_VTX_to_BP.get_phi());     
         trkl_BP_to_L1.set_point_int(trkl_VTX_to_BP.get_point_ext().extend_segment(trkl_VTX_to_BP.get_theta(), trkl_VTX_to_BP.get_phi(), beam_pipe_radius + beam_pipe_thickness));
+        
+        double theta_p = trkl_VTX_to_BP.multiple_scattering(beam_pipe_Z, beam_pipe_X0, beam_pipe_thickness);
+        double phi_p = gRandom->Uniform(0, 2*M_PI);
+        trkl_BP_to_L1.rotate(trkl_BP_to_L1.get_theta(), trkl_BP_to_L1.get_phi(), theta_p, phi_p); //non fa quello che deve fare 
+
         trkl_BP_to_L1.set_point_ext(trkl_BP_to_L1.find_intersection(layer1_radius));
         points_L1.push_back(trkl_BP_to_L1.get_point_ext());
         trkl_BP_L1.push_back(trkl_BP_to_L1);  
+        cout<<"theta multiple scattering BP->L1: "<<theta_p<<endl;
         cout<<"THETA dopo bp!!!!!"<< trkl_BP_to_L1.get_theta() << endl;
 
         // Tracklet L1 -> L2
         tracklet trkl_L1_to_L2;
-        //trkl_L1_to_L2.set_theta(trkl_VTX_to_BP.get_theta());  
-        //trkl_L1_to_L2.set_phi(trkl_VTX_to_BP.get_phi());   
-        trkl_L1_to_L2.set_theta(trkl_BP_to_L1.get_theta()+ trkl_BP_to_L1.multiple_scattering(layer1_Z, layer1_X0, layer1_thickness));
-        trkl_L1_to_L2.set_phi(trkl_BP_to_L1.get_phi()+ trkl_BP_to_L1.multiple_scattering(layer1_Z, layer1_X0, layer1_thickness));
+        trkl_L1_to_L2.set_theta(trkl_VTX_to_BP.get_theta());  
+        trkl_L1_to_L2.set_phi(trkl_VTX_to_BP.get_phi());   
         trkl_L1_to_L2.set_point_int(trkl_BP_to_L1.get_point_ext().extend_segment(trkl_VTX_to_BP.get_theta(), trkl_VTX_to_BP.get_phi(), layer1_radius + layer1_thickness));
+        
+        double theta_p2 = trkl_BP_to_L1.multiple_scattering(layer1_Z, layer1_X0, layer1_thickness);
+        double phi_p2 = gRandom->Uniform(0, 2*M_PI);
+        trkl_L1_to_L2.rotate(trkl_L1_to_L2.get_theta(), trkl_L1_to_L2.get_phi(), theta_p2, phi_p2);
+
         trkl_L1_to_L2.set_point_ext(trkl_L1_to_L2.find_intersection(layer2_radius));
         points_L2.push_back(trkl_L1_to_L2.get_point_ext());
         trkl_L1_L2.push_back(trkl_L1_to_L2);  
