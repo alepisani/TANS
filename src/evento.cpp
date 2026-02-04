@@ -141,7 +141,7 @@ void evento::event(){
         
         double theta_p = trkl_VTX_to_BP.multiple_scattering(beam_pipe_Z, beam_pipe_X0, beam_pipe_thickness);
         double phi_p = gRandom->Uniform(0, 2*M_PI);
-        trkl_BP_to_L1.rotate(trkl_BP_to_L1.get_theta(), trkl_BP_to_L1.get_phi(), theta_p, phi_p); //non fa quello che deve fare 
+        trkl_BP_to_L1.rotate(theta_p, phi_p); //non fa quello che deve fare 
 
         trkl_BP_to_L1.set_point_ext(trkl_BP_to_L1.find_intersection(layer1_radius));
         points_L1.push_back(trkl_BP_to_L1.get_point_ext());
@@ -157,7 +157,7 @@ void evento::event(){
         
         double theta_p2 = trkl_BP_to_L1.multiple_scattering(layer1_Z, layer1_X0, layer1_thickness);
         double phi_p2 = gRandom->Uniform(0, 2*M_PI);
-        trkl_L1_to_L2.rotate(trkl_L1_to_L2.get_theta(), trkl_L1_to_L2.get_phi(), theta_p2, phi_p2);
+        trkl_L1_to_L2.rotate(theta_p2, phi_p2);
 
         trkl_L1_to_L2.set_point_ext(trkl_L1_to_L2.find_intersection(layer2_radius));
         points_L2.push_back(trkl_L1_to_L2.get_point_ext());

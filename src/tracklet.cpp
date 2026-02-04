@@ -98,7 +98,8 @@ double tracklet::multiple_scattering(int Z, double X0, double thickness) {
 
 }
 
-void tracklet::rotate (double theta, double phi, double theta_p, double phi_p) {
+
+void tracklet::rotate (double theta_p, double phi_p) {
     double mr[3][3];
 
     mr[0][0] = sin(phi);
