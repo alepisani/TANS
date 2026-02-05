@@ -15,11 +15,12 @@ tracklet::tracklet() {}
 // DISTRUTTORE
 tracklet::~tracklet() {}
 
-void tracklet::generate_theta() {
-    do {
-        theta = gRandom->Uniform(0,M_PI); 
-    } while (abs(-log(tan(theta/2))) >= 1.);
 
+void tracklet::generate_theta(){
+    theta = 2*atan(exp(-eta));
+    /*do {
+        theta = gRandom->Uniform(0,M_PI); 
+    } while (abs(-log(tan(theta/2))) >= 1.);*/
 }
 
 //AL CONTRARIO! GENERO ETA SU UNA FUNZIONE CHE MI DA LUI, CON ACCETTANZA IN BASE A DOVE STA IL VERTICE
@@ -29,7 +30,9 @@ void tracklet::generate_phi(){
 }
 
 void tracklet::generate_eta(){
-    eta=-log(tan(theta/2));
+    //eta=-log(tan(theta/2));
+    eta = gRandom->Uniform(-1,1); //mi serve la distribuzione assegnata in eta
+
 }
 
 void tracklet::set_points(point point0, point point1){

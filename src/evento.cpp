@@ -29,8 +29,8 @@ using namespace std;
 
 
 void evento::setmultiplicity() {
-    //multiplicity = static_cast<int>(gRandom->Uniform(1, 50));
-    multiplicity = 3; 
+    multiplicity = static_cast<int>(gRandom->Uniform(1, 50));
+    //multiplicity = 3; 
 }
 
 void evento::display_event(){
