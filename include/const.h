@@ -3,11 +3,15 @@
 
 
 // BEAM PIPE (berillium)
+const double beam_pipe_X0 = 350; //mm
+const int beam_pipe_Z=4;
 const double beam_pipe_radius = 30; //mm
 const double beam_pipe_thickness = 0.8; //mm
 const double beam_pipe_lenght = 270; //mm
 
 // LAYER1 
+const double layer1_X0 = 93.7; //mm X0 del silicio
+const int layer1_Z=14;
 const double layer1_radius = 40; //mm
 const double layer1_thickness = 0.2; //mm
 const double layer1_lenght = 270; //mm
