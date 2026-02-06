@@ -97,35 +97,7 @@ double tracklet::multiple_scattering(int Z, double X0, double thickness) {
     double theta0=13.6/(beta*p)*Z*sqrt(thickness/(sin(theta)*X0))*(1+0.038*log(thickness/X0)); //theta nel piano
     double theta_rms=theta0*sqrt(2); //rms nello spazio
     double theta_ms=gRandom->Gaus(0, theta_rms);
-    //return theta_ms;
-
-    double thetaMS = gRandom->Gaus(0, theta_rms);
-    double phiMS = 2. * M_PI * gRandom->Rndm();
-    double theta = this->get_theta();
-    double phi = this->get_phi();
-
-    // versor after MS in reference system of the particle
-    double vec[3] = {cos(phiMS)*sin(thetaMS), sin(phiMS)*sin(thetaMS), cos(thetaMS)};
-
-    //rotate the vector in the lab system
-    double rotMat[3][3] =  {{-sin(phi), -cos(phi)*cos(theta),   cos(phi)*sin(theta)},
-                            {cos(phi),  -sin(phi)*cos(theta),   sin(phi)*sin(theta)},
-                            {0.,        sin(theta),             cos(theta)}};
-    
-    double vecp[3];
-    for(int i=0; i<3; i++)  vecp[i] = vec[i];
-
-    for(int i=0; i<3; i++)
-    {
-        vec[i] = 0;
-        for(int j=0; j<3; j++)  vec[i] += rotMat[i][j] * vecp[j];
-    }
-    
-    double newPhi = atan(vec[1]/vec[0]);
-    double newTheta = vec[2];
-
-    return newTheta;
-
+    return theta_ms;
 
 }
 

@@ -14,18 +14,7 @@
 #include <iostream>
 using namespace std;
 
-
-
-//evento::evento() : TObject(), x(0), y(0), z(0), multiplicity(0), rand() {
-    //costruttore di default
-//}
-
-//evento::evento() {}
-
-//evento::evento(double x, double y, double z, int multiplicity) : TObject(), x(x), y(y), z(z), multiplicity(multiplicity), rand() {
-    //costruttore con parametri
-//}
-
+evento::evento(): TObject(), x(0), y(0), z(0), multiplicity(0), rand() {rand.SetSeed(0);}
 
 
 void evento::setmultiplicity() {

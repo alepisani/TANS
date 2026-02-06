@@ -9,12 +9,8 @@ class evento : public TObject {
 
  public:
     // inline default constructor so ROOT/cling finds it when compiling only headers
-    // evento() : TObject(), x(0), y(0), z(0), multiplicity(0), rand() {rand.SetSeed(0);}
-    //evento(double z, double x, double y, int multiplicity);
-
-    //evento(const evento& source); //copy constructor
-    //virtual ~evento();
-    //evento& operator=(const evento& source); //assignment operator
+    evento();
+   
 
     //implementazione in riga di funzioni
 
