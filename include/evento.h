@@ -23,6 +23,7 @@ class evento : public TObject {
     void display_event();
     void generate_vertex();
     void event();
+    void smearing();
 
     friend std::ostream &operator<<(std::ostream &output, const evento &ev);
 
