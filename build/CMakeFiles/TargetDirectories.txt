@@ -1,4 +1,0 @@
-/mnt/c/users/admin/Desktop/tans/TANS/build/CMakeFiles/G__MyDict.dir
-/mnt/c/users/admin/Desktop/tans/TANS/build/CMakeFiles/myprogram.dir
-/mnt/c/users/admin/Desktop/tans/TANS/build/CMakeFiles/edit_cache.dir
-/mnt/c/users/admin/Desktop/tans/TANS/build/CMakeFiles/rebuild_cache.dir

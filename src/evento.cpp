@@ -129,10 +129,9 @@ void evento::event(){
         trkl_VTX_to_BP.set_point_ext(trkl_VTX_to_BP.find_intersection(beam_pipe_radius));
         points_BP.push_back(trkl_VTX_to_BP.get_point_ext());  //vettore con punti di intersezione con la beam pipe, serve per la ricostruzione
         trkl_VTX_BP.push_back(trkl_VTX_to_BP);
-        cout<<"THETA!!!!!"<< trkl_VTX_to_BP.get_theta() << endl;
         cout << "vertex   " << vertex << endl;
         cout << "BP   " << trkl_VTX_to_BP.get_point_ext() << endl;
-
+        
         // Tracklet BP -> L1
         tracklet trkl_BP_to_L1;
         trkl_BP_to_L1.set_theta(trkl_VTX_to_BP.get_theta());
@@ -162,9 +161,13 @@ void evento::event(){
         trkl_L1_to_L2.set_point_ext(trkl_L1_to_L2.find_intersection(layer2_radius));
         points_L2.push_back(trkl_L1_to_L2.get_point_ext());
         trkl_L1_L2.push_back(trkl_L1_to_L2);  
-        cout<<"THETA!!!!! dopo layer1"<< trkl_L1_to_L2.get_theta() << endl;
-
-
+        
+        cout << "------------" << endl;
+        cout<<"THETA "<< trkl_VTX_to_BP.get_theta() << endl;
+        cout<<"THETA dopo bp!!!!!"<< trkl_BP_to_L1.get_theta() << endl;
+        cout<<"THETA dopo layer1"<< trkl_L1_to_L2.get_theta() << endl;
+        cout << "------------" << endl;
+        
         
 
     }
