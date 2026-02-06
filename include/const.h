@@ -1,6 +1,11 @@
 #ifndef CONST_H
 #define CONST_H
 
+// Vertex constant sigmas
+const double X_rms = 0.1; //mm
+const double Y_rms = 0.1; //mm
+const double Z_rms = 53.; //mm
+
 
 // BEAM PIPE (berillium)
 const double beam_pipe_X0 = 350; //mm

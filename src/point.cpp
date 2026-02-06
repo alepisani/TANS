@@ -1,4 +1,6 @@
 #include "../include/point.h"
+#include "../include/const.h"
+#include "TRandom3.h"
 #include <cmath>
 #include <iostream>
 #include <cmath>
@@ -16,11 +18,31 @@ point::point(double a, double b, double c):TObject(),
     }
 
 void point::set_point(double a, double b, double c){
+    
     x = a;
     y = b;
     z = c;
     R = sqrt(x*x + y*y);
     phi = atan2(y,x);
+
+}
+
+void point::set_phi(double p){
+
+    phi = p;
+    x = R * cos(phi);
+    y = R * sin(phi);
+
+}
+
+void point::generate_VTX(){
+    
+    double x = gRandom->Gaus(0,X_rms);
+    double y = gRandom->Gaus(0,Y_rms);
+    double z = gRandom->Gaus(0,Z_rms);
+    
+    this->set_point(x,y,z);
+
 
 }
 

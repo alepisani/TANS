@@ -1,7 +1,7 @@
 #include "../include/const.h"
-#include "../include/evento.h"
+#include "../include/event.h"
 #include "../include/point.h"
-#include "../include/tracklet.h"
+#include "../include/particle.h"
 #include <iostream>
 #include "TApplication.h" 
 #include "TGeoManager.h"
@@ -25,27 +25,10 @@ int main(int argc, char **argv) {
     int seed = 0;
     gRandom->SetSeed(seed);
 
-    evento ev;
-    ev.setmultiplicity();
-    ev.generate_vertex();
-    ev.event();
-    for(int i = 0; i < ev.points_L1.size(); i++){
-        cout << "L1" << endl;
-        cout << ev.points_L1[i] << endl;
-    }
-    for(int i = 0; i < ev.points_L2.size(); i++){
-        cout << "L2" << endl;
-        cout << ev.points_L2[i] << endl;
-    }
+    event ev;
+    ev.eventsimulation();
     ev.smearing();
-    for(int i = 0; i < ev.points_L1.size(); i++){
-        cout << "L1s" << endl;
-        cout << ev.points_L1[i] << endl;
-    }
-    for(int i = 0; i < ev.points_L2.size(); i++){
-        cout << "L2s" << endl;
-        cout << ev.points_L2[i] << endl;
-    }
+
     ev.display_event();
 
 

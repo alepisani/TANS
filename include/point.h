@@ -15,6 +15,11 @@ class point : public TObject {
     double get_z() const {return z;}
     double get_R() const {return R;}
     double get_phi() const {return phi;}
+
+    void set_phi(double);
+    void set_point(double, double, double);
+
+    void generate_VTX();
   
     friend std::ostream &operator<<(std::ostream &output, const point &point);
 

@@ -1,0 +1,45 @@
+#ifndef EVENT_H
+#define EVENT_H
+
+#include "TObject.h"
+#include "./particle.h"
+#include "./point.h"
+
+class event : public TObject {
+
+public:
+   event():TObject(), multiplicity(0), pnt(), vertex(){}
+   event(int, point, point);
+   
+   int getmultiplicity() const {return multiplicity;}
+   auto get_point() const {return pnt;}
+   
+   void setmultiplicity();
+   void set_vertex(point vtx);
+
+   void eventsimulation();
+   void multiple_scattering();
+   void smearing();
+   void display_event();
+
+   friend std::ostream &operator<<(std::ostream &output, const event &ev);
+
+   std::vector<point> points_BP;        //will contain all points on bp
+   std::vector<point> points_L1;        //will contain all points on l1
+   std::vector<point> points_L2;        //will contain all points on l2
+     
+
+  
+private:
+   int multiplicity;
+   point pnt;
+   point vertex;
+
+   ClassDef(event,1);
+};
+
+
+
+
+
+#endif

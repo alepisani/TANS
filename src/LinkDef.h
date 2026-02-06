@@ -2,6 +2,6 @@
 
 #pragma link C++ class point+;
 #pragma link C++ class particle+;
-#pragma link C++ class evento+;
+#pragma link C++ class event+;
 
 #endif
