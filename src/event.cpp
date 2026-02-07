@@ -2,6 +2,10 @@
 #include "../include/point.h"
 #include "../include/particle.h"
 #include "../include/const.h"
+#include "TFile.h"
+#include "TTree.h"
+#include "TBranch.h"
+#include "TClonesArray.h"
 #include "TApplication.h" 
 #include "TGeoManager.h"
 #include "TGeoVolume.h"
@@ -19,9 +23,9 @@ event::event(int m, point p, point vtx):TObject(), multiplicity(m), pnt(p), vert
 
 void event::setmultiplicity() {
     
-    //multiplicity = static_cast<int>(gRandom->Uniform(1, 50));
+    multiplicity = static_cast<int>(gRandom->Uniform(1, 50));
     //multiplicity = fMultiplicityHist->GetRandom();
-    multiplicity = 2; 
+    //multiplicity = 5000; 
 
 }
 
@@ -35,6 +39,7 @@ void event::eventsimulation(){
 
     point vertex;
     vertex.generate_VTX();
+    cout << vertex << endl;
     
     this->set_vertex(vertex);
     this->setmultiplicity();
@@ -132,21 +137,21 @@ void event::display_event(){
         TPolyLine3D *trkl_vtx_bp = new TPolyLine3D(n_punti);   
         trkl_vtx_bp->SetPoint(0, vertex.get_x(), vertex.get_y(), vertex.get_z());
         trkl_vtx_bp->SetPoint(1, points_L1[i].get_x(), points_L1[i].get_y(), points_L1[i].get_z());
-        trkl_vtx_bp->SetLineColor(kBlue);
+        trkl_vtx_bp->SetLineColor(kGreen);
         trkl_vtx_bp->SetLineWidth(2);
         trkl_vtx_bp->Draw("same");
         
         TPolyLine3D *trkl_bp_l1 = new TPolyLine3D(n_punti);   
         trkl_bp_l1->SetPoint(0, points_BP[i].get_x(), points_BP[i].get_y(), points_BP[i].get_z());
         trkl_bp_l1->SetPoint(1, points_L1[i].get_x(), points_L1[i].get_y(), points_L1[i].get_z());
-        trkl_bp_l1->SetLineColor(kBlue);
+        trkl_bp_l1->SetLineColor(kGreen);
         trkl_bp_l1->SetLineWidth(2);
         trkl_bp_l1->Draw("same");
 
         TPolyLine3D *trkl_l1_l2 = new TPolyLine3D(n_punti);   
         trkl_l1_l2->SetPoint(0, points_L1[i].get_x(), points_L1[i].get_y(), points_L1[i].get_z());
         trkl_l1_l2->SetPoint(1, points_L2[i].get_x(), points_L2[i].get_y(), points_L2[i].get_z());
-        trkl_l1_l2->SetLineColor(kBlue);
+        trkl_l1_l2->SetLineColor(kGreen);
         trkl_l1_l2->SetLineWidth(2);
         trkl_l1_l2->Draw("same");
 
@@ -165,7 +170,106 @@ std::ostream &operator<<(std::ostream &output, const event & ev) {
     return output;
 }
 
+void event::RunFullSimulation() {
+    
+    int nEvents = 1000;
 
+    TFile* hfile = new TFile("../data/hist_sim.root", "RECREATE");
+    TTree* tree = new TTree("Tree", "Tree simulazione");
+
+    // Buffer per i dati scalari (Vertice e Molteplicità)
+    // Usiamo una struct o variabili singole per la Leaf List
+    double vtx[3]; // X, Y, Z
+    int multiplicity;
+
+    // Buffer per i dati vettoriali (Punti nei vari Layer)
+    // TClonesArray riduce l'overhead di allocazione/deallocazione
+    TClonesArray* hitsBP = new TClonesArray("point", 200);
+    TClonesArray* particle_VTX_BP = new TClonesArray("particle", 200);
+    TClonesArray* particle_BP_L1 = new TClonesArray("particle", 200);
+    TClonesArray* particle_L1_L2 = new TClonesArray("particle", 200);
+    TClonesArray* hitsL1 = new TClonesArray("point", 200);
+    TClonesArray* hitsL2 = new TClonesArray("point", 200);
+
+    // Definizione dei Branch
+    tree->Branch("Vtx", vtx, "vtxX/D:vtxY/D:vtxZ/D");
+    tree->Branch("Mult", &multiplicity, "mult/I");
+    tree->Branch("HitsBP", &hitsBP);
+    tree->Branch("Particle_VTX_BP", &particle_VTX_BP);
+    tree->Branch("Particle_BP_L1", &particle_BP_L1);
+    tree->Branch("Particle_L1_L2", &particle_L1_L2);
+    tree->Branch("HitsL1", &hitsL1);
+    tree->Branch("HitsL2", &hitsL2);
+
+    event evSim;
+
+    for (int iEv = 0; iEv < nEvents; ++iEv) {
+        
+        point vertex;
+        vertex.generate_VTX();
+        evSim.set_vertex(vertex);
+        evSim.setmultiplicity();
+        
+        vtx[0] = vertex.get_x();
+        vtx[1] = vertex.get_y();
+        vtx[2] = vertex.get_z();
+        multiplicity = evSim.get_multiplicity();
+
+        for (int iPart = 0; iPart < multiplicity; ++iPart) {
+            particle prtl;
+            prtl.set_point(vertex);
+            prtl.generate_theta();
+            prtl.generate_phi();
+
+            //trasporto da vtx a bp
+            new((*particle_VTX_BP)[iPart]) particle(prtl);
+            prtl.find_intersection(beam_pipe_radius);
+            new((*hitsBP)[iPart]) point(prtl.get_point());  
+            points_BP.push_back(prtl.get_point());
+            prtl.multiple_scattering(beam_pipe_Z, beam_pipe_X0, beam_pipe_thickness);
+
+            //trasporto da bp a l1
+            new((*particle_BP_L1)[iPart]) particle(prtl);
+            prtl.find_intersection(layer1_radius);
+            new((*hitsL1)[iPart]) point(prtl.get_point());
+            points_L1.push_back(prtl.get_point());
+            prtl.multiple_scattering(layer1_Z, layer1_X0, layer1_thickness);
+
+            //trasporto l1 bp a l2
+            new((*particle_L1_L2)[iPart]) particle(prtl);
+            prtl.find_intersection(layer2_radius);
+            new((*hitsL2)[iPart]) point(prtl.get_point());
+            points_L2.push_back(prtl.get_point());
+
+        }
+
+        tree->Fill();
+
+        hitsBP->Clear("C");
+        particle_VTX_BP->Clear("C");
+        particle_BP_L1->Clear("C");
+        particle_L1_L2->Clear("C");
+        hitsL1->Clear("C");
+        hitsL2->Clear("C");
+
+        if (iEv % 100 == 0) std::cout << "Event " << iEv << " has been simulated." << std::endl;
+    }
+
+    this->smearing();
+
+    hfile->Write();
+    hfile->Close();
+
+    delete hitsBP;
+    delete hitsL1;
+    delete hitsL2;
+    delete particle_VTX_BP;
+    delete particle_BP_L1;
+    delete particle_L1_L2;
+    delete hfile;
+
+    std::cout << "Simulation ended: all event has been processed succesfully. Data available on /data/hist_sim.root" << std::endl;
+}
 
 
 

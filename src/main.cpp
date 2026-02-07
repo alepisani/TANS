@@ -26,10 +26,10 @@ int main(int argc, char **argv) {
     gRandom->SetSeed(seed);
 
     event ev;
-    ev.eventsimulation();
-    ev.smearing();
+    //ev.eventsimulation();
+    ev.RunFullSimulation();
 
-    ev.display_event();
+    //ev.display_event();
 
 
 

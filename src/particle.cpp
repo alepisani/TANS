@@ -8,17 +8,24 @@ using namespace std;
 
 ClassImp(particle);
 
-particle::particle(point pt, double t, double p):TObject(), pt(pt), theta(t), phi(p){}
+particle::particle(point pt, double t, double p):TObject(), pt(pt), theta(t), phi(p){
+
+    eta = -log(tan(theta/2));
+
+}
 
 void particle::generate_theta(){
 
     //firstly extract eta
     //double eta = fEtaHist->GetRandom();
-    //theta = 2*atan(exp(-eta));
+    eta = gRandom->Uniform(-1,1);
+    theta = 2*atan(exp(-eta));
 
+    /*
     do {
         theta = gRandom->Uniform(0,M_PI); 
     } while (abs(-log(tan(theta/2))) >= 1.);
+    */
 
 }
 

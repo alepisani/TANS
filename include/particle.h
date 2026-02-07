@@ -8,7 +8,7 @@ using namespace std;
 class particle : public TObject {
 
     public:
-    particle():TObject(), pt(), theta(0.), phi(0.){}
+    particle():TObject(), pt(), theta(0.), phi(0.), eta(0.){}
     particle(point, double, double);
     
     void generate_theta();
@@ -32,7 +32,8 @@ class particle : public TObject {
     private:
         point pt;
         double theta;
-        double phi;  
+        double phi;
+        double eta;  
 
     ClassDef(particle, 1);
 };

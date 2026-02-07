@@ -11,7 +11,7 @@ public:
    event():TObject(), multiplicity(0), pnt(), vertex(){}
    event(int, point, point);
    
-   int getmultiplicity() const {return multiplicity;}
+   int get_multiplicity() const {return multiplicity;}
    auto get_point() const {return pnt;}
    
    void setmultiplicity();
@@ -21,6 +21,7 @@ public:
    void multiple_scattering();
    void smearing();
    void display_event();
+   void RunFullSimulation();
 
    friend std::ostream &operator<<(std::ostream &output, const event &ev);
 
