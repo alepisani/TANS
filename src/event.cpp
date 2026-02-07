@@ -45,24 +45,24 @@ void event::eventsimulation(){
         prtl.set_point(vertex);
         prtl.generate_theta();
         prtl.generate_phi();
-        cout << "particle on vertex" << prtl << endl;
+        //cout << "particle on vertex" << prtl << endl;
 
         //trasport the particle until Beam Pipe
         prtl.find_intersection(beam_pipe_radius);
         points_BP.push_back(prtl.get_point());
         prtl.multiple_scattering(beam_pipe_Z, beam_pipe_X0, beam_pipe_thickness);
-        cout << "particle on BP" << prtl << endl;
+        //cout << "particle on BP" << prtl << endl;
 
         //transport the particle until Layer1
         prtl.find_intersection(layer1_radius);
         points_L1.push_back(prtl.get_point());
         prtl.multiple_scattering(layer1_Z, layer1_X0, layer1_thickness);
-        cout << "particle on L1" << prtl << endl;
+        //cout << "particle on L1" << prtl << endl;
 
         //transport the particle until Layer2
         prtl.find_intersection(layer2_radius);
         points_L2.push_back(prtl.get_point());
-        cout << "particle on L2" << prtl << endl;
+        //cout << "particle on L2" << prtl << endl;
 
 
     }
