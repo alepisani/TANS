@@ -46,6 +46,16 @@ void point::generate_VTX(){
 
 }
 
+void point::smearing(){
+
+    //smearing di 30um applicato sull'arco di circonferenza --> sta cambiando il phi del punto
+    //30um = 0.03mm
+
+    double smearing = gRandom->Gaus(0, 0.03);
+    this->set_phi(this->get_phi() + smearing / this->get_R());
+
+}
+
 std::ostream &operator<<(std::ostream &output, const point &point){
     output << "point coordinate (mm): (x, y, z) = (" << point.x << ", " 
                                     << point.y << ", " 

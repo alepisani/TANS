@@ -6,6 +6,7 @@
 #include "TTree.h"
 #include "TBranch.h"
 #include "TClonesArray.h"
+#include <algorithm>
 #include "TApplication.h" 
 #include "TGeoManager.h"
 #include "TGeoVolume.h"
@@ -76,28 +77,30 @@ void event::eventsimulation(){
 
 }
 
-
+/*
 void event::smearing(){
+    
+//smearing di 30um applicato sull'arco di circonferenza --> sta cambiando il phi del punto
+//30um = 0.03mm
 
-    //smearing di 30um applicato sull'arco di circonferenza --> sta cambiando il phi del punto
-    //30um = 0.03mm
+for(int i = 0; i < points_L1.size(); i++){
+    
+double smearing = gRandom->Gaus(0, 0.03);
+points_L1[i].set_phi(points_L1[i].get_phi() + smearing / points_L1[i].get_R());
 
-    for(int i = 0; i < points_L1.size(); i++){
+}
 
-        double smearing = gRandom->Gaus(0, 0.03);
-        points_L1[i].set_phi(points_L1[i].get_phi() + smearing / points_L1[i].get_R());
+for(int i = 0; i < points_L2.size(); i++){
+    
+double smearing = gRandom->Gaus(0, 0.03);
+points_L2[i].set_phi(points_L2[i].get_phi() + smearing / points_L2[i].get_R());
 
-    }
-
-    for(int i = 0; i < points_L2.size(); i++){
-
-        double smearing = gRandom->Gaus(0, 0.03);
-        points_L2[i].set_phi(points_L2[i].get_phi() + smearing / points_L2[i].get_R());
-
-    }
+}
 
 
 }
+*/
+
 
 void event::display_event(){
     
@@ -241,6 +244,7 @@ void event::RunFullSimulation() {
             //trasporto da bp a l1
             new((*particle_BP_L1)[iPart]) particle(prtl);
             prtl.find_intersection(layer1_radius);
+            prtl.get_point().smearing();
             new((*hitsL1)[iPart]) point(prtl.get_point());
             points_L1.push_back(prtl.get_point());
             prtl.multiple_scattering(layer1_Z, layer1_X0, layer1_thickness);
@@ -248,6 +252,7 @@ void event::RunFullSimulation() {
             //trasporto l1 bp a l2
             new((*particle_L1_L2)[iPart]) particle(prtl);
             prtl.find_intersection(layer2_radius);
+            prtl.get_point().smearing();
             new((*hitsL2)[iPart]) point(prtl.get_point());
             points_L2.push_back(prtl.get_point());
 
@@ -265,7 +270,6 @@ void event::RunFullSimulation() {
         if (iEv % 100 == 0) std::cout << "Event " << iEv << " has been simulated." << std::endl;
     }
 
-    this->smearing();
 
     hfile->Write();
     hfile->Close();
@@ -279,6 +283,7 @@ void event::RunFullSimulation() {
     delete hfile;
 
     std::cout << "Simulation ended: all event has been processed succesfully. Data available on /data/hist_sim.root" << std::endl;
+
 }
 
 

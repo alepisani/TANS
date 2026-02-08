@@ -20,6 +20,7 @@ class point : public TObject {
     void set_point(double, double, double);
 
     void generate_VTX();
+    void smearing();
   
     friend std::ostream &operator<<(std::ostream &output, const point &point);
 

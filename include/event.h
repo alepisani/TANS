@@ -19,7 +19,6 @@ public:
 
    void eventsimulation();
    void multiple_scattering();
-   void smearing();
    void display_event();
    void RunFullSimulation();
 
