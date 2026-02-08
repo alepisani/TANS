@@ -60,12 +60,14 @@ void event::eventsimulation(){
 
         //transport the particle until Layer1
         prtl.find_intersection(layer1_radius);
+        //if(abs(prtl.get_point().get_z()) <= layer1_lenght/2){points_L1.push_back(prtl.get_point());}
         points_L1.push_back(prtl.get_point());
         prtl.multiple_scattering(layer1_Z, layer1_X0, layer1_thickness);
         //cout << "particle on L1" << prtl << endl;
 
         //transport the particle until Layer2
         prtl.find_intersection(layer2_radius);
+        //if(abs(prtl.get_point().get_z()) <= layer2_lenght/2){points_L2.push_back(prtl.get_point());}
         points_L2.push_back(prtl.get_point());
         //cout << "particle on L2" << prtl << endl;
 
@@ -134,7 +136,7 @@ void event::display_event(){
     int n_punti = 2;
     for(int i = 0; i < multiplicity; i++){
 
-        if(abs(points_L2[i].get_z()) <= layer2_lenght/2){
+        if(abs(points_L1[i].get_z()) <= layer1_lenght/2){
 
             TPolyLine3D *trkl_vtx_bp = new TPolyLine3D(n_punti);   
             trkl_vtx_bp->SetPoint(0, vertex.get_x(), vertex.get_y(), vertex.get_z());
@@ -149,16 +151,21 @@ void event::display_event(){
             trkl_bp_l1->SetLineColor(kGreen);
             trkl_bp_l1->SetLineWidth(2);
             trkl_bp_l1->Draw("same");
-    
-            TPolyLine3D *trkl_l1_l2 = new TPolyLine3D(n_punti);   
-            trkl_l1_l2->SetPoint(0, points_L1[i].get_x(), points_L1[i].get_y(), points_L1[i].get_z());
-            trkl_l1_l2->SetPoint(1, points_L2[i].get_x(), points_L2[i].get_y(), points_L2[i].get_z());
-            trkl_l1_l2->SetLineColor(kGreen);
-            trkl_l1_l2->SetLineWidth(2);
-            trkl_l1_l2->Draw("same");
-
+            
+            
+            if(abs(points_L2[i].get_z()) <= layer2_lenght/2){
+                
+                TPolyLine3D *trkl_l1_l2 = new TPolyLine3D(n_punti);   
+                trkl_l1_l2->SetPoint(0, points_L1[i].get_x(), points_L1[i].get_y(), points_L1[i].get_z());
+                trkl_l1_l2->SetPoint(1, points_L2[i].get_x(), points_L2[i].get_y(), points_L2[i].get_z());
+                trkl_l1_l2->SetLineColor(kGreen);
+                trkl_l1_l2->SetLineWidth(2);
+                trkl_l1_l2->Draw("same");
+                
+            }
+        
         }
-
+            
     }
 
 }

@@ -19,7 +19,7 @@ void particle::generate_theta(){
     // Generazione con accettanza geometrica del detector
     // considerando la posizione asimmetrica del vertice e margini di sicurezza
     const double z_det_max = 135.0;      // mm (metà della lunghezza 270mm)
-    const double r_det_max = 70.0;       // mm (raggio layer2)
+    const double r_det_max = 40.0;       // mm (raggio layer1)
     const double safety_factor = 0.95;   // Fattore di sicurezza per margine conservativo
     
     // Posizione attuale della particella (dal vertice)
