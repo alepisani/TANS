@@ -134,29 +134,32 @@ void event::display_event(){
     int n_punti = 2;
     for(int i = 0; i < multiplicity; i++){
 
-        TPolyLine3D *trkl_vtx_bp = new TPolyLine3D(n_punti);   
-        trkl_vtx_bp->SetPoint(0, vertex.get_x(), vertex.get_y(), vertex.get_z());
-        trkl_vtx_bp->SetPoint(1, points_L1[i].get_x(), points_L1[i].get_y(), points_L1[i].get_z());
-        trkl_vtx_bp->SetLineColor(kGreen);
-        trkl_vtx_bp->SetLineWidth(2);
-        trkl_vtx_bp->Draw("same");
-        
-        TPolyLine3D *trkl_bp_l1 = new TPolyLine3D(n_punti);   
-        trkl_bp_l1->SetPoint(0, points_BP[i].get_x(), points_BP[i].get_y(), points_BP[i].get_z());
-        trkl_bp_l1->SetPoint(1, points_L1[i].get_x(), points_L1[i].get_y(), points_L1[i].get_z());
-        trkl_bp_l1->SetLineColor(kGreen);
-        trkl_bp_l1->SetLineWidth(2);
-        trkl_bp_l1->Draw("same");
+        if(abs(points_L2[i].get_z()) <= layer2_lenght/2){
 
-        TPolyLine3D *trkl_l1_l2 = new TPolyLine3D(n_punti);   
-        trkl_l1_l2->SetPoint(0, points_L1[i].get_x(), points_L1[i].get_y(), points_L1[i].get_z());
-        trkl_l1_l2->SetPoint(1, points_L2[i].get_x(), points_L2[i].get_y(), points_L2[i].get_z());
-        trkl_l1_l2->SetLineColor(kGreen);
-        trkl_l1_l2->SetLineWidth(2);
-        trkl_l1_l2->Draw("same");
+            TPolyLine3D *trkl_vtx_bp = new TPolyLine3D(n_punti);   
+            trkl_vtx_bp->SetPoint(0, vertex.get_x(), vertex.get_y(), vertex.get_z());
+            trkl_vtx_bp->SetPoint(1, points_L1[i].get_x(), points_L1[i].get_y(), points_L1[i].get_z());
+            trkl_vtx_bp->SetLineColor(kGreen);
+            trkl_vtx_bp->SetLineWidth(2);
+            trkl_vtx_bp->Draw("same");
+            
+            TPolyLine3D *trkl_bp_l1 = new TPolyLine3D(n_punti);   
+            trkl_bp_l1->SetPoint(0, points_BP[i].get_x(), points_BP[i].get_y(), points_BP[i].get_z());
+            trkl_bp_l1->SetPoint(1, points_L1[i].get_x(), points_L1[i].get_y(), points_L1[i].get_z());
+            trkl_bp_l1->SetLineColor(kGreen);
+            trkl_bp_l1->SetLineWidth(2);
+            trkl_bp_l1->Draw("same");
+    
+            TPolyLine3D *trkl_l1_l2 = new TPolyLine3D(n_punti);   
+            trkl_l1_l2->SetPoint(0, points_L1[i].get_x(), points_L1[i].get_y(), points_L1[i].get_z());
+            trkl_l1_l2->SetPoint(1, points_L2[i].get_x(), points_L2[i].get_y(), points_L2[i].get_z());
+            trkl_l1_l2->SetLineColor(kGreen);
+            trkl_l1_l2->SetLineWidth(2);
+            trkl_l1_l2->Draw("same");
+
+        }
 
     }
-
 
 }
 

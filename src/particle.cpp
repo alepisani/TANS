@@ -16,16 +16,39 @@ particle::particle(point pt, double t, double p):TObject(), pt(pt), theta(t), ph
 
 void particle::generate_theta(){
 
-    //firstly extract eta
-    //double eta = fEtaHist->GetRandom();
-    eta = gRandom->Uniform(-1,1);
-    theta = 2*atan(exp(-eta));
-
-    /*
-    do {
-        theta = gRandom->Uniform(0,M_PI); 
-    } while (abs(-log(tan(theta/2))) >= 1.);
-    */
+    // Generazione con accettanza geometrica del detector
+    // considerando la posizione asimmetrica del vertice e margini di sicurezza
+    const double z_det_max = 135.0;      // mm (metà della lunghezza 270mm)
+    const double r_det_max = 70.0;       // mm (raggio layer2)
+    const double safety_factor = 0.95;   // Fattore di sicurezza per margine conservativo
+    
+    // Posizione attuale della particella (dal vertice)
+    double x_vtx = pt.get_x();
+    double y_vtx = pt.get_y();
+    double z_vtx = pt.get_z();
+    
+    // Raggio attuale del vertice nel piano trasversale
+    double r_vtx = sqrt(x_vtx*x_vtx + y_vtx*y_vtx);
+    
+    // Calcolo distanze asimmetriche verso +z e -z
+    double z_forward = z_det_max - z_vtx;   // Distanza verso +z (forward)
+    double z_backward = z_det_max + z_vtx;  // Distanza verso -z (backward)
+    
+    // Raggio disponibile dal vertice (con fattore di sicurezza)
+    double r_available = (r_det_max - r_vtx) * safety_factor;
+    if (r_available < 0.5) r_available = 0.5;  // Protezione minima
+    
+    // Angoli massimi di accettanza nelle due direzioni
+    double theta_fwd = atan(r_available / z_forward);       // Angolo massimo verso +z
+    double theta_bwd = M_PI - atan(r_available / z_backward); // Angolo massimo verso -z
+    
+    // Conversione a pseudorapidità
+    double eta_max = -log(tan(theta_fwd / 2.0));      // Limite massimo (forward)
+    double eta_min = -log(tan(theta_bwd / 2.0));      // Limite minimo (backward)
+    
+    // Genera eta uniformemente entro i limiti asimmetrici
+    eta = gRandom->Uniform(eta_min, eta_max);
+    theta = 2.0 * atan(exp(-eta));
 
 }
 

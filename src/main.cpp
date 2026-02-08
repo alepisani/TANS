@@ -26,13 +26,10 @@ int main(int argc, char **argv) {
     gRandom->SetSeed(seed);
 
     event ev;
-    //ev.eventsimulation();
     ev.RunFullSimulation();
-
+    
+    //ev.eventsimulation();
     //ev.display_event();
-
-
-
 
 
     std::atomic<bool> shouldExit(false);
