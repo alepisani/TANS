@@ -28,6 +28,13 @@ void event::setmultiplicity() {
     //multiplicity = fMultiplicityHist->GetRandom();
     //multiplicity = 5000; 
 
+    /*TF1 *f = new TF1("f", "gaus", -5, 5);
+
+    TH1D *h = new TH1D("h", "PDF", 1000, -5, 5);
+    h->FillRandom("f", 1e6);   // campiona la funzione
+    h->Scale(1.0 / h->Integral()); // normalizzazione (opzionale)
+    multiplicity = h->GetRandom();*/
+
 }
 
 void event::set_vertex(point vtx){
@@ -71,8 +78,33 @@ void event::eventsimulation(){
         //if(abs(prtl.get_point().get_z()) <= layer2_lenght/2){points_L2.push_back(prtl.get_point());}
         points_L2.push_back(prtl.get_point());
         //cout << "particle on L2" << prtl << endl;
+ 
+    
 
+    }
+    //noise
+    int n_noise1 = static_cast<int>(gRandom->Uniform(0, 15)); 
+    for (int i =0; i<n_noise1; i++){
+        point noise_point; 
+        double phi_noise = gRandom->Uniform(0, 2*M_PI);
+        double R_noise = layer1_radius;
+        double x_noise = R_noise * cos(phi_noise);
+        double y_noise = R_noise * sin(phi_noise);
+        double z_noise = gRandom->Uniform(-layer1_lenght/2, layer1_lenght/2);
+        noise_point.set_point(x_noise, y_noise, z_noise);
+        points_L1.push_back(noise_point);
+    }
 
+    int n_noise2 = static_cast<int>(gRandom->Uniform(0, 15)); 
+    for (int i =0; i<n_noise2; i++){
+        point noise_point; 
+        double phi_noise = gRandom->Uniform(0, 2*M_PI);
+        double R_noise = layer2_radius;
+        double x_noise = R_noise * cos(phi_noise);
+        double y_noise = R_noise * sin(phi_noise);
+        double z_noise = gRandom->Uniform(-layer1_lenght/2, layer1_lenght/2);
+        noise_point.set_point(x_noise, y_noise, z_noise);
+        points_L2.push_back(noise_point);
     }
 
 }
