@@ -35,6 +35,20 @@ void point::set_phi(double p){
 
 }
 
+void point::set_R(double r){
+
+    R = r;
+    x = R * cos(phi);
+    y = R * sin(phi);
+
+}
+
+void point::set_z(double zeta){
+
+    z = zeta;
+
+}
+
 void point::generate_VTX(){
     
     double x = gRandom->Gaus(0,X_rms);

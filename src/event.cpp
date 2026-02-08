@@ -82,57 +82,8 @@ void event::eventsimulation(){
     
 
     }
-    //noise
-    int n_noise1 = static_cast<int>(gRandom->Uniform(0, 15)); 
-    for (int i =0; i<n_noise1; i++){
-        point noise_point; 
-        double phi_noise = gRandom->Uniform(0, 2*M_PI);
-        double R_noise = layer1_radius;
-        double x_noise = R_noise * cos(phi_noise);
-        double y_noise = R_noise * sin(phi_noise);
-        double z_noise = gRandom->Uniform(-layer1_lenght/2, layer1_lenght/2);
-        noise_point.set_point(x_noise, y_noise, z_noise);
-        points_L1.push_back(noise_point);
-    }
-
-    int n_noise2 = static_cast<int>(gRandom->Uniform(0, 15)); 
-    for (int i =0; i<n_noise2; i++){
-        point noise_point; 
-        double phi_noise = gRandom->Uniform(0, 2*M_PI);
-        double R_noise = layer2_radius;
-        double x_noise = R_noise * cos(phi_noise);
-        double y_noise = R_noise * sin(phi_noise);
-        double z_noise = gRandom->Uniform(-layer1_lenght/2, layer1_lenght/2);
-        noise_point.set_point(x_noise, y_noise, z_noise);
-        points_L2.push_back(noise_point);
-    }
 
 }
-
-/*
-void event::smearing(){
-    
-//smearing di 30um applicato sull'arco di circonferenza --> sta cambiando il phi del punto
-//30um = 0.03mm
-
-for(int i = 0; i < points_L1.size(); i++){
-    
-double smearing = gRandom->Gaus(0, 0.03);
-points_L1[i].set_phi(points_L1[i].get_phi() + smearing / points_L1[i].get_R());
-
-}
-
-for(int i = 0; i < points_L2.size(); i++){
-    
-double smearing = gRandom->Gaus(0, 0.03);
-points_L2[i].set_phi(points_L2[i].get_phi() + smearing / points_L2[i].get_R());
-
-}
-
-
-}
-*/
-
 
 void event::display_event(){
     
@@ -203,16 +154,6 @@ void event::display_event(){
             
     }
 
-}
-
-std::ostream &operator<<(std::ostream &output, const event & ev) {
-    output << "+-----------------------------------evento" << endl;
-    output << "| x del vertice: " << ev.pnt.get_x() << endl;
-    output << "| y del vertice: " << ev.pnt.get_y() << endl;
-    output << "| z del vertice: " << ev.pnt.get_z() << endl;
-    output << "| multiplicity: " << ev.multiplicity << endl;
-    output << "+-----------------------------------------" << endl;
-    return output;
 }
 
 void event::RunFullSimulation() {
@@ -290,6 +231,25 @@ void event::RunFullSimulation() {
 
         }
 
+        double PNoiseL1 = gRandom->Rndm();
+        double PNoiseL2 = gRandom->Rndm();
+
+        if(PNoiseL1 < 0.001){
+            point noisy_point;
+            noisy_point.set_phi(gRandom->Uniform(0, 2 * M_PI));
+            noisy_point.set_R(layer1_radius);
+            noisy_point.set_z(gRandom->Uniform(-layer1_lenght/2, +layer1_lenght/2));
+            new((*hitsL1)[multiplicity]) point(noisy_point);
+        }
+
+        if(PNoiseL2 < 0.001){
+            point noisy_point;
+            noisy_point.set_phi(gRandom->Uniform(0, 2 * M_PI));
+            noisy_point.set_R(layer2_radius);
+            noisy_point.set_z(gRandom->Uniform(-layer2_lenght/2, +layer2_lenght/2));
+            new((*hitsL2)[multiplicity]) point(noisy_point);
+        }        
+
         tree->Fill();
 
         hitsBP->Clear("C");
@@ -318,6 +278,14 @@ void event::RunFullSimulation() {
 
 }
 
-
+std::ostream &operator<<(std::ostream &output, const event & ev) {
+    output << "+-----------------------------------evento" << endl;
+    output << "| x del vertice: " << ev.pnt.get_x() << endl;
+    output << "| y del vertice: " << ev.pnt.get_y() << endl;
+    output << "| z del vertice: " << ev.pnt.get_z() << endl;
+    output << "| multiplicity: " << ev.multiplicity << endl;
+    output << "+-----------------------------------------" << endl;
+    return output;
+}
 
 
