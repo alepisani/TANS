@@ -25,7 +25,12 @@ const double layer1_lenght = 270; //mm
 const double layer2_radius = 70; //mm
 const double layer2_lenght = 270; //mm
 
+//MS
 const bool multiple_scattering_on = true;
+
+//reconstuction constant
+const double zBinWidth = 50; //mm
+const double delta_phi = 0.01; //rad
 
 #endif
 

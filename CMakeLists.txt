@@ -20,13 +20,15 @@ set(SOURCES
     src/point.cpp
     src/particle.cpp
     src/event.cpp
+    src/reconstruction.cpp
     )
 
 # Header files per il dizionario
 set(HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/include/point.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/particle.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/event.h)
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/event.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/reconstruction.h)
 
 # Genera il dizionario ROOT
 ROOT_GENERATE_DICTIONARY(G__MyDict ${HEADERS} LINKDEF src/LinkDef.h)

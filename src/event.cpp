@@ -2,6 +2,7 @@
 #include "../include/point.h"
 #include "../include/particle.h"
 #include "../include/const.h"
+#include "../include/reconstruction.h"
 #include "TFile.h"
 #include "TTree.h"
 #include "TBranch.h"
@@ -28,7 +29,7 @@ void event::setmultiplicity() {
     
     //multiplicity = static_cast<int>(gRandom->Uniform(1, 50));
     //multiplicity = fMultiplicityHist->GetRandom();
-    //multiplicity = 5000; 
+    multiplicity = 5000; 
 
     TF1 *f_mult = new TF1("f_mult", "[0]*ROOT::Math::gamma_pdf(x, [1], [2])", 0, 50);
 
@@ -36,7 +37,7 @@ void event::setmultiplicity() {
     double n_mean = 30.0; 
     double k = 2.0; 
     f_mult->SetParameters(1, k, n_mean/k);
-    multiplicity = static_cast<int>(f_mult->GetRandom());
+    //multiplicity = static_cast<int>(f_mult->GetRandom());
 
 
 }
@@ -68,7 +69,7 @@ void event::eventsimulation(){
         prtl.find_intersection(beam_pipe_radius);
         points_BP.push_back(prtl.get_point());
         if (multiple_scattering_on){
-        prtl.multiple_scattering(beam_pipe_Z, beam_pipe_X0, beam_pipe_thickness);
+            prtl.multiple_scattering(beam_pipe_Z, beam_pipe_X0, beam_pipe_thickness);
         };
         //cout << "particle on BP" << prtl << endl;
 
@@ -77,7 +78,7 @@ void event::eventsimulation(){
         //if(abs(prtl.get_point().get_z()) <= layer1_lenght/2){points_L1.push_back(prtl.get_point());}
         points_L1.push_back(prtl.get_point());
         if (multiple_scattering_on){
-        prtl.multiple_scattering(layer1_Z, layer1_X0, layer1_thickness);
+            prtl.multiple_scattering(layer1_Z, layer1_X0, layer1_thickness);
         };
         //cout << "particle on L1" << prtl << endl;
 
@@ -166,7 +167,8 @@ void event::display_event(){
 
 void event::RunFullSimulation() {
     
-    int nEvents = 1000;
+    int nEvents = 1;
+    reconstruction reco;
 
     TFile* hfile = new TFile("../data/hist_sim.root", "RECREATE");
     TTree* tree = new TTree("Tree", "Tree simulazione");
@@ -202,6 +204,7 @@ void event::RunFullSimulation() {
         point vertex;
         vertex.generate_VTX();
         evSim.set_vertex(vertex);
+        cout << vertex << endl;
         evSim.setmultiplicity();
         
         vtx[0] = vertex.get_x();
@@ -219,9 +222,9 @@ void event::RunFullSimulation() {
             new((*particle_VTX_BP)[iPart]) particle(prtl);
             prtl.find_intersection(beam_pipe_radius);
             new((*hitsBP)[iPart]) point(prtl.get_point());  
-            points_BP.push_back(prtl.get_point());
+            evSim.points_BP.push_back(prtl.get_point());
             if (multiple_scattering_on){
-            prtl.multiple_scattering(beam_pipe_Z, beam_pipe_X0, beam_pipe_thickness);
+                prtl.multiple_scattering(beam_pipe_Z, beam_pipe_X0, beam_pipe_thickness);
             };
 
             //trasporto da bp a l1
@@ -229,9 +232,9 @@ void event::RunFullSimulation() {
             prtl.find_intersection(layer1_radius);
             prtl.get_point().smearing();
             new((*hitsL1)[iPart]) point(prtl.get_point());
-            points_L1.push_back(prtl.get_point());
+            evSim.points_L1.push_back(prtl.get_point());
             if (multiple_scattering_on){
-            prtl.multiple_scattering(layer1_Z, layer1_X0, layer1_thickness);
+                prtl.multiple_scattering(layer1_Z, layer1_X0, layer1_thickness);
             };
 
             //trasporto l1 bp a l2
@@ -239,7 +242,7 @@ void event::RunFullSimulation() {
             prtl.find_intersection(layer2_radius);
             prtl.get_point().smearing();
             new((*hitsL2)[iPart]) point(prtl.get_point());
-            points_L2.push_back(prtl.get_point());
+            evSim.points_L2.push_back(prtl.get_point());
 
         }
 
@@ -260,7 +263,17 @@ void event::RunFullSimulation() {
             noisy_point.set_R(layer2_radius);
             noisy_point.set_z(gRandom->Uniform(-layer2_lenght/2, +layer2_lenght/2));
             new((*hitsL2)[multiplicity]) point(noisy_point);
-        }        
+        }
+        
+        //reco
+        cout << evSim.points_L1.size() << endl;
+        reco.reco_z(evSim);
+
+        //devi pulire i vector di punti
+        evSim.points_BP.clear();
+        evSim.points_L1.clear();
+        evSim.points_L2.clear();
+
 
         tree->Fill();
 
