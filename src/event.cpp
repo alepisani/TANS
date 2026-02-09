@@ -37,7 +37,6 @@ void event::setmultiplicity() {
     double k = 2.0; 
     f_mult->SetParameters(1, k, n_mean/k);
     multiplicity = static_cast<int>(f_mult->GetRandom());
-    cout << "Multiplicity: " << multiplicity << endl;
 
 
 }
@@ -221,7 +220,9 @@ void event::RunFullSimulation() {
             prtl.find_intersection(beam_pipe_radius);
             new((*hitsBP)[iPart]) point(prtl.get_point());  
             points_BP.push_back(prtl.get_point());
+            if (multiple_scattering_on){
             prtl.multiple_scattering(beam_pipe_Z, beam_pipe_X0, beam_pipe_thickness);
+            };
 
             //trasporto da bp a l1
             new((*particle_BP_L1)[iPart]) particle(prtl);
@@ -229,7 +230,9 @@ void event::RunFullSimulation() {
             prtl.get_point().smearing();
             new((*hitsL1)[iPart]) point(prtl.get_point());
             points_L1.push_back(prtl.get_point());
+            if (multiple_scattering_on){
             prtl.multiple_scattering(layer1_Z, layer1_X0, layer1_thickness);
+            };
 
             //trasporto l1 bp a l2
             new((*particle_L1_L2)[iPart]) particle(prtl);

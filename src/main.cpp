@@ -28,9 +28,9 @@ int main(int argc, char **argv) {
     gRandom->SetSeed(seed);
 
     event ev;
-    //ev.RunFullSimulation();
+    ev.RunFullSimulation();
     
-    ev.eventsimulation();
+    //ev.eventsimulation();
     //ev.display_event();
 
 
