@@ -17,6 +17,8 @@ class point : public TObject {
     double get_phi() const {return phi;}
 
     void set_phi(double);
+    void set_R(double);
+    void set_z(double);
     void set_point(double, double, double);
 
     void generate_VTX();

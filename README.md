@@ -8,7 +8,7 @@ mkdir build
 cd build
 cmake ..
 make
-./myprogram
+./sim
 ```
 you should see some kind of an output
 
