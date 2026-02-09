@@ -15,6 +15,8 @@
 #include <thread>
 #include "TSystem.h" 
 #include "TRandom3.h"
+#include "TF1.h"
+#include "TCanvas.h"
 using namespace std;
 
 
@@ -45,6 +47,15 @@ int main(int argc, char **argv) {
     }
     
     inputThread.join();
+
+    /*TF1 *f_eta = new TF1("f_eta", "[0]*(1+[2]*x*x) / (cosh([1]*x)*cosh([1]*x))", -2.5, 2.5);
+    f_eta->SetParameters(1.0, 0.4, 0.18); // Esempio di parametri
+
+    TCanvas *c1 = new TCanvas("c1", "Distribution of eta", 800, 600);
+    c1->cd();
+    f_eta->Draw();
+    c1->SaveAs("../data/eta_distribution.png");*/
+
     return 0;
 
 }

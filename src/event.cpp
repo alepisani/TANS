@@ -63,14 +63,18 @@ void event::eventsimulation(){
         //trasport the particle until Beam Pipe
         prtl.find_intersection(beam_pipe_radius);
         points_BP.push_back(prtl.get_point());
+        if (multiple_scattering_on){
         prtl.multiple_scattering(beam_pipe_Z, beam_pipe_X0, beam_pipe_thickness);
+        };
         //cout << "particle on BP" << prtl << endl;
 
         //transport the particle until Layer1
         prtl.find_intersection(layer1_radius);
         //if(abs(prtl.get_point().get_z()) <= layer1_lenght/2){points_L1.push_back(prtl.get_point());}
         points_L1.push_back(prtl.get_point());
+        if (multiple_scattering_on){
         prtl.multiple_scattering(layer1_Z, layer1_X0, layer1_thickness);
+        };
         //cout << "particle on L1" << prtl << endl;
 
         //transport the particle until Layer2

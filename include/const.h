@@ -25,6 +25,7 @@ const double layer1_lenght = 270; //mm
 const double layer2_radius = 70; //mm
 const double layer2_lenght = 270; //mm
 
+const bool multiple_scattering_on = true;
 
 #endif
 

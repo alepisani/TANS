@@ -4,6 +4,8 @@
 #include "TRandom3.h"
 #include <iostream>
 #include <cmath>
+#include "TF1.h"
+
 using namespace std;
 
 ClassImp(particle);
@@ -47,7 +49,10 @@ void particle::generate_theta(){
     double eta_min = -log(tan(theta_bwd / 2.0));      // Limite minimo (backward)
     
     // Genera eta uniformemente entro i limiti asimmetrici
-    eta = gRandom->Uniform(eta_min, eta_max);
+    //eta = gRandom->Uniform(eta_min, eta_max);
+    TF1 *f_eta = new TF1("f_eta", "[0]*(1+[2]*x*x) / (cosh([1]*x)*cosh([1]*x))", eta_min, eta_max);
+    f_eta->SetParameters(1.0, 0.4, 0.18); // Esempio di parametri
+    eta = f_eta->GetRandom();
     theta = 2.0 * atan(exp(-eta));
 
 }
