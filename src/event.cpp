@@ -18,22 +18,27 @@
 #include "TPolyLine3D.h"
 #include "TRandom3.h"
 #include <iostream>
+#include "TF1.h"
+
 using namespace std;
 
 event::event(int m, point p, point vtx):TObject(), multiplicity(m), pnt(p), vertex(vtx){}
 
 void event::setmultiplicity() {
     
-    multiplicity = static_cast<int>(gRandom->Uniform(1, 50));
+    //multiplicity = static_cast<int>(gRandom->Uniform(1, 50));
     //multiplicity = fMultiplicityHist->GetRandom();
     //multiplicity = 5000; 
 
-    /*TF1 *f = new TF1("f", "gaus", -5, 5);
+    TF1 *f_mult = new TF1("f_mult", "[0]*ROOT::Math::gamma_pdf(x, [1], [2])", 0, 50);
 
-    TH1D *h = new TH1D("h", "PDF", 1000, -5, 5);
-    h->FillRandom("f", 1e6);   // campiona la funzione
-    h->Scale(1.0 / h->Integral()); // normalizzazione (opzionale)
-    multiplicity = h->GetRandom();*/
+    // Esempio parametri per LHC (valori indicativi)
+    double n_mean = 30.0; 
+    double k = 2.0; 
+    f_mult->SetParameters(1, k, n_mean/k);
+    multiplicity = static_cast<int>(f_mult->GetRandom());
+    cout << "Multiplicity: " << multiplicity << endl;
+
 
 }
 
