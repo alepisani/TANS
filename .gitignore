@@ -1,5 +1,3 @@
-.vscode/*
-!.vscode/.gitkeep
-.data/*
-!.data/.gitkeep
+.vscode
+data
 build
