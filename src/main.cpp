@@ -2,6 +2,7 @@
 #include "../include/event.h"
 #include "../include/point.h"
 #include "../include/particle.h"
+#include "../include/reconstruction.h"
 #include <iostream>
 #include "TApplication.h" 
 #include "TGeoManager.h"
@@ -28,10 +29,15 @@ int main(int argc, char **argv) {
     gRandom->SetSeed(seed);
 
     event ev;
+    //reconstruction reco;
     ev.RunFullSimulation();
     
     //ev.eventsimulation();
     //ev.display_event();
+
+    //double z_reco = reco.reco_z(ev);
+    //cout << "Z ricostruito: " << z_reco << " mm" << endl;
+    
 
 
 

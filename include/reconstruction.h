@@ -9,8 +9,8 @@ class reconstruction : public TObject {
 
     public:
 
-    void reco_z(event);
-
+    //void reco_z(event);
+    double reco_z(event);
 
 
     /**
