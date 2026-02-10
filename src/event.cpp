@@ -28,9 +28,9 @@ event::event(int m, point p, point vtx):TObject(), multiplicity(m), pnt(p), vert
 
 void event::setmultiplicity() {
     
-    //multiplicity = static_cast<int>(gRandom->Uniform(1, 50));
+    multiplicity = static_cast<int>(gRandom->Uniform(1, 50));
     //multiplicity = fMultiplicityHist->GetRandom();
-    multiplicity = 5000; 
+    //multiplicity = 5000; 
 
     TF1 *f_mult = new TF1("f_mult", "[0]*ROOT::Math::gamma_pdf(x, [1], [2])", 0, 50);
 
@@ -46,52 +46,6 @@ void event::setmultiplicity() {
 void event::set_vertex(point vtx){
 
     vertex = vtx;
-
-}
-
-void event::eventsimulation(){
-
-    point vertex;
-    vertex.generate_VTX();
-    cout << vertex << endl;
-    
-    this->set_vertex(vertex);
-    this->setmultiplicity();
-
-    for (int i = 0; i < multiplicity; i++){
-        
-        particle prtl;
-        prtl.set_point(vertex);
-        prtl.generate_theta();
-        prtl.generate_phi();
-        //cout << "particle on vertex" << prtl << endl;
-
-        //trasport the particle until Beam Pipe
-        prtl.find_intersection(beam_pipe_radius);
-        points_BP.push_back(prtl.get_point());
-        if (multiple_scattering_on){
-            prtl.multiple_scattering(beam_pipe_Z, beam_pipe_X0, beam_pipe_thickness);
-        };
-        //cout << "particle on BP" << prtl << endl;
-
-        //transport the particle until Layer1
-        prtl.find_intersection(layer1_radius);
-        //if(abs(prtl.get_point().get_z()) <= layer1_lenght/2){points_L1.push_back(prtl.get_point());}
-        points_L1.push_back(prtl.get_point());
-        if (multiple_scattering_on){
-            prtl.multiple_scattering(layer1_Z, layer1_X0, layer1_thickness);
-        };
-        //cout << "particle on L1" << prtl << endl;
-
-        //transport the particle until Layer2
-        prtl.find_intersection(layer2_radius);
-        //if(abs(prtl.get_point().get_z()) <= layer2_lenght/2){points_L2.push_back(prtl.get_point());}
-        points_L2.push_back(prtl.get_point());
-        //cout << "particle on L2" << prtl << endl;
- 
-    
-
-    }
 
 }
 
@@ -317,7 +271,6 @@ void event::RunFullSimulation() {
     // Buffer per i dati scalari (Vertice e Molteplicità)
     // Usiamo una struct o variabili singole per la Leaf List
     double vtx[3]; // X, Y, Z
-    int multiplicity;
 
     // Buffer per i dati vettoriali (Punti nei vari Layer)
     // TClonesArray riduce l'overhead di allocazione/deallocazione
@@ -338,22 +291,22 @@ void event::RunFullSimulation() {
     tree->Branch("HitsL1", &hitsL1);
     tree->Branch("HitsL2", &hitsL2);
 
-    event evSim;
+    //event evSim;
 
     for (int iEv = 0; iEv < nEvents; ++iEv) {
         
         point vertex;
         vertex.generate_VTX();
-        evSim.set_vertex(vertex);
+        this->set_vertex(vertex);
         cout << vertex << endl;
-        evSim.setmultiplicity();
+        this->setmultiplicity();
         
         vtx[0] = vertex.get_x();
         vtx[1] = vertex.get_y();
         vtx[2] = vertex.get_z();
-        multiplicity = evSim.get_multiplicity();
+        this->get_multiplicity();
 
-        for (int iPart = 0; iPart < multiplicity; ++iPart) {
+        for (int iPart = 0; iPart < this->get_multiplicity(); ++iPart) {
             particle prtl;
             prtl.set_point(vertex);
             prtl.generate_theta();
@@ -363,7 +316,7 @@ void event::RunFullSimulation() {
             new((*particle_VTX_BP)[iPart]) particle(prtl);
             prtl.find_intersection(beam_pipe_radius);
             new((*hitsBP)[iPart]) point(prtl.get_point());  
-            evSim.points_BP.push_back(prtl.get_point());
+            points_BP.push_back(prtl.get_point());
             if (multiple_scattering_on){
                 prtl.multiple_scattering(beam_pipe_Z, beam_pipe_X0, beam_pipe_thickness);
             };
@@ -373,7 +326,7 @@ void event::RunFullSimulation() {
             prtl.find_intersection(layer1_radius);
             prtl.get_point().smearing();
             new((*hitsL1)[iPart]) point(prtl.get_point());
-            evSim.points_L1.push_back(prtl.get_point());
+            points_L1.push_back(prtl.get_point());
             if (multiple_scattering_on){
                 prtl.multiple_scattering(layer1_Z, layer1_X0, layer1_thickness);
             };
@@ -383,7 +336,7 @@ void event::RunFullSimulation() {
             prtl.find_intersection(layer2_radius);
             prtl.get_point().smearing();
             new((*hitsL2)[iPart]) point(prtl.get_point());
-            evSim.points_L2.push_back(prtl.get_point());
+            points_L2.push_back(prtl.get_point());
 
         }
 
@@ -407,15 +360,12 @@ void event::RunFullSimulation() {
         }
         
         //reco
-        cout << evSim.points_L1.size() << endl;
-        double z_reco = reco.reco_z(evSim);
-        hResidui->Fill(vtx[2] - z_reco);
-        hResidui->Draw();
+        double z_reco_hist = reco.reco_z(this);
 
         //devi pulire i vector di punti
-        evSim.points_BP.clear();
-        evSim.points_L1.clear();
-        evSim.points_L2.clear();
+        points_BP.clear();
+        points_L1.clear();
+        points_L2.clear();
 
 
         tree->Fill();

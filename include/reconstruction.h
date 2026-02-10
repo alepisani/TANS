@@ -10,25 +10,11 @@ class reconstruction : public TObject {
     public:
 
     //void reco_z(event);
-    double reco_z(event);
+    double reco_z(event* );
+    double running_window();
 
-
-    /**
-     * combinatoriale su tuttle tracklet
-     * calcolo z
-     * fill hist
-     * find max
-     * 
-     * recTolerance:
-     * deltaPhi:   0.01    # [rad] maximum angular difference between two points to be used in reconstruction
-     * zBinWidth:  0.5     # [cm]  bin width used to reconstruct z coordinate of the vertex
-     * 
-     * 
-     */
-    
-
-
-    private:
+    std::vector <double> z_candidates;  
+    std::vector <double> vertex_candidate;
 
     ClassDef(reconstruction,1);
 

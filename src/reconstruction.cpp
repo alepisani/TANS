@@ -14,152 +14,114 @@ using namespace std;
 
 ClassImp(reconstruction);
 
+double reconstruction::running_window(){
 
-/*void reconstruction::reco_z(event ev){
-    
-TH1D *hist_z_vtx = new TH1D("hist_reco", "Ricostruzione Vertice Z; z_{cand} [mm]; Conteggi", 200, -beam_pipe_lenght, beam_pipe_lenght);
+    double window = 0.25; //mm
+    int maxfrequency = 0;
+    int frequency = 0;
+    double vertex = 187; //dummy value
+    double running_sum = 0;  
 
-    double z1, z2, r1, r2, phi1, phi2, z_cand;
-
-    cout << ev.points_L1.size() << endl;
-    for(size_t i = 0; i < ev.points_L1.size(); ++i) {
+    //creation of the window to iterate on each value
+    for(auto cand_vtx : vertex_candidate){
         
-        z1 = ev.points_L1[i].get_z();
-        r1 = layer1_radius; // Usiamo il raggio nominale per stabilità
-        phi1 = ev.points_L1[i].get_phi();
-
-        for(size_t j = 0; j < ev.points_L2.size(); ++j) {
-            
-            z2 = ev.points_L2[j].get_z();
-            r2 = layer2_radius;
-            phi2 = ev.points_L2[j].get_phi();
-
-            // Calcolo del Delta Phi con correzione periodicità
-            double dphi = std::abs(phi1 - phi2);
-            if (dphi > M_PI) dphi = 2.0 * M_PI - dphi;
-
-            // Taglio sui "Tracklets" (combinatoria)
-            if(dphi <= delta_phi) {
-                // Formula corretta dell'intersezione con l'asse r=0
-                z_cand = (r2 * z1 - r1 * z2) / (r2 - r1);
-                hist_z_vtx->Fill(z_cand);
-            }
-        }
-}
-
-// 4. Gestione Grafica
-TCanvas *c_reco = new TCanvas("c_reco", "Canvas Ricostruzione", 800, 600);
-hist_z_vtx->SetLineColor(kRed);
-hist_z_vtx->Draw();
-
-// Fondamentale per vedere il risultato in un'applicazione compilata:
-c_reco->Update();
-c_reco->Modified();
-
-}*/
-
-double reconstruction::reco_z(event ev){
-    
-TH1D *hist_z_vtx = new TH1D("hist_reco", "Ricostruzione Vertice Z; z_{cand} [mm]; Conteggi", 200, -beam_pipe_lenght, beam_pipe_lenght);
-
-    double z1, z2, r1, r2, phi1, phi2, z_cand;
-
-    cout << ev.points_L1.size() << endl;
-    for(size_t i = 0; i < ev.points_L1.size(); ++i) {
+        double window_in = cand_vtx - window/2.;
+        double window_out = cand_vtx + window/2.;
         
-        z1 = ev.points_L1[i].get_z();
-        r1 = layer1_radius; // Usiamo il raggio nominale per stabilità
-        phi1 = ev.points_L1[i].get_phi();
+        frequency = 0;        
+        running_sum = 0;      
+        
+        //check the window frequency 
+        for(auto cand_vtx2 : vertex_candidate){
 
-        for(size_t j = 0; j < ev.points_L2.size(); ++j) {
-            
-            z2 = ev.points_L2[j].get_z();
-            r2 = layer2_radius;
-            phi2 = ev.points_L2[j].get_phi();
-
-            // Calcolo del Delta Phi con correzione periodicità
-            double dphi = std::abs(phi1 - phi2);
-            if (dphi > M_PI) dphi = 2.0 * M_PI - dphi;
-
-            // Taglio sui "Tracklets" (combinatoria)
-            if(dphi <= delta_phi) {
-                // Formula corretta dell'intersezione con l'asse r=0
-                z_cand = (r2 * z1 - r1 * z2) / (r2 - r1);
-                hist_z_vtx->Fill(z_cand);
+            if(cand_vtx2 > window_in && cand_vtx2 < window_out){
+                frequency++;
+                running_sum += cand_vtx2;
             }
+
         }
+
+        //find the maximum and consider the vertex as the mean of the window
+        if(frequency > maxfrequency){
+            maxfrequency = frequency;
+            vertex = running_sum / frequency;  
+        }
+    }
+
+    return vertex;
 }
 
-// 4. Gestione Grafica
-TCanvas *c_reco = new TCanvas("c_reco", "Canvas Ricostruzione", 800, 600);
-hist_z_vtx->SetLineColor(kRed);
-hist_z_vtx->Draw();
-
-// Fondamentale per vedere il risultato in un'applicazione compilata:
-c_reco->Update();
-c_reco->Modified();
-
-double z_reco = hist_z_vtx->GetBinCenter(hist_z_vtx->GetMaximumBin()); //per ottenere la moda dell'istogramma
-return z_reco;
-
-}
-
-
-
-
-/*
-void reconstruction::reco_z(event& ev) {
+double reconstruction::reco_z(event* ev){
     
-// 1. Setup dell'istogramma
-// Usiamo un nome univoco o lo cancelliamo se esiste già per evitare memory leak in loop
-TH1D *hist_z_vtx = new TH1D("hist_reco", "Ricostruzione Vertice Z; z_{cand} [cm]; Conteggi", 
-200, -beam_pipe_lenght, beam_pipe_lenght);
+    TH1D *hist_z_vtx = new TH1D("hist_reco", "Ricostruzione Vertice Z; z_{cand} [mm]; Conteggi", 50, -beam_pipe_lenght/2., beam_pipe_lenght/2.);
 
-// 2. Variabili di appoggio
-double z1, z2, r1, r2, phi1, phi2, z_cand;
+        double z1, z2, r1, r2, phi1, phi2, z_cand;
 
-// 3. Accesso ai membri dell'evento passato per riferimento
-// Nota: assumo che points_L1 e points_L2 siano public o abbiano getter
-const auto& hits1 = ev.points_L1; 
-const auto& hits2 = ev.points_L2;
+        cout << ev->points_L1.size() << endl;
+        for(size_t i = 0; i < ev->points_L1.size(); ++i) {
+            
+            z1 = ev->points_L1[i].get_z();
+            r1 = layer1_radius; 
+            phi1 = ev->points_L1[i].get_phi();
 
-cout << hits1.size() << endl;
-for(size_t i = 0; i < hits1.size(); ++i) {
+            for(size_t j = 0; j < ev->points_L2.size(); ++j) {
+                
+                z2 = ev->points_L2[j].get_z();
+                r2 = layer2_radius;
+                phi2 = ev->points_L2[j].get_phi();
+
+                //taking into accout the periodicity
+                double dphi = std::abs(phi1 - phi2);
+                if (dphi > M_PI) dphi = 2.0 * M_PI - dphi;
+
+                //selection on phi and geometry
+                if(dphi <= delta_phi) {
+                    z_cand = (r2 * z1 - r1 * z2) / (r2 - r1);
+                    if(abs(z_cand) <= beam_pipe_lenght/2.){
+                        hist_z_vtx->Fill(z_cand);
+                        z_candidates.push_back(z_cand);
+                    } 
+                }
+            }
+    }
+
+    int bin = hist_z_vtx->GetMaximumBin();
+    double bin_low = hist_z_vtx->GetBinLowEdge(bin);
+    double bin_high = bin_low + hist_z_vtx->GetBinWidth(bin);
+
+    //fill a vector with all the z values of the maximum bin
+    for(double z : z_candidates){
+
+        if(z >= bin_low && z < bin_high){
+            vertex_candidate.push_back(z);
+        }
+
+    }
+
+    //find primary vertex
+    double z_vtx = running_window();
     
-z1 = hits1[i].get_z();
-r1 = layer1_radius; // Usiamo il raggio nominale per stabilità
-phi1 = hits1[i].get_phi();
 
-for(size_t j = 0; j < hits2.size(); ++j) {
-    
-z2 = hits2[j].get_z();
-r2 = layer2_radius;
-phi2 = hits2[j].get_phi();
+    //QUESTO FUNZIONE SU SINGOLO EVENTO, DA TOGLIERE DOPO
+    // 4. Gestione Grafica
+    TCanvas *c_reco = new TCanvas("c_reco", "Canvas Ricostruzione", 800, 600);
+    hist_z_vtx->SetLineColor(kRed);
+    hist_z_vtx->Draw();
 
-// Calcolo del Delta Phi con correzione periodicità [0, pi]
-double dphi = std::abs(phi1 - phi2);
-if (dphi > M_PI) dphi = 2.0 * M_PI - dphi;
+    // Fondamentale per vedere il risultato in un'applicazione compilata:
+    c_reco->cd();
+    c_reco->Update();
+    c_reco->Modified();
 
-// Taglio sui "Tracklets" (combinatoria)
-if(dphi <= delta_phi) {
-    // Formula corretta dell'intersezione con l'asse r=0
-    z_cand = (r2 * z1 - r1 * z2) / (r2 - r1);
-    hist_z_vtx->Fill(z_cand);
-}
-}
-}
+    double z_reco = hist_z_vtx->GetBinCenter(hist_z_vtx->GetMaximumBin()); //per ottenere la moda dell'istogramma
+    cout << "hist = " << z_reco << endl;
+    cout << "running window = " << z_vtx << endl;
 
-// 4. Gestione Grafica
-TCanvas *c_reco = new TCanvas("c_reco", "Canvas Ricostruzione", 800, 600);
-hist_z_vtx->SetLineColor(kRed);
-hist_z_vtx->Draw();
-
-// Fondamentale per vedere il risultato in un'applicazione compilata:
-c_reco->Update();
-c_reco->Modified();
+    return z_vtx;
 
 }
 
-*/
+
+
 
 

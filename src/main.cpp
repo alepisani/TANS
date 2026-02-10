@@ -32,7 +32,6 @@ int main(int argc, char **argv) {
     //reconstruction reco;
     ev.RunFullSimulation();
     
-    //ev.eventsimulation();
     //ev.display_event();
 
     //double z_reco = reco.reco_z(ev);
