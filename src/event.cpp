@@ -123,7 +123,7 @@ void event::display_event(){
 // QUELLA CHE SEGUE E' LA VERSIONE CON L'ISTOGRAMMA DEI RESIDUI!!!!
 void event::RunFullSimulation() {
     
-    int nEvents = 100000;
+    int nEvents = 10000;
     reconstruction reco;
 
     TFile* hfile = new TFile("../data/hist_sim.root", "RECREATE");
@@ -242,7 +242,7 @@ void event::RunFullSimulation() {
         if (iEv % 10000 == 0) std::cout << "Event " << iEv << " has been simulated." << std::endl;
     }
 
-
+    cout << "Deviazione standard dei residui: " << hResidui->GetStdDev() << " μm" << std::endl;
     hfile->Write();
     hfile->Close();
 

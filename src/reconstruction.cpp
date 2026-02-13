@@ -16,7 +16,7 @@ ClassImp(reconstruction);
 
 double reconstruction::running_window(){
 
-    double window = 0.25; //mm
+    double window = 0.1; //mm - ridotto per migliore risoluzione
     int maxfrequency = 0;
     int frequency = 0;
     double vertex = 187; //dummy value
@@ -57,7 +57,7 @@ double reconstruction::reco_z(event* ev, TH1D* hResidui){
     z_candidates.clear();
     vertex_candidate.clear();
     
-    TH1D hist_z_vtx("hist_reco", "Ricostruzione Vertice Z; z_{cand} [mm]; Conteggi", 50, -beam_pipe_lenght/2., beam_pipe_lenght/2.);
+    TH1D hist_z_vtx("hist_reco", "Ricostruzione Vertice Z; z_{cand} [mm]; Conteggi", 200, -beam_pipe_lenght/2., beam_pipe_lenght/2.);
 
         double z1, z2, r1, r2, phi1, phi2, z_cand;
 
@@ -106,6 +106,7 @@ double reconstruction::reco_z(event* ev, TH1D* hResidui){
     double z_vtx = running_window();
     
     //fill residuals histogram if provided
+    //if(hResidui != nullptr && ev->get_multiplicity() > 10){
     if(hResidui != nullptr){
         double residuo = (z_vtx - ev->get_vertex().get_z())*1000 ;
         hResidui->Fill(residuo);
