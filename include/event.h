@@ -13,6 +13,7 @@ public:
    
    int get_multiplicity() const {return multiplicity;}
    auto get_point() const {return pnt;}
+   const point& get_vertex() const {return vertex;}
    
    void setmultiplicity();
    void set_vertex(point vtx);

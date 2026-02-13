@@ -10,7 +10,7 @@ class reconstruction : public TObject {
     public:
 
     //void reco_z(event);
-    double reco_z(event* );
+    double reco_z(event*, class TH1D*);
     double running_window();
 
     std::vector <double> z_candidates;  

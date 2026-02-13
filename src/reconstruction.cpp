@@ -51,13 +51,17 @@ double reconstruction::running_window(){
     return vertex;
 }
 
-double reconstruction::reco_z(event* ev){
+double reconstruction::reco_z(event* ev, TH1D* hResidui){
     
-    TH1D *hist_z_vtx = new TH1D("hist_reco", "Ricostruzione Vertice Z; z_{cand} [mm]; Conteggi", 50, -beam_pipe_lenght/2., beam_pipe_lenght/2.);
+    // Clear vectors from previous event
+    z_candidates.clear();
+    vertex_candidate.clear();
+    
+    TH1D hist_z_vtx("hist_reco", "Ricostruzione Vertice Z; z_{cand} [mm]; Conteggi", 50, -beam_pipe_lenght/2., beam_pipe_lenght/2.);
 
         double z1, z2, r1, r2, phi1, phi2, z_cand;
 
-        cout << ev->points_L1.size() << endl;
+        //cout << ev->points_L1.size() << endl;
         for(size_t i = 0; i < ev->points_L1.size(); ++i) {
             
             z1 = ev->points_L1[i].get_z();
@@ -78,16 +82,16 @@ double reconstruction::reco_z(event* ev){
                 if(dphi <= delta_phi) {
                     z_cand = (r2 * z1 - r1 * z2) / (r2 - r1);
                     if(abs(z_cand) <= beam_pipe_lenght/2.){
-                        hist_z_vtx->Fill(z_cand);
+                        hist_z_vtx.Fill(z_cand);
                         z_candidates.push_back(z_cand);
                     } 
                 }
             }
     }
 
-    int bin = hist_z_vtx->GetMaximumBin();
-    double bin_low = hist_z_vtx->GetBinLowEdge(bin);
-    double bin_high = bin_low + hist_z_vtx->GetBinWidth(bin);
+    int bin = hist_z_vtx.GetMaximumBin();
+    double bin_low = hist_z_vtx.GetBinLowEdge(bin);
+    double bin_high = bin_low + hist_z_vtx.GetBinWidth(bin);
 
     //fill a vector with all the z values of the maximum bin
     for(double z : z_candidates){
@@ -101,21 +105,11 @@ double reconstruction::reco_z(event* ev){
     //find primary vertex
     double z_vtx = running_window();
     
-
-    //QUESTO FUNZIONE SU SINGOLO EVENTO, DA TOGLIERE DOPO
-    // 4. Gestione Grafica
-    TCanvas *c_reco = new TCanvas("c_reco", "Canvas Ricostruzione", 800, 600);
-    hist_z_vtx->SetLineColor(kRed);
-    hist_z_vtx->Draw();
-
-    // Fondamentale per vedere il risultato in un'applicazione compilata:
-    c_reco->cd();
-    c_reco->Update();
-    c_reco->Modified();
-
-    double z_reco = hist_z_vtx->GetBinCenter(hist_z_vtx->GetMaximumBin()); //per ottenere la moda dell'istogramma
-    cout << "hist = " << z_reco << endl;
-    cout << "running window = " << z_vtx << endl;
+    //fill residuals histogram if provided
+    if(hResidui != nullptr){
+        double residuo = (z_vtx - ev->get_vertex().get_z())*1000 ;
+        hResidui->Fill(residuo);
+    }
 
     return z_vtx;
 
