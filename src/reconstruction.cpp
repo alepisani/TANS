@@ -51,6 +51,8 @@ double reconstruction::running_window(){
     return vertex;
 }
 
+
+
 double reconstruction::reco_z(event* ev, TH1D* hResidui){
     
     // Clear vectors from previous event

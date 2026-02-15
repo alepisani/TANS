@@ -7,6 +7,8 @@
 #include "TH1D.h"
 #include "TTree.h"
 #include "TBranch.h"
+#include "TGraphAsymmErrors.h"
+#include "TH2D.h"
 #include "TClonesArray.h"
 #include <algorithm>
 #include "TApplication.h" 
@@ -120,6 +122,7 @@ void event::display_event(){
 
 }
 
+
 // QUELLA CHE SEGUE E' LA VERSIONE CON L'ISTOGRAMMA DEI RESIDUI!!!!
 void event::RunFullSimulation() {
     
@@ -129,6 +132,12 @@ void event::RunFullSimulation() {
     TFile* hfile = new TFile("../data/hist_sim.root", "RECREATE");
     TTree* tree = new TTree("Tree", "Tree simulazione");
     TH1D* hResidui = new TH1D("hResidui", "Residui; (z_{gen} - z_{reco}) [#mum]; Conteggi", 500, -10*1000, 10*1000);
+    TH1D* hGen = new TH1D("hGen", "Eventi Generati; Molteplicita'; Conteggi", 50, 0, 50);
+    TH1D* hReco = new TH1D("hReco", "Eventi Ricostruiti; Molteplicita'; Conteggi", 50, 0, 50);
+    TH1D* hGenVsZ = new TH1D("hGenvsZ", "Eventi generati vs Z; Conteggi", 30, -beam_pipe_lenght/2., beam_pipe_lenght/2.);
+    TH1D* hRecoVsZ = new TH1D("hRecovsZ", "Eventi ricostruiti vs Z; Conteggi", 30, -beam_pipe_lenght/2., beam_pipe_lenght/2.);
+    TH2D* h2D = new TH2D("h2D", "Residui vs Mult; Molteplicita'; Residuo [#mum]", 10, 0, 50, 200, -500, 500);
+    TH2D* h2D_Z = new TH2D("h2D_Z", "Residui vs Z; z [mm]; Residuo [#mum]", 30, -beam_pipe_lenght/2., beam_pipe_lenght/2., 200, -500, 500);
 
     // Buffer per i dati scalari (Vertice e Molteplicità)
     // Usiamo una struct o variabili singole per la Leaf List
@@ -223,6 +232,21 @@ void event::RunFullSimulation() {
         
         //reco
         double z_reco = reco.reco_z(this, hResidui);
+        double z_true = vertex.get_z();
+        int m = this->get_multiplicity();
+        double residuo = (z_true - z_reco)*1000;
+
+        // Riempi sempre il denominatore
+        hGen->Fill(m);  //praticamente aggiunge 1 al bin corrispondente alla molteplicità m, quindi conta quanti vertici genera per ogni molteplicità
+        hGenVsZ->Fill(z_true);
+        h2D->Fill(m, residuo);
+        h2D_Z->Fill(z_true, residuo);
+        // Stabilisci il criterio di "successo":
+        // Se lo scarto è minore di una soglia (es. 1.5 mm), considero il vertice trovato
+        if (std::abs(z_reco - z_true) < 1.5) {
+            hReco->Fill(m);
+            hRecoVsZ->Fill(z_true);
+        }
 
         //devi pulire i vector di punti
         points_BP.clear();
@@ -241,8 +265,60 @@ void event::RunFullSimulation() {
 
         if (iEv % 10000 == 0) std::cout << "Event " << iEv << " has been simulated." << std::endl;
     }
+    //MODIFICHE FATTE ORA    
+    TGraphAsymmErrors* gEff = new TGraphAsymmErrors(hReco, hGen, "cp"); //"cp" indica che metodo usare per calcolare gli errori (binomiali in questo caso)
+    // 2. Estetica del grafico (punti ed errori)
+    gEff->SetTitle("Efficienza di Ricostruzione;Molteplicita';Efficienza");
+    gEff->SetMarkerStyle(20);
+    gEff->SetMarkerSize(1.0);
+    gEff->SetMarkerColor(kAzure+2);
+    gEff->SetLineColor(kAzure+2);
+    // Se vuoi anche la curva continua (il fit) sopra:
+    TF1 *f_logis = new TF1("f_logis", "[0] / (1.0 + exp(-[1]*(x-[2])))", 0, 50);
+    f_logis->SetParameters(1, 0.5, 5);
+    gEff->Fit(f_logis, "R");
+    f_logis->SetLineColor(kRed);
+    gEff->Write();
 
+    TGraphAsymmErrors* gEffVsZ = new TGraphAsymmErrors(hRecoVsZ, hGenVsZ, "cp");
+    gEffVsZ->SetTitle("Efficienza di Ricostruzione vs Z; z [mm]; Efficienza");
+    gEffVsZ->SetMarkerStyle(20);
+    gEffVsZ->SetMarkerSize(1.0);
+    gEffVsZ->SetMarkerColor(kAzure+2);
+    gEffVsZ->SetLineColor(kAzure+2);
+    gEffVsZ->Write();
+
+    hResidui->Fit("gaus");
+    // Recupera la funzione di fit associata all'istogramma
+    TF1 *fitFunc = hResidui->GetFunction("gaus");
+
+    if (fitFunc) {
+        double mean  = fitFunc->GetParameter(1); // Media (z_gen - z_reco)
+        double sigma = fitFunc->GetParameter(2); // Questa è la tua risoluzione migliorata!
+        double sigmaErr = fitFunc->GetParError(2); // Errore sulla sigma
+
+        cout << "Risoluzione del vertice (Sigma) CALCOLATA DAL FIT: " << sigma << " um" << endl;
+        cout << "Errore sulla risoluzione: " << sigmaErr << " um" << endl;
+    }
+    
     cout << "Deviazione standard dei residui: " << hResidui->GetStdDev() << " μm" << std::endl;
+
+    // Questo comando divide l'istogramma 2D in fette (slice) verticali (per bin di molteplicità)
+    // e fa un fit gaussiano su ogni fetta automaticamente.
+    h2D->FitSlicesY();
+
+    // ROOT crea automaticamente degli istogrammi con i risultati dei fit (altezza, media, sigma, chi2).
+    // L'istogramma con suffisso "_2" contiene le SIGMA di ogni fetta.
+    TH1D *hRisoluzione = (TH1D*)gDirectory->Get("h2D_2");
+    hRisoluzione->SetTitle("Risoluzione vs Molteplicita'; Molteplicita'; #sigma [um]");
+    hRisoluzione->Draw();
+    hRisoluzione->Write();
+
+    h2D_Z->FitSlicesY();
+    TH1D *hRisoluzione_Z = (TH1D*)gDirectory->Get("h2D_Z_2");
+    hRisoluzione_Z->SetTitle("Risoluzione vs Z; z [mm]; #sigma [um]");
+    hRisoluzione_Z->Write();
+
     hfile->Write();
     hfile->Close();
 
