@@ -126,7 +126,7 @@ void event::display_event(){
 // QUELLA CHE SEGUE E' LA VERSIONE CON L'ISTOGRAMMA DEI RESIDUI!!!!
 void event::RunFullSimulation() {
     
-    int nEvents = 10000;
+    int nEvents = 100000;
     reconstruction reco;
 
     TFile* hfile = new TFile("../data/hist_sim.root", "RECREATE");
