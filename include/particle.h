@@ -3,6 +3,7 @@
 #include <iostream>
 #include "TObject.h"
 #include "point.h"
+#include "TH1.h"
 using namespace std;
 
 class particle : public TObject {
@@ -11,7 +12,7 @@ class particle : public TObject {
     particle():TObject(), pt(), theta(0.), phi(0.), eta(0.){}
     particle(point, double, double);
     
-    void generate_theta();
+    void generate_theta(TH1D* hist_eta = nullptr);
     void generate_phi();
     
     double get_theta() const {return theta;}

@@ -126,7 +126,7 @@ void event::display_event(){
 // QUELLA CHE SEGUE E' LA VERSIONE CON L'ISTOGRAMMA DEI RESIDUI!!!!
 void event::RunFullSimulation() {
     
-    int nEvents = 100000;
+    int nEvents = 10000;
     reconstruction reco;
 
     TFile* hfile = new TFile("../data/hist_sim.root", "RECREATE");
@@ -162,6 +162,21 @@ void event::RunFullSimulation() {
     tree->Branch("HitsL1", &hitsL1);
     tree->Branch("HitsL2", &hitsL2);
 
+    // Load eta histogram once at the beginning
+    TH1D* hist_eta = nullptr;
+    TFile* eta_file = nullptr;
+    if(distrib_assegnata) {
+        eta_file = TFile::Open("../data/kinem.root");
+        if(eta_file && !eta_file->IsZombie()) {
+            hist_eta = (TH1D*)eta_file->Get("heta2");
+            if(!hist_eta) {
+                std::cerr << "Errore: istogramma 'heta2' non trovato nel file\n";
+            }
+        } else {
+            std::cerr << "Errore nell'aprire il file kinem.root\n";
+        }
+    }
+
     //event evSim;
 
     for (int iEv = 0; iEv < nEvents; ++iEv) {
@@ -180,7 +195,7 @@ void event::RunFullSimulation() {
         for (int iPart = 0; iPart < this->get_multiplicity(); ++iPart) {
             particle prtl;
             prtl.set_point(vertex);
-            prtl.generate_theta();
+            prtl.generate_theta(hist_eta);  // Pass histogram to avoid reopening file
             prtl.generate_phi();
 
             //trasporto da vtx a bp
@@ -263,8 +278,15 @@ void event::RunFullSimulation() {
         hitsL1->Clear("C");
         hitsL2->Clear("C");
 
-        if (iEv % 10000 == 0) std::cout << "Event " << iEv << " has been simulated." << std::endl;
+        if (iEv % 100 == 0) std::cout << "Event " << iEv << " has been simulated." << std::endl;
     }
+    
+    // Clean up eta histogram file
+    if(eta_file) {
+        eta_file->Close();
+        delete eta_file;
+    }
+    
     //MODIFICHE FATTE ORA    
     TGraphAsymmErrors* gEff = new TGraphAsymmErrors(hReco, hGen, "cp"); //"cp" indica che metodo usare per calcolare gli errori (binomiali in questo caso)
     // 2. Estetica del grafico (punti ed errori)

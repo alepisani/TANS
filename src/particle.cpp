@@ -5,6 +5,9 @@
 #include <iostream>
 #include <cmath>
 #include "TF1.h"
+#include "TH1.h"
+#include "TFile.h"
+
 
 using namespace std;
 
@@ -16,46 +19,85 @@ particle::particle(point pt, double t, double p):TObject(), pt(pt), theta(t), ph
 
 }
 
-void particle::generate_theta(){
+void particle::generate_theta(TH1D* hist_eta){
 
-    //Generate theta, considering detector's geometric acceptance
-    //considering the asymmetric position of the vertex and safety margins
-    const double z_det_max = 135.0;      // mm (half of the length, 270mm)
-    const double r_det_max = 40.0;       // mm (layer1's radius)
-    const double safety_factor = 0.95;   // safety factor for conservative margin
-    
-    // vertex position, initial position of the particle
-    double x_vtx = pt.get_x();
-    double y_vtx = pt.get_y();
-    double z_vtx = pt.get_z();
-    
-    // vertex radial distance from the beamline
-    double r_vtx = sqrt(x_vtx*x_vtx + y_vtx*y_vtx);
-    
-    // distances from the vertex to the end of the layers in both directions
-    double z_forward = z_det_max - z_vtx;   
-    double z_backward = z_det_max + z_vtx;  
-    
-    // available radial distance from the vertex
-    double r_available = (r_det_max - r_vtx) * safety_factor;
-    if (r_available < 0.5) r_available = 0.5;  // minimum protection against very close vertices
-    
-    // maximum acceptance angles in both directions
-    double theta_fwd = atan(r_available / z_forward);       
-    double theta_bwd = M_PI - atan(r_available / z_backward); 
-    
-    // conversion to pseudorapidity limits
-    double eta_max = -log(tan(theta_fwd / 2.0));      
-    double eta_min = -log(tan(theta_bwd / 2.0));      
-    
-    //generate eta to get theta
-    eta = gRandom->Uniform(eta_min, eta_max);
-    
-    //TF1 *f_eta = new TF1("f_eta", "[0]*(1+[2]*x*x) / (cosh([1]*x)*cosh([1]*x))", eta_min, eta_max);
-    //f_eta->SetParameters(1.0, 0.4, 0.18); // Esempio di parametri
-    //eta = f_eta->GetRandom();
-    
-    theta = 2.0 * atan(exp(-eta));
+    std::string input_filename = "../data/kinem.root";
+
+    if(!distrib_assegnata){
+
+        //Generate theta, considering detector's geometric acceptance
+        //considering the asymmetric position of the vertex and safety margins
+        const double z_det_max = 135.0;      // mm (half of the length, 270mm)
+        const double r_det_max = 40.0;       // mm (layer1's radius)
+        const double safety_factor = 0.95;   // safety factor for conservative margin
+        
+        // vertex position, initial position of the particle
+        double x_vtx = pt.get_x();
+        double y_vtx = pt.get_y();
+        double z_vtx = pt.get_z();
+        
+        // vertex radial distance from the beamline
+        double r_vtx = sqrt(x_vtx*x_vtx + y_vtx*y_vtx);
+        
+        // distances from the vertex to the end of the layers in both directions
+        double z_forward = z_det_max - z_vtx;   
+        double z_backward = z_det_max + z_vtx;  
+        
+        // available radial distance from the vertex
+        double r_available = (r_det_max - r_vtx) * safety_factor;
+        if (r_available < 0.5) r_available = 0.5;  // minimum protection against very close vertices
+        
+        // maximum acceptance angles in both directions
+        double theta_fwd = atan(r_available / z_forward);       
+        double theta_bwd = M_PI - atan(r_available / z_backward); 
+        
+        // conversion to pseudorapidity limits
+        double eta_max = -log(tan(theta_fwd / 2.0));      
+        double eta_min = -log(tan(theta_bwd / 2.0));      
+        
+        //generate eta to get theta
+        eta = gRandom->Uniform(eta_min, eta_max);
+        
+        //TF1 *f_eta = new TF1("f_eta", "[0]*(1+[2]*x*x) / (cosh([1]*x)*cosh([1]*x))", eta_min, eta_max);
+        //f_eta->SetParameters(1.0, 0.4, 0.18); // Esempio di parametri
+        //eta = f_eta->GetRandom();
+        
+        theta = 2.0 * atan(exp(-eta));
+    }
+
+    if(distrib_assegnata){
+
+        // If histogram is provided, use it directly (faster for multiple particles)
+        if(hist_eta != nullptr){
+            // Generate eta from the histogram distribution
+            eta = hist_eta->GetRandom();
+            // Convert eta to theta
+            theta = 2.0 * atan(exp(-eta));
+        }
+        else {
+            // Fallback: load from file (for backward compatibility)
+            TFile *file = TFile::Open(input_filename.c_str());
+
+            if (!file || file->IsZombie())
+            {
+                std::cerr << "Errore nell'aprire il file ROOT\n";
+                return;
+            }
+
+            TH1D *hist = (TH1D*)file->Get("heta2");
+
+            if (!hist) {
+                std::cerr << "Errore: istogramma 'heta2' non trovato nel file\n";
+                file->Close();
+                return;
+            }
+
+            eta = hist->GetRandom();
+            theta = 2.0 * atan(exp(-eta));
+
+            file->Close();
+        }
+    }
 
 }
 
@@ -154,8 +196,8 @@ void particle::rotate(double theta_p, double phi_p) {
 
 //multiple scattering of the particle, and consequent rotation of the trajectory
 void particle::multiple_scattering(int Z, double X0, double thickness) {
-    //double p=700; // MeV/c 
-    double p = 3000;
+    
+    double p=700; // MeV/c 
     double beta = 1.;
     double theta0 = 13.6/(beta*p)*Z*sqrt(thickness/(sin(theta)*X0))*(1+0.038*log(thickness/X0)); //theta in plane
     double theta_rms = theta0*sqrt(2); //rms in 3D space

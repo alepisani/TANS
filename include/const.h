@@ -32,6 +32,9 @@ const bool multiple_scattering_on = true;
 const double zBinWidth = 50; //mm
 const double delta_phi = 0.01; //rad
 
+//distribution
+const bool distrib_assegnata = true;
+
 #endif
 
 
