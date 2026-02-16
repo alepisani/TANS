@@ -132,8 +132,8 @@ void event::RunFullSimulation() {
     TFile* hfile = new TFile("../data/hist_sim.root", "RECREATE");
     TTree* tree = new TTree("Tree", "Tree simulazione");
     TH1D* hResidui = new TH1D("hResidui", "Residui; (z_{gen} - z_{reco}) [#mum]; Conteggi", 500, -10*1000, 10*1000);
-    TH1D* hGen = new TH1D("hGen", "Eventi Generati; Molteplicita'; Conteggi", 50, 0, 50);
-    TH1D* hReco = new TH1D("hReco", "Eventi Ricostruiti; Molteplicita'; Conteggi", 50, 0, 50);
+    TH1D* hGen = new TH1D("hGen", "Eventi Generati; Molteplicita'; Conteggi", 30, 0, 50);
+    TH1D* hReco = new TH1D("hReco", "Eventi Ricostruiti; Molteplicita'; Conteggi", 30, 0, 50);
     TH1D* hGenVsZ = new TH1D("hGenvsZ", "Eventi generati vs Z; Conteggi", 30, -beam_pipe_lenght/2., beam_pipe_lenght/2.);
     TH1D* hRecoVsZ = new TH1D("hRecovsZ", "Eventi ricostruiti vs Z; Conteggi", 30, -beam_pipe_lenght/2., beam_pipe_lenght/2.);
     TH2D* h2D = new TH2D("h2D", "Residui vs Mult; Molteplicita'; Residuo [#mum]", 10, 0, 50, 200, -500, 500);
@@ -287,6 +287,8 @@ void event::RunFullSimulation() {
         delete eta_file;
     }
     
+    hfile->cd();
+
     //MODIFICHE FATTE ORA    
     TGraphAsymmErrors* gEff = new TGraphAsymmErrors(hReco, hGen, "cp"); //"cp" indica che metodo usare per calcolare gli errori (binomiali in questo caso)
     // 2. Estetica del grafico (punti ed errori)
@@ -319,6 +321,7 @@ void event::RunFullSimulation() {
         double sigma = fitFunc->GetParameter(2); // Questa è la tua risoluzione migliorata!
         double sigmaErr = fitFunc->GetParError(2); // Errore sulla sigma
 
+        cout << "Media dei residui CALCOLATA DAL FIT: " << mean << " um" << endl; 
         cout << "Risoluzione del vertice (Sigma) CALCOLATA DAL FIT: " << sigma << " um" << endl;
         cout << "Errore sulla risoluzione: " << sigmaErr << " um" << endl;
     }

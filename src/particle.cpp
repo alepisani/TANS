@@ -197,7 +197,7 @@ void particle::rotate(double theta_p, double phi_p) {
 //multiple scattering of the particle, and consequent rotation of the trajectory
 void particle::multiple_scattering(int Z, double X0, double thickness) {
     
-    double p=700; // MeV/c 
+    double p=1000; // MeV/c 
     double beta = 1.;
     double theta0 = 13.6/(beta*p)*Z*sqrt(thickness/(sin(theta)*X0))*(1+0.038*log(thickness/X0)); //theta in plane
     double theta_rms = theta0*sqrt(2); //rms in 3D space
