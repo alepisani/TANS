@@ -21,8 +21,6 @@ particle::particle(point pt, double t, double p):TObject(), pt(pt), theta(t), ph
 
 void particle::generate_theta(TH1D* hist_eta){
 
-    std::string input_filename = "../data/kinem.root";
-
     if(!distrib_assegnata){
 
         //Generate theta, considering detector's geometric acceptance
@@ -58,45 +56,15 @@ void particle::generate_theta(TH1D* hist_eta){
         //generate eta to get theta
         eta = gRandom->Uniform(eta_min, eta_max);
         
-        //TF1 *f_eta = new TF1("f_eta", "[0]*(1+[2]*x*x) / (cosh([1]*x)*cosh([1]*x))", eta_min, eta_max);
-        //f_eta->SetParameters(1.0, 0.4, 0.18); // Esempio di parametri
-        //eta = f_eta->GetRandom();
-        
         theta = 2.0 * atan(exp(-eta));
     }
 
     if(distrib_assegnata){
-
-        // If histogram is provided, use it directly (faster for multiple particles)
-        if(hist_eta != nullptr){
-            // Generate eta from the histogram distribution
-            eta = hist_eta->GetRandom();
-            // Convert eta to theta
-            theta = 2.0 * atan(exp(-eta));
-        }
-        else {
-            // Fallback: load from file (for backward compatibility)
-            TFile *file = TFile::Open(input_filename.c_str());
-
-            if (!file || file->IsZombie())
-            {
-                std::cerr << "Errore nell'aprire il file ROOT\n";
-                return;
-            }
-
-            TH1D *hist = (TH1D*)file->Get("heta2");
-
-            if (!hist) {
-                std::cerr << "Errore: istogramma 'heta2' non trovato nel file\n";
-                file->Close();
-                return;
-            }
-
-            eta = hist->GetRandom();
-            theta = 2.0 * atan(exp(-eta));
-
-            file->Close();
-        }
+        
+        eta = hist_eta->GetRandom();
+        // Convert eta to theta
+        theta = 2.0 * atan(exp(-eta));
+        
     }
 
 }

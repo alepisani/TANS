@@ -30,10 +30,16 @@ const bool multiple_scattering_on = true;
 
 //reconstuction constant
 const double zBinWidth = 50; //mm
+
+
+//possiamo abbassarlo di almeno un odg
 const double delta_phi = 0.01; //rad
 
 //distribution
 const bool distrib_assegnata = true;
+
+//simulated events
+const int nEvents = 10000;
 
 #endif
 

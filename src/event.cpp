@@ -28,20 +28,21 @@ using namespace std;
 
 event::event(int m, point p, point vtx):TObject(), multiplicity(m), pnt(p), vertex(vtx){}
 
-void event::setmultiplicity() {
-    
-    multiplicity = static_cast<int>(gRandom->Uniform(1, 50));
-    //multiplicity = fMultiplicityHist->GetRandom();
-    //multiplicity = 5000; 
+void event::setmultiplicity(TH1I* hist_mult) {
 
-    TF1 *f_mult = new TF1("f_mult", "[0]*ROOT::Math::gamma_pdf(x, [1], [2])", 0, 50);
+    if(!distrib_assegnata){
 
-    // Esempio parametri per LHC (valori indicativi)
-    double n_mean = 30.0; 
-    double k = 2.0; 
-    f_mult->SetParameters(1, k, n_mean/k);
-    //multiplicity = static_cast<int>(f_mult->GetRandom());
+        multiplicity = static_cast<int>(gRandom->Uniform(1, 50));
 
+    }
+
+    if(distrib_assegnata){
+        if(hist_mult) {
+            multiplicity = hist_mult->GetRandom();
+        } else {
+            std::cerr << "Warning: hist_mult is nullptr, using random multiplicity\n";
+        }
+    }
 
 }
 
@@ -126,7 +127,6 @@ void event::display_event(){
 // QUELLA CHE SEGUE E' LA VERSIONE CON L'ISTOGRAMMA DEI RESIDUI!!!!
 void event::RunFullSimulation() {
     
-    int nEvents = 10000;
     reconstruction reco;
 
     TFile* hfile = new TFile("../data/hist_sim.root", "RECREATE");
@@ -164,13 +164,15 @@ void event::RunFullSimulation() {
 
     // Load eta histogram once at the beginning
     TH1D* hist_eta = nullptr;
-    TFile* eta_file = nullptr;
+    TH1I* hist_mult = nullptr;
+    TFile* hist_kinem = nullptr;
     if(distrib_assegnata) {
-        eta_file = TFile::Open("../data/kinem.root");
-        if(eta_file && !eta_file->IsZombie()) {
-            hist_eta = (TH1D*)eta_file->Get("heta2");
-            if(!hist_eta) {
-                std::cerr << "Errore: istogramma 'heta2' non trovato nel file\n";
+        hist_kinem = TFile::Open("../data/kinem.root");
+        if(hist_kinem && !hist_kinem->IsZombie()) {
+            hist_eta = (TH1D*)hist_kinem->Get("heta2");
+            hist_mult = (TH1I*)hist_kinem->Get("hm");
+            if(!hist_eta || !hist_mult) {
+                std::cerr << "Errore: istogrammi non trovato nel file\n";
             }
         } else {
             std::cerr << "Errore nell'aprire il file kinem.root\n";
@@ -185,7 +187,7 @@ void event::RunFullSimulation() {
         vertex.generate_VTX();
         this->set_vertex(vertex);
         //cout << vertex << endl;
-        this->setmultiplicity();
+        this->setmultiplicity(hist_mult);
         
         vtx[0] = vertex.get_x();
         vtx[1] = vertex.get_y();
@@ -282,9 +284,9 @@ void event::RunFullSimulation() {
     }
     
     // Clean up eta histogram file
-    if(eta_file) {
-        eta_file->Close();
-        delete eta_file;
+    if(hist_kinem) {
+        hist_kinem->Close();
+        delete hist_kinem;
     }
     
     hfile->cd();

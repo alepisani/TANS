@@ -15,7 +15,7 @@ public:
    auto get_point() const {return pnt;}
    const point& get_vertex() const {return vertex;}
    
-   void setmultiplicity();
+   void setmultiplicity(TH1I* hist_mult = nullptr);
    void set_vertex(point vtx);
 
    void eventsimulation();
