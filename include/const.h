@@ -11,7 +11,7 @@ const int nEvents = 10000;
  *  true --> data from the file
  *  false --> data from uniform distribution
  */
-const bool get_data_from_kinem = true;
+const bool get_data_from_kinem = false;
 
 // Vertex constant sigmas
 const double X_rms = 0.1; //mm

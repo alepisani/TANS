@@ -35,9 +35,9 @@ int main(int argc, char **argv) {
     event ev;
     
     ev.RunFullSimulation();
+    //ev.display_event();
     
     t.Stop();
-    //ev.display_event();
 
     cout << "write smt usefull in this section \n fai il readme \n display event" << endl;
 

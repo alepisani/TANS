@@ -13,9 +13,9 @@ using namespace std;
 
 ClassImp(particle);
 
-particle::particle(const point& pt, double t, double p):TObject(), pt(pt), theta(t), phi(p){
+particle::particle(const point& pt, double p, double eta_in): TObject(), pt(pt), phi(p), eta(eta_in) {
 
-    eta = -log(tan(theta/2));
+    theta = 2.0 * atan(exp(-eta));
 
 }
 
@@ -25,11 +25,7 @@ void particle::generate_theta(TH1D* hist_eta){
 
         //Generate theta, considering detector's geometric acceptance
         //considering the asymmetric position of the vertex and safety margins
-        const double z_det_max = 135.0;      // mm (half of the length, 270mm)
-        const double r_det_max = 40.0;       // mm (layer1's radius)
-        const double safety_factor = 0.95;   // safety factor for conservative margin
         
-        // vertex position, initial position of the particle
         double x_vtx = pt.get_x();
         double y_vtx = pt.get_y();
         double z_vtx = pt.get_z();
@@ -38,12 +34,11 @@ void particle::generate_theta(TH1D* hist_eta){
         double r_vtx = sqrt(x_vtx*x_vtx + y_vtx*y_vtx);
         
         // distances from the vertex to the end of the layers in both directions
-        double z_forward = z_det_max - z_vtx;   
-        double z_backward = z_det_max + z_vtx;  
+        double z_forward = layer1_lenght * 0.5 - z_vtx;   
+        double z_backward = layer1_lenght * 0.5 + z_vtx;  
         
         // available radial distance from the vertex
-        double r_available = (r_det_max - r_vtx) * safety_factor;
-        if (r_available < 0.5) r_available = 0.5;  // minimum protection against very close vertices
+        double r_available = (layer1_radius - r_vtx);
         
         // maximum acceptance angles in both directions
         double theta_fwd = atan(r_available / z_forward);       
@@ -53,7 +48,6 @@ void particle::generate_theta(TH1D* hist_eta){
         double eta_max = -log(tan(theta_fwd / 2.0));      
         double eta_min = -log(tan(theta_bwd / 2.0));      
         
-        //generate eta to get theta
         eta = gRandom->Uniform(eta_min, eta_max);
         
         theta = 2.0 * atan(exp(-eta));
@@ -62,7 +56,7 @@ void particle::generate_theta(TH1D* hist_eta){
     if(get_data_from_kinem){
         
         eta = hist_eta->GetRandom();
-        // Convert eta to theta
+        
         theta = 2.0 * atan(exp(-eta));
         
     }
@@ -74,8 +68,6 @@ void particle::generate_phi(){
     phi = gRandom->Uniform(0, 2 * M_PI); 
 
 }
-
-//setters
 
 void particle::set_theta(double t){
 
@@ -95,14 +87,19 @@ void particle::set_point(const point& p){
 
 }
 
-//find the intersection between the particle trajectory and the detector layers
 void particle::find_intersection(double radius){
 
-    /** trajectory of the particle: 
-        * x = x0 + t * sin(theta) * cos(phi)
-        * y = y0 + t * sin(theta) * sin(phi)
-        * z = z0 + t * cos(theta)    
+    /**
+     * this function find the intersection between the particle trajectory and the detector layers
+     * take in input the radius where there is intersection
+     * 
+     * trajectory of the particle: 
+     * x = x0 + t * sin(theta) * cos(phi)
+     * y = y0 + t * sin(theta) * sin(phi)
+     * z = z0 + t * cos(theta)    
+     * 
     */
+
     double theta = this->get_theta();
     double phi = this->get_phi();
     double c1 = sin(theta) * cos(phi);
@@ -112,7 +109,6 @@ void particle::find_intersection(double radius){
     double y0 = this->pt.get_y();
     double z0 = this->pt.get_z();
 
-    //solve the equation for t, given the radius of the layer (x^2 + y^2 = radius^2)
     double delta = (x0 * c1 + y0 * c2) * (x0 * c1 + y0 * c2) - (c1 * c1 + c2 * c2) * (x0 * x0 + y0 * y0 - radius * radius);
     double t = (-(x0 * c1 + y0 * c2)+sqrt(delta))/(c1 * c1 + c2 * c2);
 
@@ -121,13 +117,16 @@ void particle::find_intersection(double radius){
     double z_ext = z0 + c3 * t;
     class point pt(x_ext, y_ext, z_ext);
 
-    //update the particle's point to the intersection point
     this->set_point(pt);
 
 }
 
-//rotate the particle's trajectory by a given angle (after multiple scattering)
 void particle::rotate(double theta_p, double phi_p) {
+
+    /**
+     * rotate the particle's trajectory by a given angle (after multiple scattering)
+     */
+
     //rotation matrix
     double mr[3][3];
 
@@ -161,10 +160,13 @@ void particle::rotate(double theta_p, double phi_p) {
 
 }
 
-//multiple scattering of the particle, and consequent rotation of the trajectory
 void particle::multiple_scattering(int Z, double X0, double thickness) {
+
+    /**
+     * multiple scattering of the particle, and consequent rotation of the trajectory
+     */
     
-    double p=1000; // MeV/c 
+    double p = 700; // MeV/c 
     double beta = 1.;
     double theta0 = 13.6/(beta*p)*Z*sqrt(thickness/(sin(theta)*X0))*(1+0.038*log(thickness/X0)); //theta in plane
     double theta_rms = theta0*sqrt(2); //rms in 3D space

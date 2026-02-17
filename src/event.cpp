@@ -39,11 +39,13 @@ void event::setmultiplicity(TH1I* hist_mult) {
     }
 
     if(get_data_from_kinem){
+
         if(hist_mult) {
+
             multiplicity = hist_mult->GetRandom();
-        } else {
-            std::cerr << "Warning: hist_mult is nullptr, using random multiplicity\n";
+
         }
+        
     }
 
 }
@@ -140,12 +142,9 @@ void event::RunFullSimulation() {
     TH2D* h2D_Z = new TH2D("h2D_Z", "Residui vs Z; z [mm]; Residuo [#mum]", 30, -beam_pipe_lenght/2., beam_pipe_lenght/2., 200, -500, 500);
     TH1D* hist_z_vtx = new TH1D("hist_reco", "Ricostruzione Vertice Z; z_{cand} [mm]; Conteggi", bin_zvtx, -beam_pipe_lenght/2., beam_pipe_lenght/2.);
 
-    // Buffer per i dati scalari (Vertice e Molteplicità)
-    // Usiamo una struct o variabili singole per la Leaf List
+    //buffer usefull for the branch
     double vtx[3]; // X, Y, Z
 
-    // Buffer per i dati vettoriali (Punti nei vari Layer)
-    // TClonesArray riduce l'overhead di allocazione/deallocazione
     TClonesArray* hitsBP = new TClonesArray("point", 200);
     TClonesArray* particle_VTX_BP = new TClonesArray("particle", 200);
     TClonesArray* particle_BP_L1 = new TClonesArray("particle", 200);
@@ -153,7 +152,6 @@ void event::RunFullSimulation() {
     TClonesArray* hitsL1 = new TClonesArray("point", 200);
     TClonesArray* hitsL2 = new TClonesArray("point", 200);
 
-    // Definizione dei Branch
     tree->Branch("Vtx", vtx, "vtxX/D:vtxY/D:vtxZ/D");
     tree->Branch("Mult", &multiplicity, "mult/I");
     tree->Branch("HitsBP", &hitsBP);
@@ -163,7 +161,6 @@ void event::RunFullSimulation() {
     tree->Branch("HitsL1", &hitsL1);
     tree->Branch("HitsL2", &hitsL2);
 
-    // Load eta histogram once at the beginning
     TH1D* hist_eta = nullptr;
     TH1I* hist_mult = nullptr;
     TFile* hist_kinem = nullptr;
@@ -173,21 +170,19 @@ void event::RunFullSimulation() {
             hist_eta = (TH1D*)hist_kinem->Get("heta2");
             hist_mult = (TH1I*)hist_kinem->Get("hm");
             if(!hist_eta || !hist_mult) {
-                std::cerr << "Errore: istogrammi non trovato nel file\n";
+                std::cerr << "Warning: histograms not found in the given file\n";
             }
         } else {
-            std::cerr << "Errore nell'aprire il file kinem.root\n";
+            std::cerr << "Warning: could not open the given file\n";
         }
     }
 
-    //event evSim;
-
+    //simulation and recostruction of each event
     for (int iEv = 0; iEv < nEvents; ++iEv) {
         
         point vertex;
         vertex.generate_VTX();
         this->set_vertex(vertex);
-        //cout << vertex << endl;
         this->setmultiplicity(hist_mult);
         
         vtx[0] = vertex.get_x();
@@ -195,13 +190,15 @@ void event::RunFullSimulation() {
         vtx[2] = vertex.get_z();
         int mult = this->get_multiplicity();
 
+        //for each particle create in the collision we evaluate its path
         for (int iPart = 0; iPart < mult; ++iPart) {
+            
             particle prtl;
             prtl.set_point(vertex);
-            prtl.generate_theta(hist_eta);  // Pass histogram to avoid reopening file
+            prtl.generate_theta(hist_eta);  
             prtl.generate_phi();
 
-            //trasporto da vtx a bp
+            //trasport of the particle from the vertex to the beam pipe
             new((*particle_VTX_BP)[iPart]) particle(prtl);
             prtl.find_intersection(beam_pipe_radius);
             new((*hitsBP)[iPart]) point(prtl.get_point());  
@@ -210,7 +207,7 @@ void event::RunFullSimulation() {
                 prtl.multiple_scattering(beam_pipe_Z, beam_pipe_X0, beam_pipe_thickness);
             };
 
-            //trasporto da bp a l1
+            //trasport of the particle from the beam pipe to layer1
             new((*particle_BP_L1)[iPart]) particle(prtl);
             prtl.find_intersection(layer1_radius);
             prtl.get_point().smearing();
@@ -220,7 +217,7 @@ void event::RunFullSimulation() {
                 prtl.multiple_scattering(layer1_Z, layer1_X0, layer1_thickness);
             };
 
-            //trasporto l1 bp a l2
+            //trasport of the particle from the layer1 to layer2
             new((*particle_L1_L2)[iPart]) particle(prtl);
             prtl.find_intersection(layer2_radius);
             prtl.get_point().smearing();
@@ -228,6 +225,8 @@ void event::RunFullSimulation() {
             points_L2.push_back(prtl.get_point());
 
         }
+
+        //add noisy point on the detectors
 
         double PNoiseL1 = gRandom->Rndm();
         double PNoiseL2 = gRandom->Rndm();
@@ -248,11 +247,12 @@ void event::RunFullSimulation() {
             new((*hitsL2)[multiplicity]) point(noisy_point);
         }
         
-        //reco
+        //-----------------------------Reconstruction------------------------------
+
         double z_reco = reco.reco_z(this, hResidui, hist_z_vtx);
         double z_true = vertex.get_z();
         int m = this->get_multiplicity();
-        double residuo = (z_true - z_reco)*1000;
+        double residuo = (z_true - z_reco)*1000;  //from mm to um
 
         // Riempi sempre il denominatore
         hGen->Fill(m);  //praticamente aggiunge 1 al bin corrispondente alla molteplicità m, quindi conta quanti vertici genera per ogni molteplicità
@@ -281,6 +281,7 @@ void event::RunFullSimulation() {
         hitsL1->Clear("C");
         hitsL2->Clear("C");
 
+        //loading bar
         if (iEv % 100 == 0 || iEv == nEvents - 1) {
            printProgressBar(iEv + 1, nEvents, 30);
         }
@@ -289,7 +290,6 @@ void event::RunFullSimulation() {
     
     cout << endl;
 
-    // Clean up eta histogram file
     if(hist_kinem) {
         hist_kinem->Close();
         delete hist_kinem;
