@@ -12,16 +12,17 @@ public:
    event(int, point, point);
    
    int get_multiplicity() const {return multiplicity;}
-   auto get_point() const {return pnt;}
+   const point& get_point() const {return pnt;}
    const point& get_vertex() const {return vertex;}
    
    void setmultiplicity(TH1I* hist_mult = nullptr);
-   void set_vertex(point vtx);
+   void set_vertex(const point& vtx);
 
    void eventsimulation();
    void multiple_scattering();
    void display_event();
    void RunFullSimulation();
+   void printProgressBar(int, int, int);
 
    friend std::ostream &operator<<(std::ostream &output, const event &ev);
 

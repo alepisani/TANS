@@ -4,9 +4,7 @@
 #include <cmath>
 #include <iostream>
 #include <cmath>
-
 using namespace std;
-
 
 ClassImp(point);
 
@@ -57,13 +55,14 @@ void point::generate_VTX(){
     
     this->set_point(x,y,z);
 
-
 }
 
 void point::smearing(){
 
-    //smearing di 30um applicato sull'arco di circonferenza --> sta cambiando il phi del punto
-    //30um = 0.03mm
+    /**
+     * this function take a point on the layer 1 and apply the gaussian smearing (30um) to simulate
+     * the detector resolution.
+     */
 
     double smearing = gRandom->Gaus(0, 0.03);
     this->set_phi(this->get_phi() + smearing / this->get_R());

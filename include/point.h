@@ -27,12 +27,12 @@ class point : public TObject {
     friend std::ostream &operator<<(std::ostream &output, const point &point);
 
     private:
-        //cordinate planari (x,y,z)
+        //Cartesian coordinates (x,y,z)
         double x;
         double y;
         double z;  
         
-        //coordinate cilindriche (R, phi)
+        //Polar coordinates (R, phi)
         double R;
         double phi;
 

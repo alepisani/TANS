@@ -18,6 +18,7 @@
 #include "TRandom3.h"
 #include "TF1.h"
 #include "TCanvas.h"
+#include <TStopwatch.h>
 using namespace std;
 
 
@@ -28,19 +29,24 @@ int main(int argc, char **argv) {
     int seed = 0;
     gRandom->SetSeed(seed);
 
+    TStopwatch t;
+    t.Start();
+    
     event ev;
-    //reconstruction reco;
+    
     ev.RunFullSimulation();
     
+    t.Stop();
     //ev.display_event();
 
-    //double z_reco = reco.reco_z(ev);
-    //cout << "Z ricostruito: " << z_reco << " mm" << endl;
-    
+    cout << "write smt usefull in this section \n fai il readme \n display event" << endl;
 
-
-
-
+    cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" << endl;
+    cout << "| time to process all the event and simulation \n";
+    cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" << endl;
+    cout << "| Real time: " << t.RealTime() << " s\n";
+    cout << "| CPU time: " << t.CpuTime()  << " s\n";
+    cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" << endl;
 
     
     std::atomic<bool> shouldExit(false);

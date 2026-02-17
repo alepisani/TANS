@@ -23,6 +23,8 @@
 #include "TRandom3.h"
 #include <iostream>
 #include "TF1.h"
+#include <sstream>
+#include <iomanip>
 
 using namespace std;
 
@@ -30,13 +32,13 @@ event::event(int m, point p, point vtx):TObject(), multiplicity(m), pnt(p), vert
 
 void event::setmultiplicity(TH1I* hist_mult) {
 
-    if(!distrib_assegnata){
+    if(!get_data_from_kinem){
 
         multiplicity = static_cast<int>(gRandom->Uniform(1, 50));
 
     }
 
-    if(distrib_assegnata){
+    if(get_data_from_kinem){
         if(hist_mult) {
             multiplicity = hist_mult->GetRandom();
         } else {
@@ -46,7 +48,7 @@ void event::setmultiplicity(TH1I* hist_mult) {
 
 }
 
-void event::set_vertex(point vtx){
+void event::set_vertex(const point& vtx){
 
     vertex = vtx;
 
@@ -123,8 +125,6 @@ void event::display_event(){
 
 }
 
-
-// QUELLA CHE SEGUE E' LA VERSIONE CON L'ISTOGRAMMA DEI RESIDUI!!!!
 void event::RunFullSimulation() {
     
     reconstruction reco;
@@ -138,6 +138,7 @@ void event::RunFullSimulation() {
     TH1D* hRecoVsZ = new TH1D("hRecovsZ", "Eventi ricostruiti vs Z; Conteggi", 30, -beam_pipe_lenght/2., beam_pipe_lenght/2.);
     TH2D* h2D = new TH2D("h2D", "Residui vs Mult; Molteplicita'; Residuo [#mum]", 10, 0, 50, 200, -500, 500);
     TH2D* h2D_Z = new TH2D("h2D_Z", "Residui vs Z; z [mm]; Residuo [#mum]", 30, -beam_pipe_lenght/2., beam_pipe_lenght/2., 200, -500, 500);
+    TH1D* hist_z_vtx = new TH1D("hist_reco", "Ricostruzione Vertice Z; z_{cand} [mm]; Conteggi", bin_zvtx, -beam_pipe_lenght/2., beam_pipe_lenght/2.);
 
     // Buffer per i dati scalari (Vertice e Molteplicità)
     // Usiamo una struct o variabili singole per la Leaf List
@@ -166,7 +167,7 @@ void event::RunFullSimulation() {
     TH1D* hist_eta = nullptr;
     TH1I* hist_mult = nullptr;
     TFile* hist_kinem = nullptr;
-    if(distrib_assegnata) {
+    if(get_data_from_kinem) {
         hist_kinem = TFile::Open("../data/kinem.root");
         if(hist_kinem && !hist_kinem->IsZombie()) {
             hist_eta = (TH1D*)hist_kinem->Get("heta2");
@@ -192,9 +193,9 @@ void event::RunFullSimulation() {
         vtx[0] = vertex.get_x();
         vtx[1] = vertex.get_y();
         vtx[2] = vertex.get_z();
-        this->get_multiplicity();
+        int mult = this->get_multiplicity();
 
-        for (int iPart = 0; iPart < this->get_multiplicity(); ++iPart) {
+        for (int iPart = 0; iPart < mult; ++iPart) {
             particle prtl;
             prtl.set_point(vertex);
             prtl.generate_theta(hist_eta);  // Pass histogram to avoid reopening file
@@ -248,7 +249,7 @@ void event::RunFullSimulation() {
         }
         
         //reco
-        double z_reco = reco.reco_z(this, hResidui);
+        double z_reco = reco.reco_z(this, hResidui, hist_z_vtx);
         double z_true = vertex.get_z();
         int m = this->get_multiplicity();
         double residuo = (z_true - z_reco)*1000;
@@ -280,9 +281,14 @@ void event::RunFullSimulation() {
         hitsL1->Clear("C");
         hitsL2->Clear("C");
 
-        if (iEv % 100 == 0) std::cout << "Event " << iEv << " has been simulated." << std::endl;
+        if (iEv % 100 == 0 || iEv == nEvents - 1) {
+           printProgressBar(iEv + 1, nEvents, 30);
+        }
+        
     }
     
+    cout << endl;
+
     // Clean up eta histogram file
     if(hist_kinem) {
         hist_kinem->Close();
@@ -291,20 +297,25 @@ void event::RunFullSimulation() {
     
     hfile->cd();
 
+    //---------------------------------------------------------fill all the distros we're intrensted in
+
     //MODIFICHE FATTE ORA    
-    TGraphAsymmErrors* gEff = new TGraphAsymmErrors(hReco, hGen, "cp"); //"cp" indica che metodo usare per calcolare gli errori (binomiali in questo caso)
-    // 2. Estetica del grafico (punti ed errori)
-    gEff->SetTitle("Efficienza di Ricostruzione;Molteplicita';Efficienza");
-    gEff->SetMarkerStyle(20);
-    gEff->SetMarkerSize(1.0);
-    gEff->SetMarkerColor(kAzure+2);
-    gEff->SetLineColor(kAzure+2);
-    // Se vuoi anche la curva continua (il fit) sopra:
-    TF1 *f_logis = new TF1("f_logis", "[0] / (1.0 + exp(-[1]*(x-[2])))", 0, 50);
-    f_logis->SetParameters(1, 0.5, 5);
-    gEff->Fit(f_logis, "R");
-    f_logis->SetLineColor(kRed);
-    gEff->Write();
+    if (hReco->GetEntries() > 0 && hGen->GetEntries() > 0) {
+        TGraphAsymmErrors* gEff = new TGraphAsymmErrors(hReco, hGen, "cp"); // cp --> errori binomiali
+        // 2. Estetica del grafico (punti ed errori)
+        gEff->SetTitle("Efficienza di Ricostruzione;Molteplicita';Efficienza");
+        gEff->SetMarkerStyle(20);
+        gEff->SetMarkerSize(1.0);
+        gEff->SetMarkerColor(kAzure+2);
+        gEff->SetLineColor(kAzure+2);
+        // Se vuoi anche la curva continua (il fit) sopra:
+        gEff->Fit("gaus", "QR");
+        TF1 *fitGausEff = gEff->GetFunction("gaus");
+        if (fitGausEff) {
+            fitGausEff->SetLineColor(kRed);
+        }
+        gEff->Write();
+    }
 
     TGraphAsymmErrors* gEffVsZ = new TGraphAsymmErrors(hRecoVsZ, hGenVsZ, "cp");
     gEffVsZ->SetTitle("Efficienza di Ricostruzione vs Z; z [mm]; Efficienza");
@@ -314,25 +325,24 @@ void event::RunFullSimulation() {
     gEffVsZ->SetLineColor(kAzure+2);
     gEffVsZ->Write();
 
-    hResidui->Fit("gaus");
-    // Recupera la funzione di fit associata all'istogramma
-    TF1 *fitFunc = hResidui->GetFunction("gaus");
-
-    if (fitFunc) {
-        double mean  = fitFunc->GetParameter(1); // Media (z_gen - z_reco)
-        double sigma = fitFunc->GetParameter(2); // Questa è la tua risoluzione migliorata!
-        double sigmaErr = fitFunc->GetParError(2); // Errore sulla sigma
-
-        cout << "Media dei residui CALCOLATA DAL FIT: " << mean << " um" << endl; 
-        cout << "Risoluzione del vertice (Sigma) CALCOLATA DAL FIT: " << sigma << " um" << endl;
-        cout << "Errore sulla risoluzione: " << sigmaErr << " um" << endl;
+    if (hResidui->GetEntries() > 0) {
+        hResidui->Fit("gaus", "Q");
+        TF1 *fitFunc = hResidui->GetFunction("gaus");
+        if (fitFunc) {
+            double mean     = fitFunc->GetParameter(1);
+            double sigma    = fitFunc->GetParameter(2);
+            double sigmaErr = fitFunc->GetParError(2);
+            cout << "Media dei residui (dal fit gaussiano):      " << mean     << " um" << endl;
+            cout << "Risoluzione del vertice - Sigma (dal fit):  " << sigma    << " um" << endl;
+            cout << "Errore sulla risoluzione:                   " << sigmaErr << " um" << endl;
+        }
     }
     
     cout << "Deviazione standard dei residui: " << hResidui->GetStdDev() << " μm" << std::endl;
 
     // Questo comando divide l'istogramma 2D in fette (slice) verticali (per bin di molteplicità)
     // e fa un fit gaussiano su ogni fetta automaticamente.
-    h2D->FitSlicesY();
+    h2D->FitSlicesY(nullptr, 0, -1, 10, "Q");
 
     // ROOT crea automaticamente degli istogrammi con i risultati dei fit (altezza, media, sigma, chi2).
     // L'istogramma con suffisso "_2" contiene le SIGMA di ogni fetta.
@@ -341,12 +351,12 @@ void event::RunFullSimulation() {
     hRisoluzione->Draw();
     hRisoluzione->Write();
 
-    h2D_Z->FitSlicesY();
+    h2D_Z->FitSlicesY(nullptr, 0, -1, 10, "Q");
     TH1D *hRisoluzione_Z = (TH1D*)gDirectory->Get("h2D_Z_2");
     hRisoluzione_Z->SetTitle("Risoluzione vs Z; z [mm]; #sigma [um]");
     hRisoluzione_Z->Write();
 
-    hfile->Write();
+    hfile->Write("", TObject::kOverwrite);
     hfile->Close();
 
     delete hitsBP;
@@ -357,8 +367,36 @@ void event::RunFullSimulation() {
     delete particle_L1_L2;
     delete hfile;
 
-    std::cout << "Simulation ended: all event has been processed succesfully. Data available on /data/hist_sim.root" << std::endl;
+    cout << endl; cout << endl;
+    std::cout << "Simulation ended: all event has been processed succesfully. \nData available on /data/hist_sim.root" << std::endl;
+    cout << endl; cout << endl;
 
+}
+
+void event::printProgressBar(int current, int total, int barWidth = 30) {
+    float progress = static_cast<float>(current) / total;
+    int pos = static_cast<int>(barWidth * progress);
+
+    std::ostringstream oss;
+    oss << "\r[";
+
+    for (int i = 0; i < barWidth; ++i) {
+        if (i < pos)
+            oss << "█";
+        else
+            oss << " ";
+    }
+
+    oss << "] ";
+    oss << std::setw(3) << int(progress * 100.0) << "% ";
+    oss << "(events=" << current << "/" << total << ")";
+
+    std::string output = oss.str();
+    size_t terminal_width = 80;
+    if (output.size() < terminal_width)
+        output += std::string(terminal_width - output.size(), ' ');
+
+    std::cout << output << std::flush;
 }
 
 std::ostream &operator<<(std::ostream &output, const event & ev) {

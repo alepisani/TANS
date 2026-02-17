@@ -13,7 +13,7 @@ using namespace std;
 
 ClassImp(particle);
 
-particle::particle(point pt, double t, double p):TObject(), pt(pt), theta(t), phi(p){
+particle::particle(const point& pt, double t, double p):TObject(), pt(pt), theta(t), phi(p){
 
     eta = -log(tan(theta/2));
 
@@ -21,7 +21,7 @@ particle::particle(point pt, double t, double p):TObject(), pt(pt), theta(t), ph
 
 void particle::generate_theta(TH1D* hist_eta){
 
-    if(!distrib_assegnata){
+    if(!get_data_from_kinem){
 
         //Generate theta, considering detector's geometric acceptance
         //considering the asymmetric position of the vertex and safety margins
@@ -59,7 +59,7 @@ void particle::generate_theta(TH1D* hist_eta){
         theta = 2.0 * atan(exp(-eta));
     }
 
-    if(distrib_assegnata){
+    if(get_data_from_kinem){
         
         eta = hist_eta->GetRandom();
         // Convert eta to theta
@@ -89,7 +89,7 @@ void particle::set_phi(double p){
 
 }
 
-void particle::set_point(point p){
+void particle::set_point(const point& p){
 
     pt = p;
 
@@ -119,8 +119,7 @@ void particle::find_intersection(double radius){
     double x_ext = x0 + c1 * t;
     double y_ext = y0 + c2 * t;
     double z_ext = z0 + c3 * t;
-    class point pt;
-    pt.set_point(x_ext, y_ext, z_ext);
+    class point pt(x_ext, y_ext, z_ext);
 
     //update the particle's point to the intersection point
     this->set_point(pt);
