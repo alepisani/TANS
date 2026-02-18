@@ -20,7 +20,6 @@ public:
 
    void eventsimulation();
    void multiple_scattering();
-   void display_event();
    void RunFullSimulation();
    void printProgressBar(int, int, int);
 
