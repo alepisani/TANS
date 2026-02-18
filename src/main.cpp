@@ -1,7 +1,8 @@
 #include "../include/const.h"
-#include "../include/evento.h"
+#include "../include/event.h"
 #include "../include/point.h"
-#include "../include/tracklet.h"
+#include "../include/particle.h"
+#include "../include/reconstruction.h"
 #include <iostream>
 #include "TApplication.h" 
 #include "TGeoManager.h"
@@ -15,6 +16,9 @@
 #include <thread>
 #include "TSystem.h" 
 #include "TRandom3.h"
+#include "TF1.h"
+#include "TCanvas.h"
+#include <TStopwatch.h>
 using namespace std;
 
 
@@ -25,33 +29,27 @@ int main(int argc, char **argv) {
     int seed = 0;
     gRandom->SetSeed(seed);
 
-    evento ev;
-    ev.setmultiplicity();
-    ev.generate_vertex();
-    ev.event();
-    for(int i = 0; i < ev.points_L1.size(); i++){
-        cout << "L1" << endl;
-        cout << ev.points_L1[i] << endl;
-    }
-    for(int i = 0; i < ev.points_L2.size(); i++){
-        cout << "L2" << endl;
-        cout << ev.points_L2[i] << endl;
-    }
-    ev.smearing();
-    for(int i = 0; i < ev.points_L1.size(); i++){
-        cout << "L1s" << endl;
-        cout << ev.points_L1[i] << endl;
-    }
-    for(int i = 0; i < ev.points_L2.size(); i++){
-        cout << "L2s" << endl;
-        cout << ev.points_L2[i] << endl;
-    }
-    ev.display_event();
+    TStopwatch t;
+    t.Start();
+    
+    event ev;
+    ev.RunFullSimulation();
+    
+    t.Stop();
 
+    cout << "write smt usefull in this section \n fai il readme \n display event" << endl;
 
+    cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" << endl;
+    cout << "| time to process all the event and simulation \n";
+    cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" << endl;
+    cout << "| Real time: " << t.RealTime() << " s\n";
+    cout << "| CPU time: " << t.CpuTime()  << " s\n";
+    cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" << endl;
+    cout << endl;
+    cout << endl;
+    cout << "press ENTER to Exit" << endl;
 
-
-
+    
     std::atomic<bool> shouldExit(false);
     
     std::thread inputThread([&shouldExit]() {
@@ -65,6 +63,7 @@ int main(int argc, char **argv) {
     }
     
     inputThread.join();
+    
     return 0;
 
 }

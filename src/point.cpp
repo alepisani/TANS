@@ -1,69 +1,79 @@
 #include "../include/point.h"
+#include "../include/const.h"
+#include "TRandom3.h"
 #include <cmath>
 #include <iostream>
 #include <cmath>
-
 using namespace std;
-
 
 ClassImp(point);
 
-// COSTRUTTORE
-point::point() : x(0), y(0), z(0) {}
-
-// DISTRUTTORE
-point::~point() {}
+point::point(double a, double b, double c):TObject(),
+    x(a), y(b), z(c) 
+    {
+        R = sqrt(x*x + y*y);
+        phi = atan2(y,x);
+    }
 
 void point::set_point(double a, double b, double c){
+    
     x = a;
     y = b;
     z = c;
+    R = sqrt(x*x + y*y);
+    phi = atan2(y,x);
+
 }
 
 void point::set_phi(double p){
 
     phi = p;
-
-}
-
-void point::set_cilindrical(){
-
-    R = sqrt(x*x + y*y);
-    phi = atan2(y, x);
-
-}
-
-void point::update_coordinates(){
-
     x = R * cos(phi);
     y = R * sin(phi);
 
 }
 
-point point::extend_segment(double theta, double phi, double lenght){
+void point::set_R(double r){
 
-    double c1 = sin(theta) * cos(phi);
-    double c2 = sin(theta) * sin(phi);
-    double c3 = cos(theta);
-    double x0 = this->get_x();
-    double y0 = this->get_y();
-    double z0 = this->get_z();
+    R = r;
+    x = R * cos(phi);
+    y = R * sin(phi);
 
-    double delta = (x0 * c1 + y0 * c2) * (x0 * c1 + y0 * c2) - (c1 * c1 + c2 * c2) * (x0 * x0 + y0 * y0 - lenght * lenght);
-    double t = (-(x0 * c1 + y0 * c2)+sqrt(delta))/(c1 * c1 + c2 * c2);
+}
 
-    double x = x0 + c1 * t;
-    double y = y0 + c2 * t;
-    double z = z0 + c3 * t;
+void point::set_z(double zeta){
 
-    this->set_point(x, y, z);
-    return *this;
+    z = zeta;
+
+}
+
+void point::generate_VTX(){
+    
+    double x = gRandom->Gaus(0,X_rms);
+    double y = gRandom->Gaus(0,Y_rms);
+    double z = gRandom->Gaus(0,Z_rms);
+    
+    this->set_point(x,y,z);
+
+}
+
+void point::smearing(){
+
+    /**
+     * this function take a point on the layer 1 and apply the gaussian smearing (30um) to simulate
+     * the detector resolution.
+     */
+
+    double smearing = gRandom->Gaus(0, 0.03);
+    this->set_phi(this->get_phi() + smearing / this->get_R());
 
 }
 
 std::ostream &operator<<(std::ostream &output, const point &point){
-    output << "point coordinate (mm): (" << point.x << ", " 
+    output << "point coordinate (mm): (x, y, z) = (" << point.x << ", " 
                                     << point.y << ", " 
-                                    << point.z << ")" << endl;
+                                    << point.z << ") (" 
+                                    << point.R << ", "  
+                                    << point.phi << ")" << endl;
     return output;
 }
