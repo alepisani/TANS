@@ -1,9 +1,6 @@
 #ifndef CONST_H
 #define CONST_H
 
-//---------------------EventDisplay---------------------
-const bool eventdisplay = false;
-
 //---------------------Simulation----------------------
 
 // Simulated events
