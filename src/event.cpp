@@ -128,7 +128,7 @@ void event::RunFullSimulation() {
     TH1D* hGenVsZ = new TH1D("hGenvsZ", "Eventi generati vs Z; Conteggi", 100, -beam_pipe_lenght/2., beam_pipe_lenght/2.);
     TH1D* hRecoVsZ = new TH1D("hRecovsZ", "Eventi ricostruiti vs Z; Conteggi", 100, -beam_pipe_lenght/2., beam_pipe_lenght/2.);
     TH2D* hResVsMult = new TH2D("hResVsMult", "Residui vs Mult; Molteplicita'; Residuo [#mum]", 50, 0, 50, 100, -2000, 2000);
-    TH2D* hResVsZ = new TH2D("hResVsZ", "Residui vs Z; z [mm]; Residuo [#mum]", 50, -beam_pipe_lenght/2., beam_pipe_lenght/2., 100, -2000, 2000);
+    TH2D* hResVsZ = new TH2D("hResVsZ", "Residui vs Z; z [mm]; Residuo [#mum]", 10, -beam_pipe_lenght/2., beam_pipe_lenght/2., 100, -2000, 2000);
     TH1D* hist_z_vtx = new TH1D("hist_reco", "Ricostruzione Vertice Z; z_{cand} [mm]; Conteggi", bin_zvtx, -beam_pipe_lenght/2., beam_pipe_lenght/2.);
     hist_z_vtx->SetDirectory(0);
 

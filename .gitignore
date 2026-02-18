@@ -2,4 +2,7 @@
 data/hist_sim.root
 data/hist_sim_datafromhist.root
 data/hist_sim_unifdistrib.root
+data/plotDA
+data/plotDU
+data/.DS_Store
 build
