@@ -37,12 +37,12 @@ int main(int argc, char **argv) {
     
     t.Stop();
 
-    cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" << endl;
+    cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" << endl;
     cout << "| time to process all the event and simulation \n";
-    cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" << endl;
+    cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" << endl;
     cout << "| Real time: " << t.RealTime() << " s\n";
     cout << "| CPU time: " << t.CpuTime()  << " s\n";
-    cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" << endl;
+    cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" << endl;
     cout << endl;
     cout << endl;
     cout << "press ENTER to Exit" << endl;
