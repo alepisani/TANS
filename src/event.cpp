@@ -58,38 +58,26 @@ void event::set_vertex(const point& vtx){
 
 void event::display_event(){
     
-    //inizializzo ambiente
-    TGeoManager *geom = new TGeoManager("Hierarchy", "Esempio Tracker");
-    
-    // definizione materiali
+    //geometry display
+    TGeoManager *geom = new TGeoManager("Hierarchy", "ETracker");
     TGeoMaterial *mat = new TGeoMaterial("Vacuum", 0, 0, 0);
     TGeoMedium *med = new TGeoMedium("Vacuum", 1, mat);
-    
-    // TOP Volume
     TGeoVolume *top = geom->MakeBox("TOP", med, 100, 100, 100);
     geom->SetTopVolume(top);
-    
-    // Geometria (Beam pipe e Layer)
     TGeoVolume *beampipe = geom->MakeTube("beam_pipe", med, beam_pipe_radius, beam_pipe_radius + beam_pipe_thickness, beam_pipe_lenght / 2.);
     beampipe->SetLineColor(kGreen);
     top->AddNode(beampipe, 1);
-    
-    //layer1 interno
-    TGeoVolume *layer1 = geom->MakeTube("Interno", med, layer1_radius, layer1_radius + layer1_thickness, layer1_lenght / 2.);
+    TGeoVolume *layer1 = geom->MakeTube("layer1", med, layer1_radius, layer1_radius + layer1_thickness, layer1_lenght / 2.);
     layer1->SetLineColor(kRed);
     top->AddNode(layer1, 1);
-    
-    //layer2 esterno
-    TGeoVolume *layer2 = geom->MakeTube("Esterno", med, layer2_radius, layer2_radius + 1, layer2_lenght / 2.);
+    TGeoVolume *layer2 = geom->MakeTube("layer2", med, layer2_radius, layer2_radius + 1, layer2_lenght / 2.);
     layer2->SetLineColor(kBlue);
-    top->AddNode(layer2, 1);
-    
+    top->AddNode(layer2, 1);    
     geom->CloseGeometry();
     
-    // Disegno
     top->Draw("ogl");
 
-    //creazione delle tracce
+    //track display
     int n_punti = 2;
     for(int i = 0; i < multiplicity; i++){
 
@@ -296,6 +284,9 @@ void event::RunFullSimulation() {
     }
     
     hfile->cd();
+
+    //displays only the last event proccessed
+    if(eventdisplay) this->display_event();
 
     //---------------------------------------------------------fill all the distros we're intrensted in
 

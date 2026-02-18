@@ -33,9 +33,7 @@ int main(int argc, char **argv) {
     t.Start();
     
     event ev;
-    
     ev.RunFullSimulation();
-    //ev.display_event();
     
     t.Stop();
 
@@ -47,6 +45,9 @@ int main(int argc, char **argv) {
     cout << "| Real time: " << t.RealTime() << " s\n";
     cout << "| CPU time: " << t.CpuTime()  << " s\n";
     cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" << endl;
+    cout << endl;
+    cout << endl;
+    cout << "press ENTER to Exit" << endl;
 
     
     std::atomic<bool> shouldExit(false);
