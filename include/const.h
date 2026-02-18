@@ -2,7 +2,7 @@
 #define CONST_H
 
 //---------------------EventDisplay---------------------
-const bool eventdisplay = true;
+const bool eventdisplay = false;
 
 //---------------------Simulation----------------------
 
