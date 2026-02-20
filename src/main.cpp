@@ -21,10 +21,7 @@
 #include <TStopwatch.h>
 using namespace std;
 
-
-int main(int argc, char **argv) {
-
-    TApplication app("app", &argc, argv);
+int main() {
 
     int seed = 0;
     gRandom->SetSeed(seed);
@@ -44,23 +41,6 @@ int main(int argc, char **argv) {
     cout << "| CPU time: " << t.CpuTime()  << " s\n";
     cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" << endl;
     cout << endl;
-    cout << endl;
-    cout << "press ENTER to Exit" << endl;
-
-    
-    std::atomic<bool> shouldExit(false);
-    
-    std::thread inputThread([&shouldExit]() {
-        std::cin.get();
-        shouldExit = true;
-    });
-    
-    while (!shouldExit) {
-        gSystem->ProcessEvents();
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-    }
-    
-    inputThread.join();
     
     return 0;
 

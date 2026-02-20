@@ -18,8 +18,6 @@ public:
    void setmultiplicity(TH1I* hist_mult = nullptr);
    void set_vertex(const point& vtx);
 
-   void eventsimulation();
-   void multiple_scattering();
    void RunFullSimulation();
    void printProgressBar(int, int, int);
 
