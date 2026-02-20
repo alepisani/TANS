@@ -64,7 +64,8 @@ void event::RunFullSimulation() {
     TH1D* hGenVsZ = new TH1D("hGenvsZ", "Eventi generati vs Z; Conteggi", 100, -beam_pipe_lenght/2., beam_pipe_lenght/2.);
     TH1D* hRecoVsZ = new TH1D("hRecovsZ", "Eventi ricostruiti vs Z; Conteggi", 100, -beam_pipe_lenght/2., beam_pipe_lenght/2.);
     TH2D* hResVsMult = new TH2D("hResVsMult", "Residui vs Mult; Molteplicita'; Residuo [#mum]", 50, 0, 50, 100, -2000, 2000);
-    TH2D* hResVsZ = new TH2D("hResVsZ", "Residui vs Z; z [mm]; Residuo [#mum]", 10, -30, 30, 100, -2000, 2000);
+    TH2D* hResVsZtrue = new TH2D("hResVsZtrue", "Residui vs Ztrue; z [mm]; Residuo [#mum]", 10, -beam_pipe_lenght/2., beam_pipe_lenght/2., 100, -2000, 2000);
+    TH2D* hResVsZreco = new TH2D("hResVsZreco", "Residui vs Zreco; z [mm]; Residuo [#mum]", 10, -beam_pipe_lenght/2., beam_pipe_lenght/2., 100, -2000, 2000);
     TH1D* hist_z_vtx = new TH1D("hist_reco", "Ricostruzione Vertice Z; z_{cand} [mm]; Conteggi", bin_zvtx, -beam_pipe_lenght/2., beam_pipe_lenght/2.);
     hist_z_vtx->SetDirectory(0);
 
@@ -103,7 +104,8 @@ void event::RunFullSimulation() {
         }
     }
 
-    //simulation and recostruction of each event
+    //-----------------------------Event_Simulation------------------------------
+
     for (int iEv = 0; iEv < nEvents; ++iEv) {
         
         point vertex;
@@ -173,39 +175,47 @@ void event::RunFullSimulation() {
             new((*hitsL2)[multiplicity]) point(noisy_point);
         }
         
+        //close the file where we take the distribution
+        if(hist_kinem) {
+            hist_kinem->Close();
+            delete hist_kinem;
+        }
+        
         //-----------------------------Reconstruction------------------------------
-
+        
         double z_reco = reco.reco_z(this, hResidui, hist_z_vtx);
         double z_true = vertex.get_z();
         double residuo = (z_true - z_reco)*1000;  //from mm to um
-
-        // Riempi sempre il denominatore
-        hGen->Fill(mult);  
-        hGenVsZ->Fill(z_true);
-        hResVsMult->Fill(mult, residuo);
-        hResVsZ->Fill(z_true, residuo);
-
-        if (std::abs(z_reco - z_true) < 1.5) {
-            hReco->Fill(mult);
-            hRecoVsZ->Fill(z_true);
-        }
-
+        
         //clear the vector for the next iteration
-        if (iEv < nEvents - 1) {
-            points_BP.clear();
-            points_L1.clear();
-            points_L2.clear();
-        }
-
-
-        tree->Fill();
-
+        points_BP.clear();
+        points_L1.clear();
+        points_L2.clear();
         hitsBP->Clear("C");
         particle_VTX_BP->Clear("C");
         particle_BP_L1->Clear("C");
         particle_L1_L2->Clear("C");
         hitsL1->Clear("C");
         hitsL2->Clear("C");
+        
+        //filling the histograms
+        hGen->Fill(mult);  
+        hGenVsZ->Fill(z_true);
+        hResVsMult->Fill(mult, residuo);
+        hResVsZtrue->Fill(z_true, residuo);
+        hResVsZreco->Fill(z_reco, residuo);
+
+
+        //SELEZIONE DA RIVEDEREEEEEEEEEEEEEEEEEEEEEEEEEEE!!!!!!!!!!!!!!!!!!!!!!!
+        if (std::abs(z_reco - z_true) < 1.5) {
+            hReco->Fill(mult);
+            hRecoVsZ->Fill(z_true);
+        }
+
+
+
+        tree->Fill();
+
 
         //loading bar
         if (iEv % 100 == 0 || iEv == nEvents - 1) {
@@ -216,10 +226,6 @@ void event::RunFullSimulation() {
     
     cout << endl;
 
-    if(hist_kinem) {
-        hist_kinem->Close();
-        delete hist_kinem;
-    }
     
     hfile->cd();
 
@@ -234,17 +240,12 @@ void event::RunFullSimulation() {
         gEff->SetMarkerSize(1.0);
         gEff->SetMarkerColor(kAzure+2);
         gEff->SetLineColor(kAzure+2);
-        gEff->Fit("gaus", "QR");
-        TF1 *fitGausEff = gEff->GetFunction("gaus");
-        if (fitGausEff) {
-            fitGausEff->SetLineColor(kRed);
-        }
         gEff->Write("eff_vs_mult");
     }
 
     //plot efficienty vs reconstructed z_vertex 
     TGraphAsymmErrors* gEffVsZ = new TGraphAsymmErrors(hRecoVsZ, hGenVsZ, "cp");
-    gEffVsZ->SetTitle("Efficiency vs Z_{vertex, reco}; Z [mm]; Efficiecy");
+    gEffVsZ->SetTitle("Efficiency vs Z_{true}; Z [mm]; Efficiecy");
     gEffVsZ->SetMarkerStyle(20);
     gEffVsZ->SetMarkerSize(1.0);
     gEffVsZ->SetMarkerColor(kAzure+2);
@@ -267,7 +268,6 @@ void event::RunFullSimulation() {
         }
     }
     
-
     /**
      * slice the TH2D to find the plot we want: 
      *  - resolution vs multeplicity
@@ -282,14 +282,15 @@ void event::RunFullSimulation() {
     if(auto h = (TH1D*)gDirectory->Get("hResVsMult_1")) h->SetDirectory(0);
     if(auto h = (TH1D*)gDirectory->Get("hResVsMult_chi2")) h->SetDirectory(0);
 
-    hResVsZ->FitSlicesY(nullptr, 0, -1, 0, "Q");
-    TH1D *hRisoluzione_Z = (TH1D*)gDirectory->Get("hResVsZ_2");
+    hResVsZtrue->FitSlicesY(nullptr, 0, -1, 0, "Q");
+    TH1D *hRisoluzione_Z = (TH1D*)gDirectory->Get("hResVsZtrue_2");
     hRisoluzione_Z->SetTitle("Risoluzione vs Z; z [mm]; #sigma [#mum]");
     // remove the plot i'm not intrested in
-    if(auto h = (TH1D*)gDirectory->Get("hResVsZ_0")) h->SetDirectory(0);
-    if(auto h = (TH1D*)gDirectory->Get("hResVsZ_1")) h->SetDirectory(0);
-    if(auto h = (TH1D*)gDirectory->Get("hResVsZ_chi2")) h->SetDirectory(0);
-
+    if(auto h = (TH1D*)gDirectory->Get("hResVsZtrue_0")) h->SetDirectory(0);
+    if(auto h = (TH1D*)gDirectory->Get("hResVsZtrue_1")) h->SetDirectory(0);
+    if(auto h = (TH1D*)gDirectory->Get("hResVsZtrue_chi2")) h->SetDirectory(0);
+    
+    
 
 
     hfile->Write("", TObject::kOverwrite);

@@ -40,6 +40,14 @@ int main() {
     cout << "| Real time: " << t.RealTime() << " s\n";
     cout << "| CPU time: " << t.CpuTime()  << " s\n";
     cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" << endl;
+    cout << boolalpha << "| multiple scattering: " << multiple_scattering_on << endl;
+    cout << "| distribution used: ";
+    if(get_data_from_kinem){
+        cout << " from ./data/kinem.root" << endl;
+    }
+    else {cout << " uniform distribution" << endl;}
+    cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" << endl;
+
     cout << endl;
     
     return 0;

@@ -47,7 +47,7 @@ const bool multiple_scattering_on = true;
 
 
 //Binning to create the Z_vertex reconstruction histogram
-const int bin_zvtx = 200;
+const int bin_zvtx = 100;
 
 // Delta phi selection for Z_vertex candidate
 const double delta_phi = 0.01; //rad

@@ -25,13 +25,12 @@ make -jN
 ./sim
 ```
 
-then press ENTER to exit. 
 in the directory ./data/hist_sim you'll be able to see all the data from the simulation and the plot from the reconstruction.
 
 ## const.h
 From the directory .include/const.h you can change all the ccode const and decide some different option how the code works:
 * nEvents : number of event simulated and therefore recostructed (default value = 100000);
-* get_data_from_kinem : for the simulation you are able to either take the eta and multeplicity values from uniform distribution of from the ./data/kinem.root file.
+* get_data_from_kinem : for the simulation you are able to either take the eta and multeplicity values from uniform distribution of from the ./data/kinem.root file. 
 * multiple_scattering_on : ask you if you want to take into account the multiple scattering for the simulation
 
 ## Output
