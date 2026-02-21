@@ -139,9 +139,8 @@ void event::RunFullSimulation() {
             //trasport of the particle from the vertex to the beam pipe
             new((*particle_VTX_BP)[iPart]) particle(prtl);
             prtl.find_intersection(beam_pipe_radius);
-            if(prtl.get_point().get_z() > beam_pipe_lenght/2.) check_bp++;
             new((*hitsBP)[iPart]) point(prtl.get_point());  
-            points_BP.push_back(prtl.get_point());
+            if(abs(prtl.get_point().get_z()) < beam_pipe_lenght * 0.5) points_BP.push_back(prtl.get_point());
             if (multiple_scattering_on){
                 prtl.multiple_scattering(beam_pipe_Z, beam_pipe_X0, beam_pipe_thickness);
             };
@@ -149,10 +148,9 @@ void event::RunFullSimulation() {
             //trasport of the particle from the beam pipe to layer1
             new((*particle_BP_L1)[iPart]) particle(prtl);
             prtl.find_intersection(layer1_radius);
-            if(prtl.get_point().get_z() > beam_pipe_lenght/2.) check_l1++;
             prtl.get_point().smearing();
             new((*hitsL1)[iPart]) point(prtl.get_point());
-            points_L1.push_back(prtl.get_point());
+            if(abs(prtl.get_point().get_z()) < layer1_lenght * 0.5) points_L1.push_back(prtl.get_point());
             if (multiple_scattering_on){
                 prtl.multiple_scattering(layer1_Z, layer1_X0, layer1_thickness);
             };
@@ -160,10 +158,10 @@ void event::RunFullSimulation() {
             //trasport of the particle from the layer1 to layer2
             new((*particle_L1_L2)[iPart]) particle(prtl);
             prtl.find_intersection(layer2_radius);
-            if(prtl.get_point().get_z() > beam_pipe_lenght/2.) check_l2++;
             prtl.get_point().smearing();
             new((*hitsL2)[iPart]) point(prtl.get_point());
-            points_L2.push_back(prtl.get_point());
+            if(abs(prtl.get_point().get_z()) < layer2_lenght * 0.5) points_L2.push_back(prtl.get_point());
+
 
         }
 
@@ -333,9 +331,6 @@ void event::RunFullSimulation() {
     cout << endl; cout << endl;
     std::cout << "Simulation ended: all event has been processed succesfully. \nData available on /data/hist_sim.root" << std::endl;
     cout << endl; cout << endl;
-    cout << "check bp: " << check_bp << endl;
-    cout << "check l1: " << check_l1 << endl;
-    cout << "check l2: " << check_l2 << endl;
 
 }
 
