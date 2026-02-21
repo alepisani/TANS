@@ -11,7 +11,7 @@ const int nEvents = 100000;
  *  true --> data from the file
  *  false --> data from uniform distribution
  */
-const bool get_data_from_kinem = false;
+const bool get_data_from_kinem = true;
 
 // Vertex constant sigmas
 const double X_rms = 0.1; //mm
@@ -50,10 +50,10 @@ const bool multiple_scattering_on = true;
 const int bin_zvtx = 100;
 
 // Delta phi selection for Z_vertex candidate
-const double delta_phi = 0.01; //rad
+const double delta_phi = 0.05; //rad
 
 //Half Running window
-const double half_window = 0.05; //mm
+const double half_window = 0.2; //mm
 
 
 

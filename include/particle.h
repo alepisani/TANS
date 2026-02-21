@@ -26,6 +26,7 @@ class particle : public TObject {
     void find_intersection(double);
     void multiple_scattering(int Z, double X0, double t);
     void rotate (double theta_p, double phi_p);
+    bool is_in_acceptance();
 
     friend std::ostream &operator<<(std::ostream &output, const particle &particle);
 

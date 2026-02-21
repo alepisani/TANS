@@ -17,7 +17,7 @@ ClassImp(reconstruction);
 double reconstruction::running_window(){
 
     int maxfrequency = 0;
-    double vertex = 187; //initialised to a dummy value
+    double vertex = 9999.; //initialised to a dummy value
     size_t cand_size = vertex_candidate.size();
 
     //creation of the window to iterate on each value
@@ -94,8 +94,9 @@ double reconstruction::reco_z(event* ev, TH1D* hResidui, TH1D* hist_z_vtx){
     }
 
     int bin = hist_z_vtx->GetMaximumBin();  //find the bin with the maximum frequency of candidates
-    double bin_low = hist_z_vtx->GetBinLowEdge(bin); 
-    double bin_high = bin_low + hist_z_vtx->GetBinWidth(bin); 
+    //taking into accout also the previous and next bin
+    double bin_low = hist_z_vtx->GetBinLowEdge(bin-1); 
+    double bin_high = bin_low + 3 * hist_z_vtx->GetBinWidth(bin); 
 
     //fill a vector with all the z values of the maximum bin
     for(double z : z_candidates){
@@ -108,12 +109,6 @@ double reconstruction::reco_z(event* ev, TH1D* hResidui, TH1D* hist_z_vtx){
 
     //find primary vertex
     double z_vtx = running_window();
-    
-    //fill residuals histogram 
-    if(hResidui != nullptr){
-        double residuo = (z_vtx - ev->get_vertex().get_z())*1000 ;
-        hResidui->Fill(residuo);
-    }
 
     return z_vtx;
 

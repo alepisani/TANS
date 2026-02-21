@@ -16,6 +16,7 @@
 #include "TGeoTrack.h"
 #include "TPolyLine3D.h"
 #include "TRandom3.h"
+#include "TCanvas.h"
 #include <iostream>
 #include "TF1.h"
 #include <sstream>
@@ -55,17 +56,26 @@ void event::RunFullSimulation() {
     
     gErrorIgnoreLevel = kError;
     reconstruction reco;
+    int check_bp = 0; int check_l1 = 0; int check_l2 = 0;
+
+    std::vector <double> v_mult;
+    std::vector <double> v_ztrue;
+    std::vector <double> v_zreco;
+    v_mult.reserve(nEvents);
+    v_ztrue.reserve(nEvents);
+    v_zreco.reserve(nEvents);
 
     TFile* hfile = new TFile("../data/hist_sim.root", "RECREATE");
     TTree* tree = new TTree("Tree", "Tree simulazione");
     TH1D* hResidui = new TH1D("hResidui", "Residui; (z_{gen} - z_{reco}) [#mum]; Conteggi", 500, -1000, 1000);
-    TH1D* hGen = new TH1D("hGen", "Eventi Generati; Molteplicita'; Conteggi", 50, 0, 50);
-    TH1D* hReco = new TH1D("hReco", "Eventi Ricostruiti; Molteplicita'; Conteggi", 50, 0, 50);
-    TH1D* hGenVsZ = new TH1D("hGenvsZ", "Eventi generati vs Z; Conteggi", 100, -beam_pipe_lenght/2., beam_pipe_lenght/2.);
-    TH1D* hRecoVsZ = new TH1D("hRecovsZ", "Eventi ricostruiti vs Z; Conteggi", 100, -beam_pipe_lenght/2., beam_pipe_lenght/2.);
-    TH2D* hResVsMult = new TH2D("hResVsMult", "Residui vs Mult; Molteplicita'; Residuo [#mum]", 50, 0, 50, 100, -2000, 2000);
-    TH2D* hResVsZtrue = new TH2D("hResVsZtrue", "Residui vs Ztrue; z [mm]; Residuo [#mum]", 10, -beam_pipe_lenght/2., beam_pipe_lenght/2., 100, -2000, 2000);
-    TH2D* hResVsZreco = new TH2D("hResVsZreco", "Residui vs Zreco; z [mm]; Residuo [#mum]", 10, -beam_pipe_lenght/2., beam_pipe_lenght/2., 100, -2000, 2000);
+    TH1D* hGen = new TH1D("hGen", "Eventi Generati; Molteplicita'; Conteggi", 25, 0, 50);
+    TH1D* hReco = new TH1D("hReco", "Eventi Ricostruiti; Molteplicita'; Conteggi", 25, 0, 50);
+    TH1D* hGenVsZ = new TH1D("hGenvsZ", "Eventi generati vs Z; Conteggi", 20, -beam_pipe_lenght/2., beam_pipe_lenght/2.);
+    TH1D* hRecoVsZ = new TH1D("hRecovsZ", "Eventi ricostruiti vs Z; Conteggi", 20, -beam_pipe_lenght/2., beam_pipe_lenght/2.);
+    TH2D* hResVsMult = new TH2D("hResVsMult", "Residui vs Mult; Molteplicita'; Residuo [#mum]", 25, 0, 50, 200, -2000, 2000);
+    TH2D* hResVsZtrue = new TH2D("hResVsZtrue", "Residui vs Ztrue; z [mm]; Residuo [#mum]", 50, -beam_pipe_lenght/2., beam_pipe_lenght/2., 200, -2000, 2000);
+    TH2D* hResVsZreco = new TH2D("hResVsZreco", "Residui vs Zreco; z [mm]; Residuo [#mum]", 50, -beam_pipe_lenght/2., beam_pipe_lenght/2., 200, -2000, 2000);
+    
     TH1D* hist_z_vtx = new TH1D("hist_reco", "Ricostruzione Vertice Z; z_{cand} [mm]; Conteggi", bin_zvtx, -beam_pipe_lenght/2., beam_pipe_lenght/2.);
     hist_z_vtx->SetDirectory(0);
 
@@ -105,7 +115,7 @@ void event::RunFullSimulation() {
     }
 
     //-----------------------------Event_Simulation------------------------------
-
+    
     for (int iEv = 0; iEv < nEvents; ++iEv) {
         
         point vertex;
@@ -123,12 +133,13 @@ void event::RunFullSimulation() {
             
             particle prtl;
             prtl.set_point(vertex);
-            prtl.generate_theta(hist_eta);  
             prtl.generate_phi();
+            prtl.generate_theta(hist_eta);  
 
             //trasport of the particle from the vertex to the beam pipe
             new((*particle_VTX_BP)[iPart]) particle(prtl);
             prtl.find_intersection(beam_pipe_radius);
+            if(prtl.get_point().get_z() > beam_pipe_lenght/2.) check_bp++;
             new((*hitsBP)[iPart]) point(prtl.get_point());  
             points_BP.push_back(prtl.get_point());
             if (multiple_scattering_on){
@@ -138,6 +149,7 @@ void event::RunFullSimulation() {
             //trasport of the particle from the beam pipe to layer1
             new((*particle_BP_L1)[iPart]) particle(prtl);
             prtl.find_intersection(layer1_radius);
+            if(prtl.get_point().get_z() > beam_pipe_lenght/2.) check_l1++;
             prtl.get_point().smearing();
             new((*hitsL1)[iPart]) point(prtl.get_point());
             points_L1.push_back(prtl.get_point());
@@ -148,6 +160,7 @@ void event::RunFullSimulation() {
             //trasport of the particle from the layer1 to layer2
             new((*particle_L1_L2)[iPart]) particle(prtl);
             prtl.find_intersection(layer2_radius);
+            if(prtl.get_point().get_z() > beam_pipe_lenght/2.) check_l2++;
             prtl.get_point().smearing();
             new((*hitsL2)[iPart]) point(prtl.get_point());
             points_L2.push_back(prtl.get_point());
@@ -175,17 +188,19 @@ void event::RunFullSimulation() {
             new((*hitsL2)[multiplicity]) point(noisy_point);
         }
         
-        //close the file where we take the distribution
-        if(hist_kinem) {
-            hist_kinem->Close();
-            delete hist_kinem;
-        }
         
         //-----------------------------Reconstruction------------------------------
         
         double z_reco = reco.reco_z(this, hResidui, hist_z_vtx);
         double z_true = vertex.get_z();
-        double residuo = (z_true - z_reco)*1000;  //from mm to um
+        
+        v_mult.push_back(mult);
+        v_ztrue.push_back(z_true);
+        v_zreco.push_back(z_reco);
+
+        
+        //fill the ttree with all the data        
+        tree->Fill();
         
         //clear the vector for the next iteration
         points_BP.clear();
@@ -198,67 +213,45 @@ void event::RunFullSimulation() {
         hitsL1->Clear("C");
         hitsL2->Clear("C");
         
-        //filling the histograms
-        hGen->Fill(mult);  
-        hGenVsZ->Fill(z_true);
-        hResVsMult->Fill(mult, residuo);
-        hResVsZtrue->Fill(z_true, residuo);
-        hResVsZreco->Fill(z_reco, residuo);
-
-
-        //SELEZIONE DA RIVEDEREEEEEEEEEEEEEEEEEEEEEEEEEEE!!!!!!!!!!!!!!!!!!!!!!!
-        if (std::abs(z_reco - z_true) < 1.5) {
-            hReco->Fill(mult);
-            hRecoVsZ->Fill(z_true);
-        }
-
-
-
-        tree->Fill();
-
-
         //loading bar
         if (iEv % 100 == 0 || iEv == nEvents - 1) {
-           printProgressBar(iEv + 1, nEvents, 30);
+            printProgressBar(iEv + 1, nEvents, 30);
         }
         
     }
     
     cout << endl;
-
+    
+    //close the file where we take the distribution
+    if(hist_kinem) {
+        hist_kinem->Close();
+        delete hist_kinem;
+    }
     
     hfile->cd();
+    
+    //filling the histograms
 
+    for(int i = 0; i < nEvents; i++){
 
-    //---------------------------------------------------------fill all the distros we're intrensted in
+        double residuo = (v_ztrue[i] - v_zreco[i]) * 1000; //um
+        hGen->Fill(v_mult[i]);  
+        hGenVsZ->Fill(v_ztrue[i]);
+        hResVsMult->Fill(v_mult[i], residuo);
+        hResVsZtrue->Fill(v_ztrue[i], residuo);
+        hResVsZreco->Fill(v_zreco[i], residuo);
+        hResidui->Fill(residuo);
 
-    //plot efficienty vs multeplicity
-    if (hReco->GetEntries() > 0 && hGen->GetEntries() > 0) {
-        TGraphAsymmErrors* gEff = new TGraphAsymmErrors(hReco, hGen, "cp"); // cp --> errori binomiali
-        gEff->SetTitle("Efficiency vs Multiplicity; Multeplicity; Efficiency");
-        gEff->SetMarkerStyle(20);
-        gEff->SetMarkerSize(1.0);
-        gEff->SetMarkerColor(kAzure+2);
-        gEff->SetLineColor(kAzure+2);
-        gEff->Write("eff_vs_mult");
     }
 
-    //plot efficienty vs reconstructed z_vertex 
-    TGraphAsymmErrors* gEffVsZ = new TGraphAsymmErrors(hRecoVsZ, hGenVsZ, "cp");
-    gEffVsZ->SetTitle("Efficiency vs Z_{true}; Z [mm]; Efficiecy");
-    gEffVsZ->SetMarkerStyle(20);
-    gEffVsZ->SetMarkerSize(1.0);
-    gEffVsZ->SetMarkerColor(kAzure+2);
-    gEffVsZ->SetLineColor(kAzure+2);
-    gEffVsZ->Write("eff_vs_zreco");
-
+    double mean, sigma, sigmaErr;
     if (hResidui->GetEntries() > 0) {
         hResidui->Fit("gaus", "Q");
         TF1 *fitFunc = hResidui->GetFunction("gaus");
         if (fitFunc) {
-            double mean     = fitFunc->GetParameter(1);
-            double sigma    = fitFunc->GetParameter(2);
-            double sigmaErr = fitFunc->GetParError(2);
+            mean     = fitFunc->GetParameter(1);
+            sigma    = fitFunc->GetParameter(2);
+            sigmaErr = fitFunc->GetParError(2);
             cout << endl;
             cout << "+---------------------------------------------" << endl;
             cout << "| Gaussin fit on the residual plot: " << endl;
@@ -268,13 +261,48 @@ void event::RunFullSimulation() {
         }
     }
     
+    for(int i = 0; i < nEvents; i++){
+
+        if (std::abs(v_zreco[i] - v_ztrue[i]) < 3 * (sigma / 1000.)) {
+            
+            hReco->Fill(v_mult[i]);
+            hRecoVsZ->Fill(v_ztrue[i]);
+
+        }
+
+
+    }
+
+
+    //---------------------------------------------------------fill all the distros we're intrensted in
+
+    //plot efficienty vs multeplicity
+    TGraphAsymmErrors* gEff = new TGraphAsymmErrors(hReco, hGen, "cp"); // cp --> errori binomiali
+    gEff->SetTitle("Efficiency vs Multiplicity; Multeplicity; Efficiency");
+    gEff->SetMarkerStyle(20);
+    gEff->SetMarkerSize(1.0);
+    gEff->SetMarkerColor(kAzure+2);
+    gEff->SetLineColor(kAzure+2);
+    gEff->Write("eff_vs_mult");
+    
+
+    //plot efficienty vs z_vertex_true 
+    TGraphAsymmErrors* gEffVsZ = new TGraphAsymmErrors(hRecoVsZ, hGenVsZ, "cp");
+    gEffVsZ->SetTitle("Efficiency vs Z_{true}; Z [mm]; Efficiecy");
+    gEffVsZ->SetMarkerStyle(20);
+    gEffVsZ->SetMarkerSize(1.0);
+    gEffVsZ->SetMarkerColor(kAzure+2);
+    gEffVsZ->SetLineColor(kAzure+2);
+    gEffVsZ->Write("eff_vs_zreco");
+
+    
     /**
      * slice the TH2D to find the plot we want: 
      *  - resolution vs multeplicity
      *  - resolution vs z_reconstructed
      */
 
-    hResVsMult->FitSlicesY(nullptr, 0, -1, 0, "Q");
+    hResVsMult->FitSlicesY(nullptr, 0, -1, 20, "Q");
     TH1D *hRisoluzione = (TH1D*)gDirectory->Get("hResVsMult_2");
     hRisoluzione->SetTitle("Risoluzione vs Molteplicita'; Molteplicita'; #sigma [#mum]");    
     // remove the plot i'm not intrested in
@@ -282,15 +310,13 @@ void event::RunFullSimulation() {
     if(auto h = (TH1D*)gDirectory->Get("hResVsMult_1")) h->SetDirectory(0);
     if(auto h = (TH1D*)gDirectory->Get("hResVsMult_chi2")) h->SetDirectory(0);
 
-    hResVsZtrue->FitSlicesY(nullptr, 0, -1, 0, "Q");
+    hResVsZtrue->FitSlicesY(nullptr, 0, -1, 5, "Q");
     TH1D *hRisoluzione_Z = (TH1D*)gDirectory->Get("hResVsZtrue_2");
     hRisoluzione_Z->SetTitle("Risoluzione vs Z; z [mm]; #sigma [#mum]");
     // remove the plot i'm not intrested in
     if(auto h = (TH1D*)gDirectory->Get("hResVsZtrue_0")) h->SetDirectory(0);
     if(auto h = (TH1D*)gDirectory->Get("hResVsZtrue_1")) h->SetDirectory(0);
-    if(auto h = (TH1D*)gDirectory->Get("hResVsZtrue_chi2")) h->SetDirectory(0);
-    
-    
+    //if(auto h = (TH1D*)gDirectory->Get("hResVsZtrue_chi2")) h->SetDirectory(0);
 
 
     hfile->Write("", TObject::kOverwrite);
@@ -307,6 +333,9 @@ void event::RunFullSimulation() {
     cout << endl; cout << endl;
     std::cout << "Simulation ended: all event has been processed succesfully. \nData available on /data/hist_sim.root" << std::endl;
     cout << endl; cout << endl;
+    cout << "check bp: " << check_bp << endl;
+    cout << "check l1: " << check_l1 << endl;
+    cout << "check l2: " << check_l2 << endl;
 
 }
 

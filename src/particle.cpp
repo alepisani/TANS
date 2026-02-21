@@ -19,49 +19,56 @@ particle::particle(const point& pt, double p, double eta_in): TObject(), pt(pt),
 
 }
 
-void particle::generate_theta(TH1D* hist_eta){
+void particle::generate_theta(TH1D* hist_eta) {
+    
+    double x_vtx = pt.get_x();
+    double y_vtx = pt.get_y();
+    double z_vtx = pt.get_z();
+    double r2 = layer2_radius;
+    double L2 = layer2_lenght;
 
-    if(!get_data_from_kinem){
+    double projection = x_vtx * cos(phi) + y_vtx * sin(phi);
+    double r_vtx = x_vtx * x_vtx + y_vtx * y_vtx;
+    double d_phi = -projection + sqrt(projection * projection + (r2 * r2 - r_vtx));
 
-        //Generate theta, considering detector's geometric acceptance
-        //considering the asymmetric position of the vertex and safety margins
-        
-        double x_vtx = pt.get_x();
-        double y_vtx = pt.get_y();
-        double z_vtx = pt.get_z();
-        
-        // vertex radial distance from the beamline
-        double r_vtx = sqrt(x_vtx*x_vtx + y_vtx*y_vtx);
-        
-        // distances from the vertex to the end of the layers in both directions
-        double z_forward = layer1_lenght * 0.5 - z_vtx;   
-        double z_backward = layer1_lenght * 0.5 + z_vtx;  
-        
-        // available radial distance from the vertex
-        double r_available = (layer1_radius - r_vtx);
-        
-        // maximum acceptance angles in both directions
-        double theta_fwd = atan(r_available / z_forward);       
-        double theta_bwd = M_PI - atan(r_available / z_backward); 
-        
-        // conversion to pseudorapidity limits
-        double eta_max = -log(tan(theta_fwd / 2.0));      
-        double eta_min = -log(tan(theta_bwd / 2.0));      
-        
+    double cot_min = (-L2/2.0 - z_vtx) / d_phi;
+    double cot_max = (+L2/2.0 - z_vtx) / d_phi;
+
+    double theta_fwd = acos(cot_min / sqrt(1 + cot_min * cot_min)); 
+    double theta_bwd = acos(cot_max / sqrt(1 + cot_max * cot_max)); 
+
+    double eta_min = -log(tan(theta_fwd / 2.0));
+    double eta_max = -log(tan(theta_bwd / 2.0));
+
+    if (!get_data_from_kinem) {
         eta = gRandom->Uniform(eta_min, eta_max);
-        
-        theta = 2.0 * atan(exp(-eta));
+    } else {
+
+        bool accepted = false;
+
+        while (!accepted) {
+            eta = hist_eta->GetRandom();
+            if (eta >= eta_min && eta <= eta_max) accepted = true;
+        }
+
     }
 
-    if(get_data_from_kinem){
-        
-        eta = hist_eta->GetRandom();
-        
-        theta = 2.0 * atan(exp(-eta));
-        
-    }
-
+    theta = 2.0 * atan(exp(-eta));
 }
+
+bool particle::is_in_acceptance() {
+    
+    double x_vtx = pt.get_x();
+    double y_vtx = pt.get_y();
+    double projection = x_vtx * cos(phi) + y_vtx * sin(phi);
+    double r_vtx = x_vtx * x_vtx + y_vtx * y_vtx;
+    
+    double d_phi = -projection + sqrt(projection * projection + (layer2_radius * layer2_radius - r_vtx));
+    double z_ext = pt.get_z() + d_phi / tan(theta);
+
+    return (abs(z_ext) <= layer2_lenght / 2.0);
+}
+
 
 void particle::generate_phi(){
 
