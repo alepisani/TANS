@@ -174,7 +174,7 @@ void event::RunFullSimulation() {
             point noisy_point;
             noisy_point.set_phi(gRandom->Uniform(0, 2 * M_PI));
             noisy_point.set_R(layer1_radius);
-            noisy_point.set_z(gRandom->Uniform(-layer1_lenght/2, +layer1_lenght/2));
+            noisy_point.set_z(gRandom->Uniform(-layer1_lenght/2., +layer1_lenght/2.));
             new((*hitsL1)[multiplicity]) point(noisy_point);
         }
 
@@ -182,7 +182,7 @@ void event::RunFullSimulation() {
             point noisy_point;
             noisy_point.set_phi(gRandom->Uniform(0, 2 * M_PI));
             noisy_point.set_R(layer2_radius);
-            noisy_point.set_z(gRandom->Uniform(-layer2_lenght/2, +layer2_lenght/2));
+            noisy_point.set_z(gRandom->Uniform(-layer2_lenght/2., +layer2_lenght/2.));
             new((*hitsL2)[multiplicity]) point(noisy_point);
         }
         
@@ -314,7 +314,7 @@ void event::RunFullSimulation() {
     // remove the plot i'm not intrested in
     if(auto h = (TH1D*)gDirectory->Get("hResVsZtrue_0")) h->SetDirectory(0);
     if(auto h = (TH1D*)gDirectory->Get("hResVsZtrue_1")) h->SetDirectory(0);
-    //if(auto h = (TH1D*)gDirectory->Get("hResVsZtrue_chi2")) h->SetDirectory(0);
+    if(auto h = (TH1D*)gDirectory->Get("hResVsZtrue_chi2")) h->SetDirectory(0);
 
 
     hfile->Write("", TObject::kOverwrite);
