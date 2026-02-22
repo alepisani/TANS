@@ -11,7 +11,7 @@ const int nEvents = 100000;
  *  true --> data from the file
  *  false --> data from uniform distribution
  */
-const bool get_data_from_kinem = true;
+const bool get_data_from_kinem = false;
 
 // Vertex constant sigmas
 const double X_rms = 0.1; //mm
@@ -41,6 +41,8 @@ const double layer2_lenght = 270; //mm
  *  false --> MS is off
  */
 const bool multiple_scattering_on = true;
+
+const double Prob_Noise = 0.0001;
 
 
 //---------------------Reconstruction----------------------

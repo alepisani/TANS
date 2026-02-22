@@ -20,6 +20,11 @@ particle::particle(const point& pt, double p, double eta_in): TObject(), pt(pt),
 }
 
 void particle::generate_theta(TH1D* hist_eta) {
+
+    /**
+     * generate eta and then theta taking into account only the track that 
+     * are in the layer 2 accepatance
+     */
     
     double x_vtx = pt.get_x();
     double y_vtx = pt.get_y();
@@ -41,14 +46,18 @@ void particle::generate_theta(TH1D* hist_eta) {
     double eta_max = -log(tan(theta_bwd / 2.0));
 
     if (!get_data_from_kinem) {
+
         eta = gRandom->Uniform(eta_min, eta_max);
+
     } else {
 
         bool accepted = false;
 
         while (!accepted) {
+
             eta = hist_eta->GetRandom();
             if (eta >= eta_min && eta <= eta_max) accepted = true;
+
         }
 
     }

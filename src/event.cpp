@@ -65,7 +65,7 @@ void event::RunFullSimulation() {
     v_ztrue.reserve(nEvents);
     v_zreco.reserve(nEvents);
 
-    TFile* hfile = new TFile("../data/hist_sim.root", "RECREATE");
+    TFile* hfile = new TFile("../data/hist_sim_unif.root", "RECREATE");
     TTree* tree = new TTree("Tree", "Tree simulazione");
     TH1D* hResidui = new TH1D("hResidui", "Residui; (z_{gen} - z_{reco}) [#mum]; Conteggi", 500, -1000, 1000);
     TH1D* hGen = new TH1D("hGen", "Eventi Generati; Molteplicita'; Conteggi", 25, 0, 50);
@@ -170,7 +170,7 @@ void event::RunFullSimulation() {
         double PNoiseL1 = gRandom->Rndm();
         double PNoiseL2 = gRandom->Rndm();
 
-        if(PNoiseL1 < 0.001){
+        if(PNoiseL1 < Prob_Noise){
             point noisy_point;
             noisy_point.set_phi(gRandom->Uniform(0, 2 * M_PI));
             noisy_point.set_R(layer1_radius);
@@ -178,7 +178,7 @@ void event::RunFullSimulation() {
             new((*hitsL1)[multiplicity]) point(noisy_point);
         }
 
-        if(PNoiseL2 < 0.001){
+        if(PNoiseL2 < Prob_Noise){
             point noisy_point;
             noisy_point.set_phi(gRandom->Uniform(0, 2 * M_PI));
             noisy_point.set_R(layer2_radius);
