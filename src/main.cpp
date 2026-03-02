@@ -29,8 +29,53 @@ int main() {
     TStopwatch t;
     t.Start();
     
-    event ev;
-    ev.RunFullSimulation();
+    /**
+     * simulation()
+     *      creo i tclonesarray hitL1, hitL2 che riempio successivamente. vengono chiamati come parametri dell'evento
+     *      for(event)
+     *          inizializza 
+     *              generate vtx
+     *              generate angoli 
+     *          trasporto
+     *              intersezioni
+     *              multiple scattering
+     *              smearing
+     *              usa tclonesarray per riempire i vettori
+     *          noise 
+     *              prendono come argomenti i tclonesarray li riempiono
+     *              si riempiono solo i vector con dati fisici che finiscono in accettanza
+     *      
+     * reconstruction()
+     *      leggi il ttree di simulation
+     *      for(getentries)
+     *          create vector di hit e tracklet
+     *          for(hitL12)
+     *              riempi vector
+     *              tracklet
+     *              taglio in phi
+     *              histogramma di z_rec, prendi la moda e i due bin vicini
+     *              cosa intendo per tracce non ricostruite?
+     *                  se ho ricostruito < 1 (2?) tracce 
+     *                  se hist ha solo 1 entries per ogni bin
+     *                  come tratti picchi multipli nell'istogramma? 
+     *                      fai scan manuale e consideri qui bin sopra una certa soglia (correlata con il picco massimo)
+     *              trovato il massimo fai la running window sui valori di z nel bin della moda (e quelli adiacenti)
+     *          riempi ttree
+     * 
+     * analysis()
+     *      legge ttree di ricostruzione e simulazione e fa i plot del caso
+     * 
+     * 
+     * 
+     * 
+     * 
+     * conviene usare le ntuple per leggere il ttree di simulazione e ricostruzione per poi fare l'analisi
+     */
+
+
+    
+    //event ev;
+    //ev.RunFullSimulation();
     
     t.Stop();
 
