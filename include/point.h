@@ -20,6 +20,7 @@ class point : public TObject {
     void set_R(double);
     void set_z(double);
     void set_point(double, double, double);
+    void set_cil_coord(double, double, double);
 
     void generate_VTX();
     void smearing();

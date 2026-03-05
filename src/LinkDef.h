@@ -4,5 +4,6 @@
 #pragma link C++ class particle+;
 #pragma link C++ class event+;
 #pragma link C++ class reconstruction+;
+#pragma link C++ class simulation+;
 
 #endif

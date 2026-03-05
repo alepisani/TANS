@@ -25,6 +25,16 @@ void point::set_point(double a, double b, double c){
 
 }
 
+void point::set_cil_coord(double p, double r, double z){
+
+    phi = p;
+    R = r;
+    z = z;
+    x = R * cos(phi);
+    y = R * sin(phi);
+
+}
+
 void point::set_phi(double p){
 
     phi = p;

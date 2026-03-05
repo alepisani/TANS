@@ -3,6 +3,7 @@
 #include "../include/point.h"
 #include "../include/particle.h"
 #include "../include/reconstruction.h"
+#include "../include/simulation.h"
 #include <iostream>
 #include "TApplication.h" 
 #include "TGeoManager.h"
@@ -29,6 +30,9 @@ int main() {
     TStopwatch t;
     t.Start();
     
+    simulation simu;
+    simu.sim(); 
+
     /**
      * simulation()
      *      creo i tclonesarray hitL1, hitL2 che riempio successivamente. vengono chiamati come parametri dell'evento
@@ -79,8 +83,9 @@ int main() {
     
     t.Stop();
 
+    cout << endl;
     cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" << endl;
-    cout << "| time to process all the event and simulation \n";
+    cout << "| time to process all the " << nEvents << " event and simulation \n";
     cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" << endl;
     cout << "| Real time: " << t.RealTime() << " s\n";
     cout << "| CPU time: " << t.CpuTime()  << " s\n";

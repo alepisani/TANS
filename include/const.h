@@ -4,14 +4,14 @@
 //---------------------Simulation----------------------
 
 // Simulated events
-constexpr int nEvents = 10000;
+constexpr int nEvents = 1000000;
 
 /** To simulated the interaction you can either generate the eta and multeplicity 
  *  value by usiform distribution or from the ../data/kinem.root file
  *  true --> data from the file
  *  false --> data from uniform distribution
  */
-constexpr bool get_data_from_kinem = false;
+constexpr bool get_data_from_kinem = true;
 
 // Vertex constant sigmas
 constexpr double X_rms = 0.1; //mm
@@ -42,7 +42,7 @@ constexpr double layer2_lenght = 270; //mm
  */
 constexpr bool multiple_scattering_on = true;
 
-constexpr double Prob_Noise = 0.0001;
+constexpr int noise_mu = 5;
 
 
 //---------------------Reconstruction----------------------

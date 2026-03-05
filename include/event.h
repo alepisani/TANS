@@ -4,22 +4,25 @@
 #include "TObject.h"
 #include "./particle.h"
 #include "./point.h"
+#include <TClonesArray.h>
 
 class event : public TObject {
 
 public:
-   event():TObject(), multiplicity(0), pnt(), vertex(){}
-   event(int, point, point);
+   event():TObject(), multiplicity(0), prtl(){}
+   event(int, particle);
    
    int get_multiplicity() const {return multiplicity;}
-   const point& get_point() const {return pnt;}
    const point& get_vertex() const {return vertex;}
    
-   void setmultiplicity(TH1I* hist_mult = nullptr);
+   void setmultiplicity(TH1I* hist_mult);
    void set_vertex(const point& vtx);
+   void setup_event(TH1I* hist_mult, TH1D* hist_eta);
 
-   void RunFullSimulation();
-   void printProgressBar(int, int, int);
+   void single_event(TClonesArray* vtx, TClonesArray* hitL1, TClonesArray* hitL2);
+   void noise(TClonesArray* hitL1, TClonesArray* hitL2);
+
+   //void RunFullSimulation();
 
    friend std::ostream &operator<<(std::ostream &output, const event &ev);
 
@@ -31,8 +34,11 @@ public:
   
 private:
    int multiplicity;
-   point pnt;
    point vertex;
+   particle prtl;
+   int counterVTX = 0;
+   int counterL1 = 0;
+   int counterL2 = 0;
 
    ClassDef(event,1);
 };

@@ -22,28 +22,11 @@ particle::particle(const point& pt, double p, double eta_in): TObject(), pt(pt),
 void particle::generate_theta(TH1D* hist_eta) {
 
     /**
-     * generate eta and then theta taking into account only the track that 
-     * are in the layer 2 accepatance
+     * generate eta and then theta either from uniform or data/kinem.root
      */
     
-    double x_vtx = pt.get_x();
-    double y_vtx = pt.get_y();
-    double z_vtx = pt.get_z();
-    double r2 = layer2_radius;
-    double L2 = layer2_lenght;
-
-    double projection = x_vtx * cos(phi) + y_vtx * sin(phi);
-    double r_vtx = x_vtx * x_vtx + y_vtx * y_vtx;
-    double d_phi = -projection + sqrt(projection * projection + (r2 * r2 - r_vtx));
-
-    double cot_min = (-L2/2.0 - z_vtx) / d_phi;
-    double cot_max = (+L2/2.0 - z_vtx) / d_phi;
-
-    double theta_fwd = acos(cot_min / sqrt(1 + cot_min * cot_min)); 
-    double theta_bwd = acos(cot_max / sqrt(1 + cot_max * cot_max)); 
-
-    double eta_min = -log(tan(theta_fwd / 2.0));
-    double eta_max = -log(tan(theta_bwd / 2.0));
+    double eta_min = -2.;
+    double eta_max = +2.;
 
     if (!get_data_from_kinem) {
 
@@ -64,20 +47,6 @@ void particle::generate_theta(TH1D* hist_eta) {
 
     theta = 2.0 * atan(exp(-eta));
 }
-
-bool particle::is_in_acceptance() {
-    
-    double x_vtx = pt.get_x();
-    double y_vtx = pt.get_y();
-    double projection = x_vtx * cos(phi) + y_vtx * sin(phi);
-    double r_vtx = x_vtx * x_vtx + y_vtx * y_vtx;
-    
-    double d_phi = -projection + sqrt(projection * projection + (layer2_radius * layer2_radius - r_vtx));
-    double z_ext = pt.get_z() + d_phi / tan(theta);
-
-    return (abs(z_ext) <= layer2_lenght / 2.0);
-}
-
 
 void particle::generate_phi(){
 
