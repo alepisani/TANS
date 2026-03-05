@@ -22,20 +22,13 @@ public:
    void single_event(TClonesArray* vtx, TClonesArray* hitL1, TClonesArray* hitL2);
    void noise(TClonesArray* hitL1, TClonesArray* hitL2);
 
-   //void RunFullSimulation();
-
    friend std::ostream &operator<<(std::ostream &output, const event &ev);
 
-   std::vector<point> points_BP;        //will contain all points on bp
-   std::vector<point> points_L1;        //will contain all points on l1
-   std::vector<point> points_L2;        //will contain all points on l2
-     
-
-  
 private:
    int multiplicity;
    point vertex;
    particle prtl;
+   
    int counterVTX = 0;
    int counterL1 = 0;
    int counterL2 = 0;
