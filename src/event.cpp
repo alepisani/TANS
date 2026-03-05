@@ -71,7 +71,7 @@ void event::noise(TClonesArray* HitL1, TClonesArray* HitL2){
         
         point p;
 
-        double phi = gRandom->Uniform(0, M_PI);
+        double phi = gRandom->Uniform(-M_PI, M_PI);
         double z = gRandom->Uniform(-layer1_lenght * 0.5, +layer1_lenght * 0.5);
         double R = 40; //mm
 
@@ -88,7 +88,7 @@ void event::noise(TClonesArray* HitL1, TClonesArray* HitL2){
         
         point p;
 
-        double phi = gRandom->Uniform(0, M_PI);
+        double phi = gRandom->Uniform(-M_PI, M_PI);
         double z = gRandom->Uniform(-layer2_lenght * 0.5, +layer2_lenght * 0.5);
         double R = 70; //mm
 
@@ -102,6 +102,11 @@ void event::noise(TClonesArray* HitL1, TClonesArray* HitL2){
 
 void event::single_event(TClonesArray* VTX, TClonesArray* HitL1, TClonesArray* HitL2){
 
+    //reset counters for new event
+    counterVTX = 0;
+    counterL1 = 0;
+    counterL2 = 0;
+    
     //inizialisation of the event
     vertex.generate_VTX();
     if(abs(vertex.get_z()) < beam_pipe_lenght * 0.5) new((*VTX)[counterVTX++]) point(vertex);
@@ -117,7 +122,7 @@ void event::single_event(TClonesArray* VTX, TClonesArray* HitL1, TClonesArray* H
     if(abs(prtl.get_point().get_z()) < layer1_lenght * 0.5) new((*HitL1)[counterL1++]) point(prtl.get_point());
     
     //interaction with layer2
-    prtl.find_intersection(layer2_lenght);
+    prtl.find_intersection(layer2_radius);
     prtl.get_point().smearing();
     if(abs(prtl.get_point().get_z()) < layer2_lenght * 0.5) new((*HitL2)[counterL2++]) point(prtl.get_point());
 

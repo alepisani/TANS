@@ -32,23 +32,10 @@ int main() {
     
     simulation simu;
     simu.sim(); 
+    //reconstruction
+    //analysis
 
-    /**
-     * simulation()
-     *      creo i tclonesarray hitL1, hitL2 che riempio successivamente. vengono chiamati come parametri dell'evento
-     *      for(event)
-     *          inizializza 
-     *              generate vtx
-     *              generate angoli 
-     *          trasporto
-     *              intersezioni
-     *              multiple scattering
-     *              smearing
-     *              usa tclonesarray per riempire i vettori
-     *          noise 
-     *              prendono come argomenti i tclonesarray li riempiono
-     *              si riempiono solo i vector con dati fisici che finiscono in accettanza
-     *      
+    /**     
      * reconstruction()
      *      leggi il ttree di simulation
      *      for(getentries)
