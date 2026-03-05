@@ -66,7 +66,6 @@ void event::noise(TClonesArray* HitL1, TClonesArray* HitL2){
 
     //add noise on L1
     int nNoiseL1 = gRandom->Poisson(noise_mu); 
-    if(nNoiseL1 > 0) cout << nNoiseL1 << endl;
 
     for (int i = 0; i < nNoiseL1; ++i) {
         
