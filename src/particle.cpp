@@ -66,6 +66,15 @@ void particle::set_point(const point& p){
 
 }
 
+void particle::reset(){
+
+    pt.reset();
+    theta = 0;
+    phi = 0;
+    eta = 0;
+
+}
+
 void particle::find_intersection(double radius){
 
     /**

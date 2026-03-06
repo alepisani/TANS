@@ -54,7 +54,7 @@ constexpr double smearing_sigma = 0.03; //mm
 constexpr int bin_zvtx = 100;
 
 // Delta phi selection for Z_vertex candidate
-constexpr double delta_phi = 0.05; //rad
+constexpr double delta_phi = 0.005; //rad
 
 //Half Running window
 constexpr double half_window = 0.2; //mm

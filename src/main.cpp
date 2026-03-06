@@ -40,6 +40,7 @@ int main() {
      *      leggi il ttree di simulation
      *      for(getentries)
      *          create vector di hit e tracklet
+     *          reserve sui vector con multiplicity
      *          for(hitL12)
      *              riempi vector
      *              tracklet

@@ -22,6 +22,8 @@ class point : public TObject {
     void set_point(double, double, double);
     void set_cil_coord(double, double, double);
 
+    void reset();
+
     void generate_VTX();
     void smearing();
   

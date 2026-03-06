@@ -137,6 +137,17 @@ void event::single_event(TClonesArray* VTX, TClonesArray* HitL1, TClonesArray* H
     this->noise(HitL1, HitL2);
 }
 
+void event::reset() {
+    
+    multiplicity = 0;
+    counterVTX = 0;
+    counterL1 = 0;
+    counterL2 = 0;
+    vertex.reset();
+    prtl.reset();
+    
+}
+
 std::ostream &operator<<(std::ostream &output, const event & ev) {
     output << "+-----------------------------------evento" << endl;
     output << "| x del vertice: " << ev.vertex.get_x() << endl;

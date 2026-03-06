@@ -17,6 +17,7 @@ public:
    
    void setmultiplicity(TH1I* hist_mult);
    void set_vertex(const point& vtx);
+   void reset();
 
    void single_event(TClonesArray* vtx, TClonesArray* hitL1, TClonesArray* hitL2, TH1I* hist_mult, TH1D* hist_eta);
    void noise(TClonesArray* hitL1, TClonesArray* hitL2);
@@ -30,6 +31,7 @@ public:
 
   
 private:
+
    int multiplicity;
    point vertex;
    particle prtl;

@@ -57,6 +57,16 @@ void point::set_z(double zeta){
 
 }
 
+void point::reset(){
+
+    x = 0;
+    y = 0;
+    z = 0;
+    R = 0;
+    phi = 0;
+
+}
+
 void point::generate_VTX(){
     
     double x = gRandom->Gaus(0,X_rms);

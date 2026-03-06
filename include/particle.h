@@ -23,6 +23,8 @@ class particle : public TObject {
     void set_phi(double);
     void set_point(const point&);
 
+    void reset();
+
     void find_intersection(double);
     void multiple_scattering(int Z, double X0, double t);
     void rotate (double theta_p, double phi_p);
