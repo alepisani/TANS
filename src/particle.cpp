@@ -32,16 +32,10 @@ void particle::generate_theta(TH1D* hist_eta) {
 
         eta = gRandom->Uniform(eta_min, eta_max);
 
-    } else {
+    } 
+    else{
 
-        bool accepted = false;
-
-        while (!accepted) {
-
-            eta = hist_eta->GetRandom();
-            if (eta >= eta_min && eta <= eta_max) accepted = true;
-
-        }
+        eta = hist_eta->GetRandom();
 
     }
 
@@ -153,7 +147,8 @@ void particle::multiple_scattering(int Z, double X0, double thickness) {
     
     double p = 700; // MeV/c 
     double beta = 1.;
-    double theta0 = 13.6/(beta*p)*Z*sqrt(thickness/(sin(theta)*X0))*(1+0.038*log(thickness/X0)); //theta in plane
+    double path = thickness/sin(theta);
+    double theta0 = 13.6/(beta*p)*Z*sqrt(path/X0)*(1+0.038*log(path/X0)); //theta in plane
     double theta_rms = theta0*sqrt(2); //rms in 3D space
     double theta_ms = gRandom->Gaus(0, theta_rms);
     double phi_ms = gRandom->Uniform(0, 2 * M_PI);

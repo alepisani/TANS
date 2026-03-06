@@ -11,7 +11,7 @@ constexpr int nEvents = 100000;
  *  true --> data from the file
  *  false --> data from uniform distribution
  */
-constexpr bool get_data_from_kinem = true;
+constexpr bool get_data_from_kinem = false;
 
 // Vertex constant sigmas
 constexpr double X_rms = 0.1; //mm
@@ -43,6 +43,8 @@ constexpr double layer2_lenght = 270; //mm
 constexpr bool multiple_scattering_on = true;
 
 constexpr int noise_mu = 5;
+
+constexpr double smearing_sigma = 0.03; //mm
 
 
 //---------------------Reconstruction----------------------

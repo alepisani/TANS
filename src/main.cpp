@@ -55,16 +55,8 @@ int main() {
      * 
      * analysis()
      *      legge ttree di ricostruzione e simulazione e fa i plot del caso
-     * 
-     * 
-     * 
-     * 
-     * 
-     * conviene usare le ntuple per leggere il ttree di simulazione e ricostruzione per poi fare l'analisi
      */
 
-
-    
     //event ev;
     //ev.RunFullSimulation();
     

@@ -74,7 +74,7 @@ void point::smearing(){
      * the detector resolution.
      */
 
-    double smearing = gRandom->Gaus(0, 0.03);
+    double smearing = gRandom->Gaus(0, smearing_sigma);
     this->set_phi(this->get_phi() + smearing / this->get_R());
 
 }
