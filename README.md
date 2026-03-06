@@ -37,7 +37,7 @@ From the directory .include/const.h you can change all the ccode const and decid
 If not major issues occured you may see the outcome data in /data/hist_sim.root using the ROOT TBrowser in the following way.
 ```
 root -l
-TBrowser b
+new TBrowser();
 ```
 
 
