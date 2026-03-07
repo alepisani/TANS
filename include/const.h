@@ -1,10 +1,19 @@
 #ifndef CONST_H
 #define CONST_H
 
+/**
+ * compressionlevel = 1, faster and doesnt care about file sizing
+ * compressionlevel = 9, slower but optimizes the file sizing
+ * 1,9 are only the lower and upper boundary, you can choose in [1,9]
+ */
+
+constexpr int CompressionLevel = 1;
+
+
 //---------------------Simulation----------------------
 
 // Simulated events
-constexpr int nEvents = 100000;
+constexpr int nEvents = 1000000;
 
 /** To simulated the interaction you can either generate the eta and multeplicity 
  *  value by usiform distribution or from the ../data/kinem.root file

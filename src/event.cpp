@@ -118,19 +118,20 @@ void event::single_event(TClonesArray* VTX, TClonesArray* HitL1, TClonesArray* H
         // LAYER 1
         prtl.find_intersection(layer1_radius);
         //smearing only in the ttree, the particle will be transported without smearing
-        point p1 = prtl.get_point(); 
+        point& p1 = prtl.get_point(); 
         if(abs(p1.get_z()) < layer1_lenght * 0.5) {
-            p1.smearing(); 
-            new((*HitL1)[counterL1++]) point(p1);
+            point* storedL1 = new((*HitL1)[counterL1++]) point(p1);
+            // apply the smearing directly in the array
+            storedL1->smearing(); 
         }
         prtl.multiple_scattering(layer1_Z, layer1_X0, layer1_thickness);
         
         // LAYER 2
         prtl.find_intersection(layer2_radius);
-        point p2 = prtl.get_point(); 
+        point& p2 = prtl.get_point(); 
         if(abs(p2.get_z()) < layer2_lenght * 0.5) {
-            p2.smearing();
-            new((*HitL2)[counterL2++]) point(p2);
+            point* storedL2 = new((*HitL2)[counterL2++]) point(p2);
+            storedL2->smearing();
         }
     }
     
