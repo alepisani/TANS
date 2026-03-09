@@ -1,7 +1,5 @@
 /include/.vscode
-data/hist_sim.root
-data/hist_sim_kinem.root
-data/hist_sim_unif.root
+data/simulation.root
 data/plot
 data/.DS_Store
 build
