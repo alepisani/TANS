@@ -12,20 +12,11 @@ class reconstruction : public TObject {
     reconstruction() : TObject() {}
     
     void reco();
-
-    //read and fill vector
-    void read_TTree();
-    
-    //fill zcandidates in a hist
-    void fill_zcand_hist(TH1D* zcand_hist);
-    void running_window(TH1D* zcand_hist);
-    //zreco e fill histogramma
-    double z_reco();
+    double running_window();
     
     point get_HitL1(int index) {return HitL1[index];}
     point get_HitL2(int index) {return HitL2[index];}
-    void set_HitL1(point&, int);
-    void set_HitL2(point&, int);
+    std::vector<double> get_zcand() {return z_cand;}
 
     //setter e getter dei data member
     void reset();
@@ -33,6 +24,7 @@ class reconstruction : public TObject {
     private:
     std::vector<point> HitL1;
     std::vector<point> HitL2;
+    std::vector<double> z_cand;
 
 
 

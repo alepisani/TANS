@@ -1,5 +1,6 @@
 /include/.vscode
 data/simulation.root
+data/reconstruction.root
 data/plot
 data/.DS_Store
 build
