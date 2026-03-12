@@ -28,14 +28,14 @@ void reconstruction::reset(){
 double reconstruction::running_window(){
 
     int maxfrequency = 0;
-    double vertex = 187.; //initialised to a dummy value
+    double vertex = 287.; //initialised to a dummy value
     int size_zcand = this->get_zcand().size();
 
     /** 
      * if only one tracklet is recostructed we are goint to take
      * the intersection of the tracklet with the z-axis as reconstructed vertex
      */
-    if(size_zcand == 1) return this->get_zcand()[0];
+    //if(size_zcand == 1) return this->get_zcand()[0];
 
     //creation of the window to iterate on each value
     for(int i = 0; i < size_zcand; i++){
@@ -49,7 +49,7 @@ double reconstruction::running_window(){
         //check the window frequency 
         for(int j = 0; j < size_zcand; j++){ 
 
-            if(z_cand[j] > window_in && z_cand[j] < window_out){
+            if(z_cand[j] >= window_in && z_cand[j] <= window_out){
                 
                 frequency++;
                 running_sum += z_cand[j];
@@ -59,7 +59,7 @@ double reconstruction::running_window(){
         }
 
         //find the maximum and consider the vertex as the mean of the window
-        if(frequency > maxfrequency && frequency > 1 ){
+        if(frequency > maxfrequency){
             
             maxfrequency = frequency;
             vertex = running_sum / frequency;  
@@ -140,11 +140,7 @@ void reconstruction::reco(){
 
                     z_rec = (r2 * z1 - r1 * z2) / (r2 - r1); 
 
-                    if(abs(z_rec) <= beam_pipe_lenght/2.){
-                        
-                        z_cand.push_back(z_rec);
-
-                    } 
+                    z_cand.push_back(z_rec);
                 
                 }
 
@@ -155,8 +151,8 @@ void reconstruction::reco(){
         //sort on the z_cand vector
         std::sort(z_cand.begin(), z_cand.end());
         z_rec = this->running_window();
-        
-        tree_output->Fill();
+
+        if(!(z_rec == 287)) tree_output->Fill();
 
         //loading bar
         if (nEvent % 1000 == 0 || nEvent == nEvents - 1) {

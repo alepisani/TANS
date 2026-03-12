@@ -13,7 +13,7 @@ constexpr int CompressionLevel = 1;
 //---------------------Simulation----------------------
 
 // Simulated events
-constexpr int nEvents = 10000;
+constexpr int nEvents = 100000;
 
 /** To simulated the interaction you can either generate the eta and multeplicity 
  *  value by usiform distribution or from the ../data/kinem.root file
@@ -59,10 +59,11 @@ constexpr double smearing_sigma = 0.03; //mm
 //---------------------Reconstruction----------------------
 
 // Delta phi selection for Z_vertex candidate
-constexpr double delta_phi = 0.005; //rad
+//constexpr double delta_phi = 0.005; //rad
+constexpr double delta_phi = 0.05; //rad
 
 //Half Running window
-constexpr double half_window = 2; //mm
+constexpr double half_window = 2.5; //mm
 
 
 

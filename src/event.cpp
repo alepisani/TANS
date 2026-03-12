@@ -30,8 +30,7 @@ void event::setmultiplicity(TH1I* hist_mult) {
 
     if(!get_data_from_kinem){
 
-        //multiplicity = static_cast<int>(gRandom->Uniform(1, 50));
-        multiplicity = 50;
+        multiplicity = static_cast<int>(gRandom->Uniform(1, 50));
 
     }
 
@@ -101,8 +100,8 @@ void event::single_event(TClonesArray* VTX, TClonesArray* HitL1, TClonesArray* H
     this->setmultiplicity(hist_mult); 
     vertex.generate_VTX();
     
-    if(abs(vertex.get_z()) < beam_pipe_lenght * 0.5) 
-        new((*VTX)[counterVTX++]) point(vertex);
+    //if(abs(vertex.get_z()) < beam_pipe_lenght * 0.5) 
+    new((*VTX)[counterVTX++]) point(vertex);
     
     int mult = this->get_multiplicity();
     for(int i = 0; i < mult; i++){
