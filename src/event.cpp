@@ -100,7 +100,6 @@ void event::single_event(TClonesArray* VTX, TClonesArray* HitL1, TClonesArray* H
     this->setmultiplicity(hist_mult); 
     vertex.generate_VTX();
     
-    //if(abs(vertex.get_z()) < beam_pipe_lenght * 0.5) 
     new((*VTX)[counterVTX++]) point(vertex);
     
     int mult = this->get_multiplicity();

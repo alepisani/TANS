@@ -32,7 +32,6 @@ constexpr double beam_pipe_X0 = 350; //mm
 constexpr int beam_pipe_Z = 4;
 constexpr double beam_pipe_radius = 30; //mm
 constexpr double beam_pipe_thickness = 0.8; //mm
-constexpr double beam_pipe_lenght = 270; //mm
 
 // LAYER1 (silicon)
 constexpr double layer1_X0 = 93.7; //mm 
