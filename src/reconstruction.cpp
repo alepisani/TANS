@@ -27,8 +27,8 @@ void reconstruction::reset(){
 
 double reconstruction::running_window(){
 
-    int maxfrequency = 0;
-    double vertex = 287.; //initialised to a dummy value
+    int maxfrequency = 1;
+    double vertex = 999.; //initialised to a dummy value
     int size_zcand = this->get_zcand().size();
 
     /** 
@@ -152,7 +152,7 @@ void reconstruction::reco(){
         std::sort(z_cand.begin(), z_cand.end());
         z_rec = this->running_window();
 
-        if(!(z_rec == 287)) tree_output->Fill();
+        if(!(z_rec == 999)) tree_output->Fill();
 
         //loading bar
         if (nEvent % 1000 == 0 || nEvent == nEvents - 1) {

@@ -30,7 +30,8 @@ void event::setmultiplicity(TH1I* hist_mult) {
 
     if(!get_data_from_kinem){
 
-        multiplicity = static_cast<int>(gRandom->Uniform(1, 50));
+        //multiplicity = static_cast<int>(gRandom->Uniform(1, 50));
+        multiplicity = 20;
 
     }
 

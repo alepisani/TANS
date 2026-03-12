@@ -13,7 +13,7 @@ constexpr int CompressionLevel = 1;
 //---------------------Simulation----------------------
 
 // Simulated events
-constexpr int nEvents = 100000;
+constexpr int nEvents = 1000000;
 
 /** To simulated the interaction you can either generate the eta and multeplicity 
  *  value by usiform distribution or from the ../data/kinem.root file
