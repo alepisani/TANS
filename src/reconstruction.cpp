@@ -3,6 +3,7 @@
 #include "../include/const.h"
 #include "../include/event.h"
 #include "../include/reconstruction.h"
+#include "../include/simulation.h"
 #include "TRandom3.h"
 #include <iostream>
 #include <cmath>
@@ -73,6 +74,8 @@ double reconstruction::running_window(){
 void reconstruction::reco(){
 
     TFile input_file("../data/simulation.root");
+
+    simulation sim;
     
     TTree *tree_input = (TTree*)input_file.Get("MC");
     
@@ -88,6 +91,8 @@ void reconstruction::reco(){
     tree_input->SetBranchAddress("HitsL1", &hitsL1);
     tree_input->SetBranchAddress("HitsL2", &hitsL2);
     tree_output->Branch("Z_Reco", &z_rec, "Z_Reco/D");
+
+    cout << "reconstruction in progress: " << endl;
 
     for(int nEvent = 0; nEvent < tree_input->GetEntries() ; nEvent++){
         
@@ -152,6 +157,11 @@ void reconstruction::reco(){
         z_rec = this->running_window();
         
         tree_output->Fill();
+
+        //loading bar
+        if (nEvent % 1000 == 0 || nEvent == nEvents - 1) {
+            sim.printProgressBar(nEvent + 1, nEvents, 30);
+        }
 
     }
     

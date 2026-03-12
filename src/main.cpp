@@ -48,6 +48,8 @@ int main() {
     
     simulation simu;
     simu.sim(); 
+    cout << endl; cout << endl; 
+    
     reconstruction reco;
     reco.reco();
     //analysis
@@ -77,6 +79,13 @@ int main() {
      *      se non ricostruisco qualcosa per qualche motivo mi faccio restituire un dummy value
      *      il dummy value lo uso per stimare efficeinza
      */
+
+    /**
+     * AGGIUNGI LA VERTIà MONTECARLO NEL FILE simulation.root (?) oppure
+     * apri due file contemporaneamente e prendi info 
+     * add z_true in simulation.root
+     */
+
 
     
     t.Stop();
