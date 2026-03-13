@@ -9,6 +9,7 @@
 #include <cmath>
 #include "TF1.h"
 #include "TH1D.h"
+#include "TH2D.h"
 #include "TCanvas.h"
 #include "TFile.h"
 #include "TTree.h"
@@ -152,7 +153,8 @@ void reconstruction::reco(){
         std::sort(z_cand.begin(), z_cand.end());
         z_rec = this->running_window();
 
-        if(!(z_rec == 999)) tree_output->Fill();
+        //if(!(z_rec == 999)) 
+        tree_output->Fill();
 
         //loading bar
         if (nEvent % 1000 == 0 || nEvent == nEvents - 1) {
@@ -164,5 +166,100 @@ void reconstruction::reco(){
     tree_output->Write();
     output_file.Close();
     input_file.Close();
+    
+}
+
+void reconstruction::analysis(){
+
+    /**
+     * 
+     * plot da fare:
+     *  - TH2D residui vs molteplicità
+     *  - efficienza vs molteplicità
+     *  - risoluzione vs molteplicità
+     *  - efficienza vs z_vtx_real
+     *  - risoluzione vs z_vtx_real
+     * 
+     * 
+     * how?
+     *  apri file simulation e reconstructino e crea file analysis.root
+     *  for each entries
+     *  - per ogni entries fa residuo e fai plot TH2D res vs mult
+     *  - 
+     * 
+     */
+
+    TFile simulation_file("../data/simulation.root");
+    TFile reconstruction_file("../data/reconstruction.root");
+    
+    TFile output_file("../data/analysis.root", "RECREATE");
+    output_file.SetCompressionAlgorithm(ROOT::RCompressionSetting::EAlgorithm::kLZ4);
+    output_file.SetCompressionLevel(1);
+
+    TH1D* hResidui = new TH1D("hResidui", "Residui; (z_{gen} - z_{reco}) [#mum]; Conteggi", 500, -2000, 2000);
+    TH2D* hResVsMult = new TH2D("hResVsMult", "Residui vs Mult; Molteplicita'; Residuo [#mum]", 50, 0, 50, 200, -2000, 2000);
+    TH2D* hResVsZtrue = new TH2D("hResVsZtrue", "Residui vs Ztrue; z [mm]; Residuo [#mum]", 50, -150, +150, 200, -2000, 2000);
+
+    // Get the trees
+    TTree *tree_simulation = (TTree*)simulation_file.Get("MC");
+    TTree *tree_reconstruction = (TTree*)reconstruction_file.Get("Reco");
+    
+    double z_reco, z_real, residual;
+    TClonesArray *vertex = nullptr;
+    int multiplicity;
+    
+    // Set branch addresses
+    tree_reconstruction->SetBranchAddress("Z_Reco", &z_reco);
+    tree_simulation->SetBranchAddress("Vertex", &vertex);
+    tree_simulation->SetBranchAddress("Multiplicity", &multiplicity);
+    
+    int nEvents = tree_simulation->GetEntries();
+
+    if(nEvents != tree_reconstruction->GetEntries()){
+
+        std::cerr << "Warning, entries on simulation and reconstruction does not correspond \n";
+
+    }
+
+    cout << endl;
+    cout << "analysis in progress: " << endl;
+
+    for(int nEvent = 0; nEvent < nEvents; nEvent++){
+
+        tree_simulation->GetEvent(nEvent);
+        tree_reconstruction->GetEvent(nEvent);
+        
+        // Extract the vertex z coordinate
+        point* vtx = (point*)vertex->At(0);
+        z_real = vtx->get_z();
+        
+        // Calculate residual
+        if(z_reco != 999){
+
+            residual = (z_real - z_reco) * 1000; //um
+            hResidui->Fill(residual);
+            hResVsMult->Fill(multiplicity, residual);
+            hResVsZtrue->Fill(z_real, residual);
+
+        }
+        
+        //loading bar
+        if (nEvent % 1000 == 0 || nEvent == nEvents - 1) {
+            simulation sim;
+            sim.printProgressBar(nEvent + 1, nEvents, 30);
+        }
+
+    }
+    
+    cout << endl;
+    
+    // Write histogram to output file
+    hResidui->Write();
+    hResVsMult->Write();
+    hResVsZtrue->Write();
+
+    output_file.Close();
+    simulation_file.Close();
+    reconstruction_file.Close();
     
 }

@@ -21,6 +21,8 @@ class reconstruction : public TObject {
     //setter e getter dei data member
     void reset();
 
+    void analysis();
+
     private:
     std::vector<point> HitL1;
     std::vector<point> HitL2;

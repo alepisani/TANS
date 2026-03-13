@@ -52,7 +52,8 @@ int main() {
     
     reconstruction reco;
     reco.reco();
-    //analysis
+    reco.analysis();
+    
 
     /**     
      * reconstruction()
