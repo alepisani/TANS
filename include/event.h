@@ -22,13 +22,7 @@ public:
    void single_event(TClonesArray* vtx, TClonesArray* hitL1, TClonesArray* hitL2, TH1I* hist_mult, TH1D* hist_eta);
    void noise(TClonesArray* hitL1, TClonesArray* hitL2);
 
-   friend std::ostream &operator<<(std::ostream &output, const event &ev);
-
-   std::vector<point> points_BP;        //will contain all points on bp
-   std::vector<point> points_L1;        //will contain all points on l1
-   std::vector<point> points_L2;        //will contain all points on l2
-     
-
+   friend std::ostream &operator<<(std::ostream &output, const event &ev);     
   
 private:
 

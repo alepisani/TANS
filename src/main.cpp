@@ -27,16 +27,37 @@ int main() {
     int seed = 0;
     gRandom->SetSeed(seed);
 
+    cout << endl;
+    cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" << endl;
+    cout << "| MonteCarlo simulation: " << endl; 
+    cout << "+-----------------------------------------------+" << endl;
+    cout << "| nEvents = " << nEvents << endl;
+    cout << boolalpha << "| multiple scattering: " << multiple_scattering_on << endl;
+    cout << "| distribution used: ";
+    if(get_data_from_kinem){
+        cout << " from ./data/kinem.root" << endl;
+    }
+    else {cout << " uniform distribution" << endl;}
+    cout << "| selection on delta phi = " << delta_phi << " Rad" << endl;
+    cout << "| running window width = " << half_window * 2 << " mm" << endl;
+    cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" << endl;
+    cout << endl;
+
     TStopwatch t;
     t.Start();
     
     simulation simu;
     simu.sim(); 
-    //reconstruction
-    //analysis
+    cout << endl; cout << endl; 
+    
+    reconstruction reco;
+    reco.reco();
+    reco.analysis();
+    
 
     /**     
      * reconstruction()
+     *      voglio che apra MC/simualtion e crei reconstrucion con i dati che mi interessano
      *      leggi il ttree di simulation
      *      for(getentries)
      *          create vector di hit e tracklet
@@ -55,14 +76,22 @@ int main() {
      *          riempi ttree
      * 
      * analysis()
-     *      legge ttree di ricostruzione e simulazione e fa i plot del caso
+     *      voglio che apre MC/reconstrucion e scrive i plot in MC/analysis
+     *      se non ricostruisco qualcosa per qualche motivo mi faccio restituire un dummy value
+     *      il dummy value lo uso per stimare efficeinza
      */
 
-    //event ev;
-    //ev.RunFullSimulation();
+    /**
+     * AGGIUNGI LA VERTIà MONTECARLO NEL FILE simulation.root (?) oppure
+     * apri due file contemporaneamente e prendi info 
+     * add z_true in simulation.root
+     */
+
+
     
     t.Stop();
 
+    cout << endl;
     cout << endl;
     cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" << endl;
     cout << "| time to process all the " << nEvents << " event and simulation \n";
@@ -70,14 +99,6 @@ int main() {
     cout << "| Real time: " << t.RealTime() << " s\n";
     cout << "| CPU time: " << t.CpuTime()  << " s\n";
     cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" << endl;
-    cout << boolalpha << "| multiple scattering: " << multiple_scattering_on << endl;
-    cout << "| distribution used: ";
-    if(get_data_from_kinem){
-        cout << " from ./data/kinem.root" << endl;
-    }
-    else {cout << " uniform distribution" << endl;}
-    cout << "+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" << endl;
-
     cout << endl;
     
     return 0;

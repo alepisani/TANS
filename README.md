@@ -25,7 +25,7 @@ make -jN
 ./sim
 ```
 
-in the directory ./data/hist_sim you'll be able to see all the data from the simulation and the plot from the reconstruction.
+in the directory /data will able the simulation.root, reconstruction.root and analysis.root and these contains all the data stored in the corresponding step of the MC.
 
 ## const.h
 From the directory .include/const.h you can change all the ccode const and decide some different option how the code works:
