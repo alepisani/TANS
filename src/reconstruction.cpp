@@ -11,6 +11,7 @@
 #include "TH1D.h"
 #include "TH2D.h"
 #include "TCanvas.h"
+#include "TEfficiency.h"
 #include "TFile.h"
 #include "TTree.h"
 
@@ -171,24 +172,6 @@ void reconstruction::reco(){
 
 void reconstruction::analysis(){
 
-    /**
-     * 
-     * plot da fare:
-     *  - TH2D residui vs molteplicità
-     *  - efficienza vs molteplicità
-     *  - risoluzione vs molteplicità
-     *  - efficienza vs z_vtx_real
-     *  - risoluzione vs z_vtx_real
-     * 
-     * 
-     * how?
-     *  apri file simulation e reconstructino e crea file analysis.root
-     *  for each entries
-     *  - per ogni entries fa residuo e fai plot TH2D res vs mult
-     *  - 
-     * 
-     */
-
     TFile simulation_file("../data/simulation.root");
     TFile reconstruction_file("../data/reconstruction.root");
     
@@ -196,9 +179,15 @@ void reconstruction::analysis(){
     output_file.SetCompressionAlgorithm(ROOT::RCompressionSetting::EAlgorithm::kLZ4);
     output_file.SetCompressionLevel(1);
 
-    TH1D* hResidui = new TH1D("hResidui", "Residui; (z_{gen} - z_{reco}) [#mum]; Conteggi", 500, -2000, 2000);
-    TH2D* hResVsMult = new TH2D("hResVsMult", "Residui vs Mult; Molteplicita'; Residuo [#mum]", 50, 0, 50, 200, -2000, 2000);
-    TH2D* hResVsZtrue = new TH2D("hResVsZtrue", "Residui vs Ztrue; z [mm]; Residuo [#mum]", 50, -150, +150, 200, -2000, 2000);
+    TH1D* hResidui = new TH1D("hResidui", "Residui; (z_{gen} - z_{reco}) [#mum]; Conteggi", 500, -1000, 1000);
+    TH2D* hResVsMult = new TH2D("hResVsMult", "Residui vs Mult; Molteplicita'; Residuo [#mum]", 50, 1, 50, 200, -1000, 1000);
+    TH2D* hResVsZtrue = new TH2D("hResVsZtrue", "Residui vs Ztrue; z [mm]; Residuo [#mum]", 50, -150, +150, 200, -1000, 1000);
+
+    TH1F* hEvents_z = new TH1F("hEvents_z", "Events vs Z_{true}; z [mm]; Counts", 50, -200, +200);
+    TH1F* hSuccess_z = new TH1F("hSuccess_z", "Successful reconstructions vs Z_{true}; z [mm]; Counts", 50, -200, +200);
+
+    TH1F* hEvents_mult = new TH1F("hEvents_mult", "Events vs Multiplicity; Multiplicity; Counts", 50, 0, 50);
+    TH1F* hSuccess_mult = new TH1F("hSuccess_mult", "Successful reconstructions vs Multiplicity; Multiplicity; Counts", 50, 0, 50);
 
     // Get the trees
     TTree *tree_simulation = (TTree*)simulation_file.Get("MC");
@@ -233,6 +222,10 @@ void reconstruction::analysis(){
         point* vtx = (point*)vertex->At(0);
         z_real = vtx->get_z();
         
+        // Fill efficiency histograms
+        hEvents_z->Fill(z_real);
+        hEvents_mult->Fill(multiplicity);
+        
         // Calculate residual
         if(z_reco != 999){
 
@@ -240,6 +233,8 @@ void reconstruction::analysis(){
             hResidui->Fill(residual);
             hResVsMult->Fill(multiplicity, residual);
             hResVsZtrue->Fill(z_real, residual);
+            hSuccess_z->Fill(z_real);
+            hSuccess_mult->Fill(multiplicity);
 
         }
         
@@ -250,13 +245,52 @@ void reconstruction::analysis(){
         }
 
     }
+
+    // ── Resolution vs Multiplicity ──────────────────────────────────────────────
+    int nbins_mult = hResVsMult->GetNbinsX();
+    TH1D* hResVsMult_1D = new TH1D("hResVsMult_1D", "Resolution vs Multiplicity; Multiplicity; #sigma [#mum]", nbins_mult, 0, 50);
+
+    for(int i = 1; i <= nbins_mult; i++){
+        TH1D* proj = hResVsMult->ProjectionY(Form("proj_mult_%d", i), i, i);
+        if(proj->GetEntries() > 5){
+            hResVsMult_1D->SetBinContent(i, proj->GetStdDev());
+            hResVsMult_1D->SetBinError(i, proj->GetStdDevError());
+        }
+        delete proj;
+    }
+
+    // ── Resolution vs Z ────────────────────────────────────────────────────
+    int nbins_z = hResVsZtrue->GetNbinsX();
+    TH1D* hResVsZTrue_1D = new TH1D("hResVsZTrue_1D", "Resolution vs Z_{true}; z [mm]; #sigma [#mum]", nbins_z, -200, 200);
+
+    for(int i = 1; i <= nbins_z; i++){
+        TH1D* proj = hResVsZtrue->ProjectionY(Form("proj_z_%d", i), i, i);
+        if(proj->GetEntries() > 5){
+            hResVsZTrue_1D->SetBinContent(i, proj->GetStdDev());
+            hResVsZTrue_1D->SetBinError(i, proj->GetStdDevError());
+        }
+        delete proj;
+    }
     
     cout << endl;
+    
+    // Create TEfficiency objects
+    TEfficiency* effZ = new TEfficiency(*hSuccess_z, *hEvents_z);
+    effZ->SetName("Eff_vs_z");
+    effZ->SetTitle("Efficiency vs Z_{true}; z [mm]; Efficiency");
+    
+    TEfficiency* effMult = new TEfficiency(*hSuccess_mult, *hEvents_mult);
+    effMult->SetName("Eff_vs_Mult");
+    effMult->SetTitle("Efficiency vs Multiplicity; Multiplicity; Efficiency");
     
     // Write histogram to output file
     hResidui->Write();
     hResVsMult->Write();
     hResVsZtrue->Write();
+    effZ->Write();
+    effMult->Write();
+    hResVsMult_1D->Write();
+    hResVsZTrue_1D->Write();
 
     output_file.Close();
     simulation_file.Close();
