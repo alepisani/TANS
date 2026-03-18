@@ -1,10 +1,19 @@
 #ifndef CONST_H
 #define CONST_H
 
+/**
+ * compressionlevel = 1, faster and doesnt care about file sizing
+ * compressionlevel = 9, slower but optimizes the file sizing
+ * 1,9 are only the lower and upper boundary, you can choose in [1,9]
+ */
+
+constexpr int CompressionLevel = 1;
+
+
 //---------------------Simulation----------------------
 
 // Simulated events
-constexpr int nEvents = 100000;
+constexpr int nEvents = 1000000;
 
 /** To simulated the interaction you can either generate the eta and multeplicity 
  *  value by usiform distribution or from the ../data/kinem.root file
@@ -23,7 +32,6 @@ constexpr double beam_pipe_X0 = 350; //mm
 constexpr int beam_pipe_Z = 4;
 constexpr double beam_pipe_radius = 30; //mm
 constexpr double beam_pipe_thickness = 0.8; //mm
-constexpr double beam_pipe_lenght = 270; //mm
 
 // LAYER1 (silicon)
 constexpr double layer1_X0 = 93.7; //mm 
@@ -49,15 +57,12 @@ constexpr double smearing_sigma = 0.03; //mm
 
 //---------------------Reconstruction----------------------
 
-
-//Binning to create the Z_vertex reconstruction histogram
-constexpr int bin_zvtx = 100;
-
 // Delta phi selection for Z_vertex candidate
-constexpr double delta_phi = 0.005; //rad
+//constexpr double delta_phi = 0.005; //rad
+constexpr double delta_phi = 0.05; //rad
 
 //Half Running window
-constexpr double half_window = 0.2; //mm
+constexpr double half_window = 2.5; //mm
 
 
 
