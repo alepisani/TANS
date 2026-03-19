@@ -246,29 +246,47 @@ void reconstruction::analysis(){
 
     }
 
+    // ── helper function to find the stdev of the distribution ─────────────────────
+    auto fitAndGetSigma = [](TH1D* proj, TH1D* hOut, int bin) {
+        if(proj->GetEntries() <= 10) return;
+
+        double mean  = proj->GetMean();
+        double sigma = proj->GetStdDev();
+        if(sigma <= 0) return;
+
+        // gaussian fit in the range (mean +- 2sigma)
+        TF1* gaus = new TF1("gaus_fit", "gaus", mean - 2*sigma, mean + 2*sigma);
+        int fitStatus = proj->Fit(gaus, "RQ0"); // R=range, Q=quiet, 0=no draw
+
+        if(fitStatus == 0 && gaus->GetParameter(2) > 0){
+            hOut->SetBinContent(bin, gaus->GetParameter(2)); 
+            hOut->SetBinError(bin,   gaus->GetParError(2));  
+        }
+
+        delete gaus;
+    };
+
     // ── Resolution vs Multiplicity ──────────────────────────────────────────────
     int nbins_mult = hResVsMult->GetNbinsX();
-    TH1D* hResVsMult_1D = new TH1D("hResVsMult_1D", "Resolution vs Multiplicity; Multiplicity; #sigma [#mum]", nbins_mult, 0, 50);
+    TH1D* hResVsMult_1D = new TH1D("hResVsMult_1D",
+        "Resolution vs Multiplicity; Multiplicity; #sigma [#mum]",
+        nbins_mult, 0, 50);
 
     for(int i = 1; i <= nbins_mult; i++){
         TH1D* proj = hResVsMult->ProjectionY(Form("proj_mult_%d", i), i, i);
-        if(proj->GetEntries() > 5){
-            hResVsMult_1D->SetBinContent(i, proj->GetStdDev());
-            hResVsMult_1D->SetBinError(i, proj->GetStdDevError());
-        }
+        fitAndGetSigma(proj, hResVsMult_1D, i);
         delete proj;
     }
 
-    // ── Resolution vs Z ────────────────────────────────────────────────────
+    // ── Resolution vs Z ─────────────────────────────────────────────────────────
     int nbins_z = hResVsZtrue->GetNbinsX();
-    TH1D* hResVsZTrue_1D = new TH1D("hResVsZTrue_1D", "Resolution vs Z_{true}; z [mm]; #sigma [#mum]", nbins_z, -200, 200);
+    TH1D* hResVsZTrue_1D = new TH1D("hResVsZTrue_1D",
+        "Resolution vs Z_{true}; z [mm]; #sigma [#mum]",
+        nbins_z, -150, 150);
 
     for(int i = 1; i <= nbins_z; i++){
         TH1D* proj = hResVsZtrue->ProjectionY(Form("proj_z_%d", i), i, i);
-        if(proj->GetEntries() > 5){
-            hResVsZTrue_1D->SetBinContent(i, proj->GetStdDev());
-            hResVsZTrue_1D->SetBinError(i, proj->GetStdDevError());
-        }
+        fitAndGetSigma(proj, hResVsZTrue_1D, i);
         delete proj;
     }
     

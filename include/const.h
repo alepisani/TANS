@@ -20,7 +20,7 @@ constexpr int nEvents = 1000000;
  *  true --> data from the file
  *  false --> data from uniform distribution
  */
-constexpr bool get_data_from_kinem = false;
+constexpr bool get_data_from_kinem = true;
 
 // Vertex constant sigmas
 constexpr double X_rms = 0.1; //mm
@@ -59,10 +59,10 @@ constexpr double smearing_sigma = 0.03; //mm
 
 // Delta phi selection for Z_vertex candidate
 //constexpr double delta_phi = 0.005; //rad
-constexpr double delta_phi = 0.05; //rad
+constexpr double delta_phi = 0.01; //rad
 
 //Half Running window
-constexpr double half_window = 2.5; //mm
+constexpr double half_window = 1; //mm
 
 
 

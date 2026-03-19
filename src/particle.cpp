@@ -118,11 +118,11 @@ void particle::rotate(double theta_p, double phi_p) {
     //rotation matrix
     double mr[3][3];
 
-    mr[0][0] = sin(phi);
+    mr[0][0] = -sin(phi);
     mr[1][0] = cos(phi);
     mr[2][0] = 0.;
-    mr[0][1] = cos(phi)*cos(theta);
-    mr[1][1] = cos(theta)*sin(phi);
+    mr[0][1] = -cos(phi)*cos(theta);
+    mr[1][1] = -cos(theta)*sin(phi);
     mr[2][1] = sin(theta);
     mr[0][2] = sin(theta)*cos(phi);
     mr[1][2] = sin(theta)*sin(phi);
@@ -157,7 +157,7 @@ void particle::multiple_scattering(int Z, double X0, double thickness) {
     double p = 700; // MeV/c 
     double beta = 1.;
     double path = thickness/sin(theta);
-    double theta0 = 13.6/(beta*p)*Z*sqrt(path/X0)*(1+0.038*log(path/X0)); //theta in plane
+    double theta0 = 13.6/(beta*p)*1*sqrt(path/X0)*(1+0.038*log(path/X0)); //theta in plane
     double theta_rms = theta0*sqrt(2); //rms in 3D space
     double theta_ms = gRandom->Gaus(0, theta_rms);
     double phi_ms = gRandom->Uniform(0, 2 * M_PI);
